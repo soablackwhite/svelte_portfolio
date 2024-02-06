@@ -1,0 +1,290 @@
+:root {
+  --black: #121212;
+  --white: #faf5f5;
+  --yellow: rgb(249, 223, 77);
+  --dist: -16rem;
+  --ang: -18deg;
+  --ang_start: 0deg;
+  --ang_img: -33deg;
+  --dist_img: -13rem;
+  --indent_ui: 0rem;
+  --isindent: 0deg;
+  --vidy : 1rem;
+  --vidx : 0rem;
+}
+body{
+  font-family: "Proxima Nova", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--black);
+  scroll-behavior: smooth;
+  overflow: hidden;
+  z-index: 3;
+  color: white;
+}
+h1 {
+  font-family: 'Proxima Nova', sans-serif;
+  font-size: 3rem;
+  text-align: justify;
+  font-weight: 900;
+  margin: 0;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+h2{
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 3rem;
+}
+p{
+  color: #ffffffb8;
+  line-height: 2rem;
+}
+::selection {
+  color: rgb(18, 18, 18);
+  background: var(--white);
+}
+/*___________________________________________FADE ANIMATION__________________________________________*/
+#blackscreen{
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height:100%;
+  background-color: #121212;
+  z-index: 5;
+}
+@keyframes fadeMeOut{
+  0%{opacity:1; visibility:visible;}
+  100%{opacity:0; visibility:hidden;}
+}
+#about{
+  transition: opacity 0.2s ease-in-out;
+}
+/*___________________________________________UI DESIGN STUFF__________________________________________*/
+#gear{
+  z-index: 4;
+  position: fixed;
+  width: 2.5rem;
+  height: auto;
+  align-content:center;
+  top: 2.5%;
+  right: 2.5%;
+  background-color: #12121259;
+  border-radius: 50px;
+  transition: transform 0.3s;
+  color: var(--white);
+}
+#gear:hover{
+  transform: rotate(-20deg);
+}
+#gear:focus {
+  outline: solid rgb(255, 255, 255) 2px;
+}
+.ui
+{
+  position: fixed !important;
+  z-index: 3;
+}
+/*___________________________________________MENU__________________________________________*/
+.menu {
+  left: calc(50% + 6.5rem);
+  top: calc(50% - 4rem + var(--indent_ui)); 
+  width: 8rem; /*8rem*/
+  text-align: center;
+  opacity : 1;
+  transition: left 0.66s ease, top 0.66s ease;
+  list-style-type: none;
+}
+.menu-item{
+  all: unset;
+  cursor: pointer;
+  display: block;
+  width: 8rem;
+  position: relative;
+  opacity: 1;
+  color: #f2f2f2;
+  text-shadow: 1px 1px #ffffff28;
+  transition: transform  0.13s ease-in-out;
+  margin-bottom: 0.5rem;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+.menu-item:focus {
+  outline: solid rgb(255, 255, 255) 3px;
+}
+.menu-item:hover{
+  transform: scale(1.15);
+  background-color: var(--white);
+  text-shadow: 1px 1px #18181839;
+  color: #121212;
+}
+.selected{
+  transform: scale(1.15);
+  background-color: var(--white);
+  text-shadow: 1px 1px #18181839;
+  color: #121212;
+}
+
+/*___________________________________________LOADER STUFF__________________________________________*/
+#loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  overflow: hidden;
+  transition: opacity 1s ease-in-out;
+}
+.loader {
+  position: fixed;
+  left: calc(50% - 5rem);
+  top: calc(50% - 5rem);
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-top-color: #ffffffd5;
+  animation: spin 1.5s linear infinite;
+}
+.loader:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 50%;
+  border: 4px solid;
+  border-top-color: rgb(18, 18, 18);
+  animation: spin-reverse .55s linear infinite;
+}
+.loader:after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #ffffffb6;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin-reverse {
+  0% { 
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+/*__________________________________________MEDIA QUERY & FONTS__________________________________________*/
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('../fonts/proximanova.otf') format('truetype');
+}
+
+@media (max-width: 576px) {
+  .circle{
+    left: calc(50% - 3.5rem);
+    top: calc(50% + var(--indent_ui) - 1rem);
+    width: 7rem;
+    height: 2rem;
+    text-align: right;
+    border-top: none;
+  }
+  .label {
+    left: calc(50% - 3.5rem);
+    top: calc(50% - 1.5rem + var(--indent_ui));
+    height: 2rem;
+    width: 7rem;
+  }
+  .menu{
+    left: calc(50% + 3rem); 
+    top: calc(50% + var(--indent_ui) - 4rem);
+    width: 7rem;
+  }
+  :root{
+    --dist: -9.5rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -8rem;
+  }
+}
+/*______________________________________________SMALL PHONE__________________________________________*/
+@media (max-width: 400px) {
+  .circle{
+    top: calc(50% + var(--indent_ui) - 1rem);
+    left: calc(70% - 4rem);
+    font-size: 1.3rem;
+    width: 8rem;
+    height: 2rem;
+    text-align: right;
+    border-top: none;
+  }
+  .label {
+    left: calc(70% - 4rem);
+    top: calc(50% - 1.5rem + var(--indent_ui));
+    height: 2rem;
+    width: 8rem;
+  }
+  .menu{
+    top: calc(82.4%);
+    left: 0%;
+  }
+  .menu-item{
+    font-size: 2.3vh;
+    width: 7rem;
+  }
+  .slider{
+    display: none;
+  }
+  :root{
+    --dist: -12rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -10rem;
+  }
+}
+/*______________________________________________VERY SMALL PHONE__________________________________________*/
+@media (max-width: 341px) {
+  .circle{
+    top: calc(50% + var(--indent_ui) - 1rem);
+    left: calc(70% - 4rem);
+    font-size : 1.1rem;
+    width: 8rem;
+    height: 2rem;
+    text-align: right;
+    border-top: none;
+  }
+  .menu{
+    top: 81.5%;
+    left: 0%;
+  }
+  .menu-item{
+    font-size: 1rem;
+    width: 7rem;
+  }
+  .slider{
+    display: none;
+  }
+  :root{
+    --dist: -10rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -8rem;
+  }
+}
