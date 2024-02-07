@@ -1,55 +1,69 @@
 <script lang='ts'>
-    export let angle: number;
-    export let inc: number;
-    export let d: number;
-    export let ind: number;
+    import { rescale } from "../scripts/functions";
+    import { currentCircle } from "../stores";
     export let idx: number;
-    export let cur: number; //current circle
     export let sz: number; //size of content
     export let custom: string;
-    import { rescale } from "../scripts/functions";
-
+    let alpha:number;
+    let disappear:boolean = false;
+    let cur: number;
+    $: test = generateAlpha(cur, idx, sz);
+	currentCircle.subscribe((value) => {
+		cur = value;
+	});
     function generateTransform() { // circle form 
-        if (custom == "label"){
-            angle += (4*idx - 1)*inc;
-            if ( idx == 1 ){ angle += 0.5*inc; }
-            else if ( idx == 2 ){ angle += 1.25*inc; }
+        if (custom === "label"){
+            return (`rotate(calc(var(--ang_start) + ${4*idx - 1}*var(--ang) + ${idx}*var(--ang)*var(--isindent))) translateX(var(--dist))`)
         }
-        else{ angle = angle + idx*inc + parseInt(idx/4)*inc*ind;}
-        return `rotate(${angle}deg) translateX(${d}rem)`;
+        else if (custom === "icon-circle") {
+            return (`rotate(calc(var(--ang_start) + ${idx}*var(--ang_img))) translateX(var(--dist_img))`)
+        }
+        else {
+            return (`rotate(calc(var(--ang_start) + ${idx}*var(--ang) + ${Math.floor(idx/4)}*var(--ang)*var(--isindent))) translateX(var(--dist))`)
+        }
     }
-
-    function generateAlpha(){
-        if (idx == cur)
+    function generateAlpha(cur:number, idx:number, sz:number){
+        if (idx === cur)
         {
-            return(`1`);
+            alpha = 1;
         }
-        let alpha = Math.abs(idx - cur);
-        alpha = rescale(alpha, 1, sz, 0.7, 0) - 0.4;
-        return(String(alpha));
+        else{
+            if (custom === "label"){
+                let thresh = Math.abs(cur - idx*4);
+                disappear = (thresh<3) ? false : true;
+            }
+            else { 
+                alpha = Math.abs(idx - cur);
+                alpha = rescale(alpha, 1, sz, 0.7, 0) - 0.4;
+            }
+        }
+        return(alpha);
     }
-   
+    
 </script>
 
-<div class="tags {custom}" style=
-"transform: {generateTransform()};
-opacity: {generateAlpha()};"> 
+<div class="tags {custom}" class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
     <slot> </slot>
 </div>
 
 <style>
     .icon-circle {
-        text-align: center;
-        left: calc(50% - 4rem);
         top: calc(50% - 1.5rem + var(--indent_ui));
-        width: 8rem;
-        text-align: right;
-        font-size: 1.2rem;
-        padding-bottom: 1.5rem;
+        left: calc(50% - 2rem);
+        border: none;
+        text-align: center;
+        transition: width 0.17s ease-in, opacity 0.13s ease-in-out, transform 0.33s, border-top 0.5s, top 0.33s;
     }
+
+    .disappear{
+        padding-left: 10rem;
+        opacity: 0 !important;
+    }
+
     .circle {
         left: calc(50% - 4rem);
         top: calc(50% - 1rem + var(--indent_ui));
+        height: 2rem;
         width: 8rem;
         text-align: right;
         font-size: 1.2rem;
@@ -62,14 +76,7 @@ opacity: {generateAlpha()};">
     .tags{
         position: fixed;
         z-index: 2;
-        left: 43%;  
-        top: calc(50% + var(--indent_ui));
         opacity : 1;
-    }
-    .tags a{
-        all: unset;
-        cursor: pointer;
-        transition: font 0.17s!important;
     }
     .label {
         position: fixed;
@@ -80,10 +87,31 @@ opacity: {generateAlpha()};">
         height: 2rem;
         width: 12rem;
         text-align: center;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         color: var(--black);
         text-shadow: 1px 1px 6px #ffffff;
         padding-bottom: 1.5rem;
         transition: padding-left 0.3s ease-in-out, opacity 0.29s ease-in-out, transform 0.33s, border-top 0.5s, top 0.33s;
+    }
+    @media (max-width: 576px) {
+        .circle{
+            left: calc(50% - 3.5rem);
+            top: calc(50% + var(--indent_ui) - 1rem);
+            width: 7rem;
+            height: 2rem;
+            text-align: right;
+            border-top: none;
+        }
+        .label {
+            left: calc(50% - 3.5rem);
+            top: calc(50% - 1.5rem + var(--indent_ui));
+            height: 2rem;
+            width: 7rem;
+        }
+        .menu{
+            left: calc(50% + 3rem); 
+            top: calc(50% + var(--indent_ui) - 4rem);
+            width: 7rem;
+        }
     }
 </style>

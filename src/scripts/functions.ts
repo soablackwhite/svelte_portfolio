@@ -1,19 +1,22 @@
+let isMedium;
 //___________________________________CLAMP FUNCTION_______________________________________________
-export const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+export const clamp = (num: number, min:number, max:number) => Math.min(Math.max(num, min), max);
 
 //________________________________CHANGE CSS VARIABLES____________________________________________
-// let rt = document.querySelector(':root');
-// Create a function for getting a variable value
-// function get_css_var(v) {
-//   return(getComputedStyle(document.documentElement).getPropertyValue(v));
-// }
-// Create a function for setting a variable value
-// function set_css_var(v, target) {
-//   rt.style.setProperty(v, target);
-// }
+
+// function for getting a css variable value
+export function get_css_var(v:string) {
+  return(getComputedStyle(document.documentElement).getPropertyValue(v));
+}
+// function for setting a css variable value
+export function set_css_var(v:string, target:string, root:(null|HTMLElement)) {
+  if (root){
+    root.style.setProperty(v, target);
+  }
+}
 
 //_________________________________MAP/SCALING FUNCTION___________________________________________
-export function rescale (nbr, inMin, inMax, outMin, outMax) {
+export function rescale (nbr:number, inMin:number, inMax:number, outMin:number, outMax:number) {
   return (nbr - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 
@@ -21,16 +24,14 @@ export function rescale (nbr, inMin, inMax, outMin, outMax) {
 // const wait = (delay = 0) =>
 //   new Promise(resolve => setTimeout(resolve, delay));
 
-// const setVisible = (elementOrSelector, visible) => 
-//   (typeof elementOrSelector === 'string'
-//     ? document.querySelector(elementOrSelector)
-//     : elementOrSelector
-//   ).style.display = visible ? 'block' : 'none';
-
 //___________________________________LINE BREAK/DASH_______________________________________
-export function addDashes(container) {
+export function addDashes(container:HTMLElement) {
   const text = container.textContent;
-  const lines = text.split(/\r\n|\r|\n/);
+  let lines: string[] = [];
+  if (text){
+    lines = text.split(/\r\n|\r|\n/);
+  }
+  
   const newLines = lines.map(line => {
     let newLine = '';
     let lineOverflow = '';
@@ -56,11 +57,10 @@ export function addDashes(container) {
 export function updateMedia(){isMedium = window.matchMedia("(min-width: 400px) and (max-width: 576px)").matches;}
 
 //________________________________REACH END/START SCROLL_______________________________________
-export function isEndScroll(container) {
+export function isEndScroll(container:HTMLElement) {
   return container.scrollTop + container.clientHeight === container.scrollHeight;
 }
-
-export function isBeginScroll(container) {
+export function isBeginScroll(container:HTMLElement) {
   return container.scrollTop === 0;
 }
 

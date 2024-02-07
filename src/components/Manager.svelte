@@ -1,7 +1,8 @@
 <script lang=ts>
-    import {onMount} from 'svelte'
+    import { onMount } from 'svelte'
     import { fade } from 'svelte/transition';
     let loaded:boolean;
+
     loaded = false;
     //_______________________________________LOADER_____________________________________________
     function showPage() {
@@ -17,6 +18,7 @@
     }
     onMount( () => { 
         showPage();
+        // window.addEventListener('resize', updateMedia);
     })
 </script>
 

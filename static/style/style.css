@@ -12,13 +12,20 @@
   --vidy : 1rem;
   --vidx : 0rem;
 }
+mark{
+  background-color: var(--white);
+}
+mark::selection{
+  background-color: var(--black);
+  color: var(--white);
+}
 body{
   font-family: "Proxima Nova", sans-serif;
   margin: 0;
   padding: 0;
   background-color: var(--black);
   scroll-behavior: smooth;
-  overflow: hidden;
+  overflow: hidden; 
   z-index: 3;
   color: white;
 }
@@ -36,7 +43,13 @@ h2{
   font-family: 'Montserrat', sans-serif;
   font-size: 3rem;
 }
+section {
+  padding: 50px;
+  font-family: 'Proxima Nova', sans-serif;
+  color: var(--white);
+}
 p{
+  /* background-color: #ffffff07; */
   color: #ffffffb8;
   line-height: 2rem;
 }
@@ -86,45 +99,7 @@ p{
   position: fixed !important;
   z-index: 3;
 }
-/*___________________________________________MENU__________________________________________*/
-.menu {
-  left: calc(50% + 6.5rem);
-  top: calc(50% - 4rem + var(--indent_ui)); 
-  width: 8rem; /*8rem*/
-  text-align: center;
-  opacity : 1;
-  transition: left 0.66s ease, top 0.66s ease;
-  list-style-type: none;
-}
-.menu-item{
-  all: unset;
-  cursor: pointer;
-  display: block;
-  width: 8rem;
-  position: relative;
-  opacity: 1;
-  color: #f2f2f2;
-  text-shadow: 1px 1px #ffffff28;
-  transition: transform  0.13s ease-in-out;
-  margin-bottom: 0.5rem;
-  text-decoration: none;
-  font-size: 1.1rem;
-}
-.menu-item:focus {
-  outline: solid rgb(255, 255, 255) 3px;
-}
-.menu-item:hover{
-  transform: scale(1.15);
-  background-color: var(--white);
-  text-shadow: 1px 1px #18181839;
-  color: #121212;
-}
-.selected{
-  transform: scale(1.15);
-  background-color: var(--white);
-  text-shadow: 1px 1px #18181839;
-  color: #121212;
-}
+
 
 /*___________________________________________LOADER STUFF__________________________________________*/
 #loading {
@@ -209,11 +184,6 @@ p{
     height: 2rem;
     width: 7rem;
   }
-  .menu{
-    left: calc(50% + 3rem); 
-    top: calc(50% + var(--indent_ui) - 4rem);
-    width: 7rem;
-  }
   :root{
     --dist: -9.5rem;
     --ang: -26deg;
@@ -239,14 +209,6 @@ p{
     height: 2rem;
     width: 8rem;
   }
-  .menu{
-    top: calc(82.4%);
-    left: 0%;
-  }
-  .menu-item{
-    font-size: 2.3vh;
-    width: 7rem;
-  }
   .slider{
     display: none;
   }
@@ -268,14 +230,6 @@ p{
     height: 2rem;
     text-align: right;
     border-top: none;
-  }
-  .menu{
-    top: 81.5%;
-    left: 0%;
-  }
-  .menu-item{
-    font-size: 1rem;
-    width: 7rem;
   }
   .slider{
     display: none;

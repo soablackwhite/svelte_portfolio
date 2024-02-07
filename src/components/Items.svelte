@@ -1,18 +1,24 @@
 <script lang='ts'>
-    export let index = 0;
-    export let scrollThreshold: number;
-    let max = 3;
-    let currentCircle = 0;
-    let accumulatedDelta = 0;
-    let resetThreshold;
-    import Circle from "./Circle.svelte";
     import { onMount, onDestroy } from 'svelte';
-
+    import { set_css_var, get_css_var } from "../scripts/functions";
+    import { currentCircle } from "../stores";
+    import Circle from "./Circle.svelte";
+    export let index:number = 0;
+    export let scrollThreshold: number;
+    let max:number = 3;
+    let accumulatedDelta:number = 0;
+    let resetThreshold;
+    let rt = document.querySelector(':root') as HTMLElement;
+    let labels = ['FRONTEND', 'BACKEND', 'DATA'];
     type ContentItem = string | { src: string; alt: string; link: string; };
     interface Tag {
         id: number;
         content: ContentItem[];
     }
+    let cur: number;
+    currentCircle.subscribe((value) => {
+        cur = value;
+    });
     let tags: Tag[] = [
 		{ id: 0, content: [`hi`, `i'm omar`, `scroll for more`]},
 		{ id: 1, content: [`b. 1999`, `rabat/dubai`, `nyu '22`, `developer`]},
@@ -21,60 +27,71 @@
             {src: `/media/icons/github.svg`, alt: `github icon`, link: `https://github.com/soablackwhite`},
             {src: `/media/icons/linkedin.svg`, alt: `linkedin icon`, link: `https://www.linkedin.com/in/omarouldali/`}, 
             {src: `/media/icons/twitter.svg`, alt: `twitter icon`, link: `https://twitter.com/noiseOmie`},
-            {src: `/media/icons/email.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}]
-        },
+            {src: `/media/icons/email.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}
+        ]}
 	];
-    let labels = ['FRONTEND', 'BACKEND', 'DATA'];
-    let key;
-    let keyCode;
-    function handleKeydown(event) {
-        key = event.key;
-        keyCode = event.keyCode;
-        console.log(`the key is ${key} and the key code is ${keyCode}`);
+    export function updateTag() {
+        set_css_var("--isindent", "0", rt);
+        let insert: number;
+        if (index >= 3){
+            insert = -1 * parseInt(get_css_var('--ang_img')) * (cur); //indent circle each time we move up
+            set_css_var("--ang_start", `${insert}deg`, rt);
+        }
+        else {
+            if(index == 2)
+            {
+                set_css_var("--isindent", "1", rt);
+                insert = -1 * parseInt(get_css_var('--ang')) * (cur + Math.floor(cur/4));
+            }
+            else
+            {
+                insert = -1 * parseInt(get_css_var('--ang')) * (cur); //indent circle each time we move up
+            }
+            set_css_var("--ang_start", `${insert}deg`, rt);
+        }
     }
-    function changeContent(increment: number)
-    {
+    function changeContent(increment: number) {
         accumulatedDelta += increment;
-        //add about part
         //____________________________________INCREMENT/DECREMENT INDEX______________________________________________
         if (Math.abs(accumulatedDelta) >= scrollThreshold) {
             if (accumulatedDelta > 0) {
-                currentCircle++;
-                if(currentCircle > tags[index].content.length - 1){
+                currentCircle.update((n) => n + 1);
+                if(cur > tags[index].content.length - 1){
                     //go next, reset start on 0
                     if(index < max) {
                         index ++;
-                        currentCircle = 0;
+                        currentCircle.set(0);
                     }
                     //if last, stick to last
                     else {
-                        currentCircle = tags[index].content.length - 1;
+                        currentCircle.set(tags[index].content.length - 1);
                     }
                 }
             }
             else if (accumulatedDelta < 0) {
-                currentCircle--;
-                if(currentCircle < 0){
+                currentCircle.update((n) => n - 1);
+                if(cur < 0){
                     //go prv, reset start on last
                     if(index > 0) {
                         index --;
-                        currentCircle = tags[index].content.length - 1;
+                        currentCircle.set(tags[index].content.length - 1);
                     }
                     //if first, stick to first
                     else {
-                        currentCircle = 0;
+                        currentCircle.set(0);
                     }
                 }
             }
+            updateTag();
             //add second about part
             accumulatedDelta = 0;
         }
     }
     //___________________________________SCROLL KEYBOARD______________________________________________
     window.addEventListener("wheel", function (e) {
-        console.log(index, currentCircle, e.deltaY)
+        console.log(index, cur, e.deltaY);
         changeContent(e.deltaY);
-        // clearTimeout(resetThreshold);
+        clearTimeout(resetThreshold);
         resetThreshold = setTimeout(function () {
             accumulatedDelta = 0;
         }, 100); // Adjust the time before the threshold resets
@@ -89,16 +106,14 @@
             changeContent(scrollThreshold);
         }
     });
-    // window.addEventListener('resize', updateMedia);
 </script>
-<svelte:window on:keydown={handleKeydown} />
 
 <div id="wheel">
     <!-- LABELS -->
     {#if index === 2}
         <div>
             {#each labels as label, i}
-                <Circle angle={0} inc={-18} d={-16} ind={1} idx={i} cur={currentCircle} sz={labels[index].length - 1} custom="label"> 
+                <Circle idx={i} sz={labels[index].length - 1} custom="label"> 
                     {label} 
                 </Circle>
             {/each}
@@ -108,7 +123,7 @@
     {#if index === 3}
         <div id="content-3" class="content">
             {#each tags[index].content as tag, i}
-                <Circle angle={0} inc={-33} d={-13} ind={0} idx={i} cur={currentCircle} sz={tags[index].content.length - 1} custom="icon-circle">
+                <Circle idx={i} sz={tags[index].content.length - 1} custom="icon-circle">
                     <a href={tag.link} target="_blank" rel="noreferrer nofollow"><img alt={tag.alt} src={tag.src}></a>
                 </Circle>
             {/each}
@@ -117,7 +132,7 @@
     <!-- TEXT TAGS -->
         <div class="content">
             {#each tags[index].content as tag, i}
-                <Circle angle={0} inc={-18} d={-16} ind={1} idx={i} cur={currentCircle} sz={tags[index].content.length - 1} custom="circle">
+                <Circle idx={i} sz={tags[index].content.length - 1} custom="circle">
                     {tag}
                 </Circle>
             {/each}
@@ -126,6 +141,11 @@
 </div>
 
 <style>
+    a {
+        all: unset;
+        cursor: pointer;
+        transition: font 0.17s !important;
+    }
     #content-3 img:hover{
         background-color: rgb(0,0,0);
         border-radius: 50%;

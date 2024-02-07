@@ -1,5 +1,7 @@
-<script>
-    export let index = 0;
+<script lang="ts">
+    import type { Mouse } from "@playwright/test";
+    import { currentCircle } from "../stores";
+    import { rescale, set_css_var, get_css_var } from "../scripts/functions"
     const icons = [
         '/media/icons/html5.svg',
         '/media/icons/css3.svg',
@@ -14,17 +16,33 @@
         '/media/icons/r.svg',
         '/media/icons/stata.svg',
     ];
+    export let index:number;
+    let cur: number;
+    currentCircle.subscribe((value) => {
+        cur = value;
+    });
+
+    function magnifyingGlass(this:HTMLElement, event:MouseEvent){
+        let mouseX = event.clientX;
+        let mouseY = event.clientY;
+        //convert to rem scale
+        let incx = rescale(mouseX, window.innerWidth/2 - this.offsetWidth/2, window.innerWidth/2 + this.offsetWidth/2, -4, 4);
+        let incy = rescale(mouseY, window.innerHeight/2 - this.offsetHeight/2, window.innerHeight/2 + this.offsetHeight/2, -4, 4);
+        let rt = document.querySelector(':root') as HTMLElement;
+        set_css_var("--vidy", `${(incy + 1)}rem`, rt);
+        set_css_var("--vidx", `${incx}rem`, rt);
+    }
 </script>
 
 <div class="image-container ui">
-    <div id="zoomer">
+    <div id="zoomer" role="img" on:mousemove={magnifyingGlass} >
         {#if (index === 0 || index === 1)}
             <video autoplay playsinline muted loop preload="metadata" onmouseover="this.pause()" onmouseout="this.play()">
                 <source src="/media/animated/legible.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         {:else}
-            <img alt="profile" id="profile" src={icons[index]}/>
+            <img alt="profile" id="profile" src={icons[cur]}/>
         {/if}
     </div>
 </div>

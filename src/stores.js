@@ -13,3 +13,5 @@ export const variables = writable({
     vidy : "1rem",
     vidx : "0rem",
   });
+
+export let currentCircle = writable(0);
