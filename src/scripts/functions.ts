@@ -20,10 +20,26 @@ export function rescale (nbr:number, inMin:number, inMax:number, outMin:number, 
   return (nbr - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 
-//___________________________________PRELOAD FUNCTION_____________________________________________
-// const wait = (delay = 0) =>
-//   new Promise(resolve => setTimeout(resolve, delay));
-
+export function updateTag(index:number, cur:number, rt:HTMLElement) {
+  set_css_var("--isindent", "0", rt);
+  let insert: number;
+  if (index === 3){
+      insert = -1 * parseInt(get_css_var('--ang_img')) * (cur); //indent circle each time we move up
+      set_css_var("--ang_start", `${insert}deg`, rt);
+  }
+  else {
+      if(index == 2 || index == 4)
+      {
+          set_css_var("--isindent", "1", rt);
+          insert = -1 * parseInt(get_css_var('--ang')) * (cur + Math.floor(cur/4));
+      }
+      else
+      {
+          insert = -1 * parseInt(get_css_var('--ang')) * (cur); //indent circle each time we move up
+      }
+      set_css_var("--ang_start", `${insert}deg`, rt);
+  }
+}
 //___________________________________LINE BREAK/DASH_______________________________________
 export function addDashes(container:HTMLElement) {
   const text = container.textContent;

@@ -29,8 +29,8 @@
         }
         else{
             if (custom === "label"){
-                let thresh = Math.abs(cur - idx*4);
-                disappear = (thresh<3) ? false : true;
+                let thresh = Math.abs(cur - idx*4 - 1);
+                disappear = (thresh < 3) ? false : true;
             }
             else { 
                 alpha = Math.abs(idx - cur);

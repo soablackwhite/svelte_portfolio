@@ -1,16 +1,23 @@
 <script lang="ts">
     export let index = 0;
     import { currentCircle } from "../stores";
+    import { updateTag } from "../scripts/functions";
     let selected = 0;
-    let menu = ["home", "about", "skills", "contact me"]
+    let menu = ["home", "about", "skills", "contact me", "gallery"]
+    let rt = document.querySelector(":root") as HTMLElement;
+    let cur: number;
+    currentCircle.subscribe((value) => {
+        cur = value;
+    });
+    //change index and update any angles/tags based on scroll position
     function changeIndex(n: number){
         index = n;
         console.log(index)
         currentCircle.set(0);
+        updateTag(index, cur, rt);
         document.activeElement.blur();
     }
 </script>
-
 
 <div class="menu ui">
     {#each menu as item, i}

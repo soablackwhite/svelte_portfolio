@@ -1,26 +1,29 @@
 <script lang='ts'>
     import { onMount, onDestroy } from 'svelte';
-    import { set_css_var, get_css_var } from "../scripts/functions";
+    import { updateTag } from "../scripts/functions";
     import { currentCircle } from "../stores";
     import Circle from "./Circle.svelte";
     export let index:number = 0;
     export let scrollThreshold: number;
-    let max:number = 3;
+    let max:number = 4;
     let accumulatedDelta:number = 0;
     let resetThreshold;
     let rt = document.querySelector(':root') as HTMLElement;
     let labels = ['FRONTEND', 'BACKEND', 'DATA'];
+    
     type ContentItem = string | { src: string; alt: string; link: string; };
     interface Tag {
         id: number;
         content: ContentItem[];
     }
+
     let cur: number;
     currentCircle.subscribe((value) => {
         cur = value;
     });
+
     let tags: Tag[] = [
-		{ id: 0, content: [`hi`, `i'm omar`, `scroll for more`]},
+		{ id: 0, content: [`Hi I'm Omar!`, `Scroll to know more!`, `scroll for more`]},
 		{ id: 1, content: [`b. 1999`, `rabat/dubai`, `nyu '22`, `developer`]},
 		{ id: 2, content: [`html`, `css`, `bootstrap`, `javascript`, `c`, `c++`, `node.js`, `flask`, `python`, `sql`, `r`, `stata`]},
 		{ id: 3, content: [
@@ -28,28 +31,10 @@
             {src: `/media/icons/linkedin.svg`, alt: `linkedin icon`, link: `https://www.linkedin.com/in/omarouldali/`}, 
             {src: `/media/icons/twitter.svg`, alt: `twitter icon`, link: `https://twitter.com/noiseOmie`},
             {src: `/media/icons/email.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}
-        ]}
+        ]},
+        { id: 4, content: [`html`, `css`, `bootstrap`, `javascript`, `c`, `c++`, `node.js`, `flask`, `python`, `sql`, `r`, `stata`]}
 	];
-    export function updateTag() {
-        set_css_var("--isindent", "0", rt);
-        let insert: number;
-        if (index >= 3){
-            insert = -1 * parseInt(get_css_var('--ang_img')) * (cur); //indent circle each time we move up
-            set_css_var("--ang_start", `${insert}deg`, rt);
-        }
-        else {
-            if(index == 2)
-            {
-                set_css_var("--isindent", "1", rt);
-                insert = -1 * parseInt(get_css_var('--ang')) * (cur + Math.floor(cur/4));
-            }
-            else
-            {
-                insert = -1 * parseInt(get_css_var('--ang')) * (cur); //indent circle each time we move up
-            }
-            set_css_var("--ang_start", `${insert}deg`, rt);
-        }
-    }
+    
     function changeContent(increment: number) {
         accumulatedDelta += increment;
         //____________________________________INCREMENT/DECREMENT INDEX______________________________________________
@@ -82,14 +67,13 @@
                     }
                 }
             }
-            updateTag();
+            updateTag(index, cur, rt);
             //add second about part
             accumulatedDelta = 0;
         }
     }
     //___________________________________SCROLL KEYBOARD______________________________________________
     window.addEventListener("wheel", function (e) {
-        console.log(index, cur, e.deltaY);
         changeContent(e.deltaY);
         clearTimeout(resetThreshold);
         resetThreshold = setTimeout(function () {
@@ -98,7 +82,6 @@
     });
     //___________________________________UP/DOWN KEYBOARD______________________________________________
     window.addEventListener('keydown', function(e) {
-        console.log(e.key)
         if (e.key === 'ArrowUp' && document.activeElement === document.body) {
             changeContent(-scrollThreshold);
         }
@@ -106,6 +89,9 @@
             changeContent(scrollThreshold);
         }
     });
+    onMount (() => {
+        updateTag(index, cur, rt);
+    })
 </script>
 
 <div id="wheel">
