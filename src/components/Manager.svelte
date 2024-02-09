@@ -14,7 +14,7 @@
         }
         setTimeout(() => {
             loaded = true;
-        }, 750);
+        }, 1750);
     }
     onMount( () => { 
         showPage();

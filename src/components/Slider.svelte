@@ -4,8 +4,9 @@
 
 <div class="slidecontainer">
     <input type="range" min="10" max="200" bind:value={scrollThreshold} class="slider" id="sensitivity">
-    <label for="html">sensitivity</label><br>
+    <label for="html"> scroll sensitivity</label><br>
 </div>
+
 
 <style>
     .slider {
@@ -47,7 +48,6 @@
         box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.509);
     }
     .slidecontainer label{
-        width: 4rem;
         z-index: 10;
         outline: none;
         opacity: 0.7;
@@ -56,9 +56,9 @@
         transform: rotate(-90deg);
         position: absolute;
         font-size: 0.9rem;
-        right: -1rem;
-        bottom: 9.5rem;
-        width: 5.8rem;
+        right: -1.25rem;
+        bottom: 9.8rem;
+        width: 6.2rem;
         color: #FFFFFF;
     }
 </style>

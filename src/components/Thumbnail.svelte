@@ -21,7 +21,6 @@
     currentCircle.subscribe((value) => {
         cur = value;
     });
-
     function magnifyingGlass(this:HTMLElement, event:MouseEvent){
         let mouseX = event.clientX;
         let mouseY = event.clientY;
@@ -88,6 +87,10 @@
     }
     .image-container video:hover {
         transform: translate(var(--vidx), var(--vidy));
+    }
+    .ui {
+        position: fixed !important;
+        z-index: 3;
     }
 
     @media (max-width: 576px) {

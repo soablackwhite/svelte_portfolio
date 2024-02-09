@@ -1,13 +1,15 @@
 <script lang='ts'>
     import { onMount, onDestroy } from 'svelte';
-    import { updateTag } from "../scripts/functions";
+    import { updateTag, rescale } from "../scripts/functions";
     import { currentCircle } from "../stores";
     import Circle from "./Circle.svelte";
+    import Typewriter from './Typewriter.svelte';
     export let index:number = 0;
     export let scrollThreshold: number;
     let max:number = 4;
     let accumulatedDelta:number = 0;
     let resetThreshold;
+
     let rt = document.querySelector(':root') as HTMLElement;
     let labels = ['FRONTEND', 'BACKEND', 'DATA'];
     
@@ -23,8 +25,8 @@
     });
 
     let tags: Tag[] = [
-		{ id: 0, content: [`Hi I'm Omar!`, `Scroll to know more!`, `scroll for more`]},
-		{ id: 1, content: [`b. 1999`, `rabat/dubai`, `nyu '22`, `developer`]},
+		{ id: 0, content: [`Welcome!`, `use ↑↓ to navigate`, `though you can also scroll`]},
+		{ id: 1, content: [``]},
 		{ id: 2, content: [`html`, `css`, `bootstrap`, `javascript`, `c`, `c++`, `node.js`, `flask`, `python`, `sql`, `r`, `stata`]},
 		{ id: 3, content: [
             {src: `/media/icons/github.svg`, alt: `github icon`, link: `https://github.com/soablackwhite`},
@@ -83,9 +85,11 @@
     //___________________________________UP/DOWN KEYBOARD______________________________________________
     window.addEventListener('keydown', function(e) {
         if (e.key === 'ArrowUp' && document.activeElement === document.body) {
+            console.log(scrollThreshold);
             changeContent(-scrollThreshold);
         }
         if (e.key === 'ArrowDown' && document.activeElement === document.body) {
+            console.log(scrollThreshold);
             changeContent(scrollThreshold);
         }
     });
@@ -106,11 +110,13 @@
         </div>
     {/if}
     <!-- LINK TAGS -->
-    {#if index === 3}
+    {#if index === 1}
+        <Typewriter/>
+    {:else if index === 3}
         <div id="content-3" class="content">
             {#each tags[index].content as tag, i}
                 <Circle idx={i} sz={tags[index].content.length - 1} custom="icon-circle">
-                    <a href={tag.link} target="_blank" rel="noreferrer nofollow"><img alt={tag.alt} src={tag.src}></a>
+                    <a href={tag.link} tabindex={i} target="_blank" rel="noreferrer nofollow"><img alt={tag.alt} src={tag.src}></a>
                 </Circle>
             {/each}
         </div>
@@ -136,15 +142,18 @@
         background-color: rgb(0,0,0);
         border-radius: 50%;
     }
+    #content-3 img:focus {
+        background-color: rgb(0,0,0);
+        border-radius: 50%;
+    }
     #content-3 img{
         filter: invert(1);
         width: 4rem;
         transition: width 0.17s ease-in;
     }
-
     @media (max-width: 576px) {
         #content-3 img{
-            width: 2.5rem;
+            width: 3rem;
         }
     }
     @media (max-width: 400) {

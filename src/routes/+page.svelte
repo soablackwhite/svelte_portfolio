@@ -31,7 +31,9 @@
 	import Slider from '../components/Slider.svelte';
     import Thumbnail from '../components/Thumbnail.svelte';
     import Items from '../components/Items.svelte';
+    import Typewriter from '../components/Typewriter.svelte';
     import { currentCircle } from '../stores';
+    import Loader from '../components/Loader.svelte';
     let index:number = 0;
     let scrollThreshold:number = 70;
     onMount(() => {
@@ -41,14 +43,12 @@
 </script>
 <Manager>
         <!--------------------------------------LOADER----------------------------------------------------->
-        <div slot="loader" id="loading"> 
-            <div class="loader"> </div>
-        </div>
+        <Loader slot="loader" />
         <!-----------------------------------BLACK SCREEN-------------------------------------------------->
         <div slot="bs" id="blackscreen"> </div>
         <!----------------------------------CONTENT WRAPPER------------------------------------------------>
         <div slot="main" id="wrapper" style="z-index: 0;">
-            <Logo />
+            <Logo bind:index={index}/>
             <!----------------------------------CANVAS----------------------------------------------------->
             <Sketch />
             <!------------------------------------UI------------------------------------------------------->
@@ -60,7 +60,7 @@
             <!------------------------------CONTENT WHEEL-------------------------------------------------->
             <Items bind:index={index} bind:scrollThreshold={scrollThreshold}/>
             <!-------------------------------TYPEWRITERL--------------------------------------------------->
-            <div id="about"> <p> </p> </div>
+            <div id="about">  </div>
         </div>  
 </Manager>
 

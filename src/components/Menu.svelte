@@ -15,7 +15,11 @@
         console.log(index)
         currentCircle.set(0);
         updateTag(index, cur, rt);
-        document.activeElement.blur();
+        let active = document.activeElement as HTMLElement;
+        if (active)
+        {
+            active.blur();
+        }
     }
 </script>
 
@@ -30,6 +34,7 @@
     .menu {
         left: calc(50% + 6.5rem);
         top: calc(50% - 4rem + var(--indent_ui)); 
+        position: fixed !important;
         width: 8rem; /*8rem*/
         text-align: center;
         opacity : 1;

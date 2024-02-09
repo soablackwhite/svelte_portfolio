@@ -30,7 +30,7 @@
         else{
             if (custom === "label"){
                 let thresh = Math.abs(cur - idx*4 - 1);
-                disappear = (thresh < 3) ? false : true;
+                disappear = (thresh < 4) ? false : true;
             }
             else { 
                 alpha = Math.abs(idx - cur);
@@ -54,12 +54,10 @@
         text-align: center;
         transition: width 0.17s ease-in, opacity 0.13s ease-in-out, transform 0.33s, border-top 0.5s, top 0.33s;
     }
-
     .disappear{
         padding-left: 10rem;
         opacity: 0 !important;
     }
-
     .circle {
         left: calc(50% - 4rem);
         top: calc(50% - 1rem + var(--indent_ui));
@@ -112,6 +110,43 @@
             left: calc(50% + 3rem); 
             top: calc(50% + var(--indent_ui) - 4rem);
             width: 7rem;
+        }
+        .icon-circle {
+            left: calc(50% - 1.5rem);
+        }
+    }
+    @media (max-width: 400px) {
+        .circle{
+            top: calc(50% + var(--indent_ui) - 1rem);
+            left: calc(70% - 4rem);
+            font-size: 1.3rem;
+            width: 8rem;
+            height: 2rem;
+            text-align: right;
+            border-top: none;
+        }
+        .icon-circle {
+            left: calc(70% - 2rem);
+        }
+        .label {
+            left: calc(70% - 4rem);
+            top: calc(50% - 1.5rem + var(--indent_ui));
+            height: 2rem;
+            width: 8rem;
+        }
+    }
+    @media (max-width: 341px) {
+        .circle{
+            top: calc(50% + var(--indent_ui) - 1rem);
+            left: calc(70% - 4rem);
+            font-size: 1.1rem;
+            width: 8rem;
+            height: 2rem;
+            text-align: right;
+            border-top: none;
+        }
+        .icon-circle {
+            left: calc(70% - 2rem);
         }
     }
 </style>

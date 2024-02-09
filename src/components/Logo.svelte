@@ -1,7 +1,19 @@
+<script lang="ts">
+    export let index:number;
+    import { updateTag } from "../scripts/functions";
+    import { currentCircle } from "../stores";
+    function update(){
+        index = 0;
+        let rt = document.querySelector(":root") as HTMLElement;
+        updateTag(index, $currentCircle, rt);
+    }
+</script>
+
 <svg
     viewBox="0 0 32 32"
     version="1.1"
     id="logo"
+    on:click={update}
     sodipodi:docname="file_type_stata_icon_130148 (1).svg"
     inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
     xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -123,14 +135,13 @@
         opacity:1;
         fill: #00000031;
     }
+    #logo path{
+        cursor: pointer;
+    }
+
     @media (max-height: 576px) {
         #logo {
             transform: translate(-4rem, 2rem) rotate(90deg) scale(0.8);
-        }
-    }
-    @media (max-width: 576px) {
-        #logo {
-            transform: translate(-4rem, 2rem) rotate(90deg);
         }
     }
     @media (max-width: 341px) {
