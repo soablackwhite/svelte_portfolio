@@ -51,7 +51,7 @@
         transition: transform 0.33s;
         border-radius: 100px;
         background-color: var(--black);
-        z-index: 1;
+        z-index: 3;
         width: 250px;
         height: 250px;
         display: flex;
@@ -81,8 +81,8 @@
     .image-container video {
         display: block;
         margin: auto;
-        width:250px;
-        height:250px;
+        width: 250px;
+        height: 250px;
         transition: transform 0.13s, width 0.33s ease-in-out, height 0.33s ease-in-out;
     }
     .image-container video:hover {

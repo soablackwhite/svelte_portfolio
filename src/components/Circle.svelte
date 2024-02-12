@@ -1,4 +1,5 @@
 <script lang='ts'>
+    //VARIABLES
     import { rescale } from "../scripts/functions";
     import { currentCircle } from "../stores";
     export let idx: number;
@@ -7,10 +8,10 @@
     let alpha:number;
     let disappear:boolean = false;
     let cur: number;
-    $: test = generateAlpha(cur, idx, sz);
 	currentCircle.subscribe((value) => {
 		cur = value;
 	});
+    $: test = generateAlpha(cur, idx, sz); //this is so that it updates with any change to cur, idx, and sz variables
     function generateTransform() { // circle form 
         if (custom === "label"){
             return (`rotate(calc(var(--ang_start) + ${4*idx - 1}*var(--ang) + ${idx}*var(--ang)*var(--isindent))) translateX(var(--dist))`)
@@ -23,11 +24,8 @@
         }
     }
     function generateAlpha(cur:number, idx:number, sz:number){
-        if (idx === cur)
-        {
-            alpha = 1;
-        }
-        else{
+        if (idx === cur){ alpha = 1; }
+        else {
             if (custom === "label"){
                 let thresh = Math.abs(cur - idx*4 - 1);
                 disappear = (thresh < 4) ? false : true;
@@ -39,7 +37,6 @@
         }
         return(alpha);
     }
-    
 </script>
 
 <div class="tags {custom}" class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
@@ -73,13 +70,12 @@
     }
     .tags{
         position: fixed;
-        z-index: 2;
+        z-index: 1;
         opacity : 1;
     }
     .label {
         position: fixed;
         display: block;
-        z-index: 2;
         left: calc(50% - 6.5rem);
         top: calc(50% - 1.5rem + var(--indent_ui));
         height: 2rem;

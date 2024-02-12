@@ -3,7 +3,7 @@
     import { currentCircle } from "../stores";
     import { updateTag } from "../scripts/functions";
     let selected = 0;
-    let menu = ["home", "about", "skills", "contact me", "gallery"]
+    let menu = ["home", "about", "skills", "contact me"]
     let rt = document.querySelector(":root") as HTMLElement;
     let cur: number;
     currentCircle.subscribe((value) => {
@@ -40,6 +40,7 @@
         opacity : 1;
         transition: left 0.66s ease, top 0.66s ease;
         list-style-type: none;
+        z-index: 2;
     }
     .menu-item{
         all: unset;

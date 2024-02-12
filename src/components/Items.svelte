@@ -6,7 +6,7 @@
     import Typewriter from './Typewriter.svelte';
     export let index:number = 0;
     export let scrollThreshold: number;
-    let max:number = 4;
+    let max:number = 3;
     let accumulatedDelta:number = 0;
     let resetThreshold;
 
@@ -23,9 +23,24 @@
     currentCircle.subscribe((value) => {
         cur = value;
     });
+    let home_txt = [
+        "Welcome!",
+        "to navigate, use arrows ↑↓",
+        "to navigate, scroll!",
+        "..and adjust sensitivity at the bottom right corner!"
+    ]
+    let about_txt = [
+        "hi i'm omar!",
+        "i'm an NYU graduate.",
+        "i'm a developer.",
+        "i'm a designer.",
+        "i like to play with data.",
+        "i like to visualize code.",
+        "my hobbies are reading, cooking, and running!",
+    ]
 
     let tags: Tag[] = [
-		{ id: 0, content: [`Welcome!`, `use ↑↓ to navigate`, `though you can also scroll`]},
+		{ id: 0, content: [``]},
 		{ id: 1, content: [``]},
 		{ id: 2, content: [`html`, `css`, `bootstrap`, `javascript`, `c`, `c++`, `node.js`, `flask`, `python`, `sql`, `r`, `stata`]},
 		{ id: 3, content: [
@@ -34,7 +49,6 @@
             {src: `/media/icons/twitter.svg`, alt: `twitter icon`, link: `https://twitter.com/noiseOmie`},
             {src: `/media/icons/email.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}
         ]},
-        { id: 4, content: [`html`, `css`, `bootstrap`, `javascript`, `c`, `c++`, `node.js`, `flask`, `python`, `sql`, `r`, `stata`]}
 	];
     
     function changeContent(increment: number) {
@@ -110,8 +124,10 @@
         </div>
     {/if}
     <!-- LINK TAGS -->
-    {#if index === 1}
-        <Typewriter/>
+    {#if index === 0}
+        <Typewriter texts={home_txt}/>
+    {:else if index === 1}
+        <Typewriter texts={about_txt}/>
     {:else if index === 3}
         <div id="content-3" class="content">
             {#each tags[index].content as tag, i}
