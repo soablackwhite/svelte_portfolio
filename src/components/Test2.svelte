@@ -1,85 +1,91 @@
 <script lang="ts">
-    import { onMount, tick } from 'svelte';
-  
-    let currentText = ''; // Displayed text
-    let texts = [
-        "Hi I'm Omar!",
-        "I'm a developer!",
-        "I'm a designer!",
+  import { onMount, tick, afterUpdate } from "svelte";
+  let contentDiv;
+  let borderHeight = '0px';
+  let currentText = '';
+  let end = 0;
+  let start = 0;
+  let index = 0; // current txtarray index
+  let speed = 75; // typing/erasing speed, unit: ms
+  let delay = 500; //delay before next text, unit: ms
+  export let texts: string[] =[
+        "hi i'm omar!",
+        "i'm a developer",
+        "i'm a designer",
+        "i like to play with data",
         "i like to read",
         "i like to cook",
         "i like to run",
-        "i hate coding",
-        "but i do it for a living! T.T"
+        "i hate coding"
     ];
-    let index = 0; // Current index in the texts array
-    const speed = 35; // Typing/erasing speed, unit: ms
-    const delay = 450; 
-  
-    // Function to incrementally replace different characters
-    async function replaceCharacters(newText: string, oldText: string = '') {
-      let resultText = oldText.split('');
-      const maxLength = Math.max(newText.length, oldText.length);
-  
-      for (let i = 0; i < maxLength; i++) {
-        if (newText[i] !== oldText[i]) {
-          // Replace character if different
-          resultText[i] = newText[i] ?? '';
-          currentText = resultText.join('');
-          await tick(); // Ensure Svelte updates the DOM
-          await new Promise(r => setTimeout(r, speed));
+
+  function updateBorderHeight() {
+    borderHeight = `${contentDiv.offsetHeight}px`;
+  }
+
+  // Run updateBorderHeight after every DOM update
+  afterUpdate(updateBorderHeight);
+   // compare strings & return common starting substring
+   function getCommonStart(str1:string, str2:string) {
+        let i = 0;
+        while (i < str1.length && i < str2.length && str1[i] === str2[i]) {
+            i++;
         }
-        // Remove extra characters from the end if the new text is shorter
-        if (i >= newText.length) {
-          resultText.length = newText.length;
-          currentText = resultText.join('');
-          await tick(); // Ensure Svelte updates the DOM
-          await new Promise(r => setTimeout(r, speed));
-        }
-      }
+        return str1.substring(0, i);
     }
-  
+
+    // typewriter effect function with incremental erasure
+    async function typeWriter(newText:string, oldText:string = '') {
+        let commonStart = getCommonStart(newText, oldText);
+        currentText = oldText // start w/ old text
+        
+        // erase characters not in common
+        while (currentText.length > commonStart.length) {
+            currentText = currentText.substring(0, currentText.length - 1);
+            await tick(); // wait for next DOM update
+            await new Promise(r => setTimeout(r, speed));
+        }
+
+        // type new characters
+        for (let i = commonStart.length; i < newText.length; i++) {
+            currentText += newText[i];
+            await tick(); // wait for next DOM update
+            await new Promise(r => setTimeout(r, speed));
+        }
+    }
+
     onMount(() => {
-      (async function typeNext() {
-        await replaceCharacters(texts[index], currentText);
-        index = (index + 1) % texts.length; // Loop to the next text
-        setTimeout(typeNext, delay); // Delay before starting the next update
-      })();
+        (async function typeNext() {
+            await typeWriter(texts[index], texts[index - 1] || '');
+            await new Promise(r => setTimeout(r, delay)); // delay before next text
+            index = (index + 1) % texts.length; // loop back to 1st text
+            typeNext();
+        })();
     });
-  </script>
-
-
-<div class="typewriter">{currentText}</div>
+</script>
 
 <style>
-    .typewriter{
-        overflow-y: scroll;
-        position: absolute;
-        z-index: 10;
-        left: calc(50% - 20rem);
-        top: calc(50%);
-        height: auto;
-        width: 20rem;
-        font-size: x-large;
-        padding-left: 15px;
-        border-left: 0.1rem solid rgba(240, 240, 210, .9);
-        background-color: #00000000;
-        hyphens: auto;
-        -webkit-hyphens: auto;
-        -ms-hyphens: auto;
-        -moz-hyphens: auto;
-        transition: all 3s ease !important;
-    }
+  .container {
+    position: absolute;
+    /* display: inline-block; */
+    width: 6rem;  
+  }
 
-    .typewriter::-webkit-scrollbar {
-        width: 0.5em;
-        height: 0.5em;
-    }
-    .typewriter::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0);
-    }
-    .typewriter::-webkit-scrollbar-track {
-        background-color: rgba(0, 0, 0, 0);
-    }
-    
+  .border {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transition: height 1s ease-in-out;
+  }
+  .content {
+    padding-left: 20px; /* Ensure content doesn't overlap the border */
+  }
 </style>
+
+<div class="container">
+  <div bind:this={contentDiv} class="content">
+    <div class="typewriter">{currentText}</div>
+  </div>
+  <div class="border" style="height: {borderHeight};"></div>
+</div>

@@ -24,10 +24,10 @@
         cur = value;
     });
     let home_txt = [
-        "Welcome!",
+        "welcome :)",
         "to navigate, use arrows ↑↓",
-        "to navigate, scroll!",
-        "..and adjust sensitivity at the bottom right corner!"
+        "to navigate, scroll",
+        "...feel free to adjust scrolling sensitivity to your liking in the bottom right corner!"
     ]
     let about_txt = [
         "hi i'm omar!",

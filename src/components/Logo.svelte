@@ -83,7 +83,7 @@
             id="feGaussianBlur4107" />
         </filter>
     </defs>
-    <path
+    <path 
         id="circle146"
         style="stroke-width:0.5;stroke-opacity:0.0207254"
         d="m 11,16 a 4.9999995,4.9999995 0 0 1 -5,5 4.9999995,4.9999995 0 0 1 -5,-5 4.9999995,4.9999995 0 0 1 5,-5 4.9999995,4.9999995 0 0 1 5,5 z" />

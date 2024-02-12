@@ -1,21 +1,21 @@
 <script lang="ts">
-    import { onMount, tick } from "svelte";
-    export let texts: string[] =[
-        "hi i'm omar!",
-        "i'm a developer",
-        "i'm a designer",
-        "i like to play with data",
-        "i like to read",
-        "i like to cook",
-        "i like to run",
-        "i hate coding"
-    ];
+    import { onMount, afterUpdate } from "svelte";
+    export let texts: string[];
+    let justOpened = true;
     let currentText = '';
     let end = 0;
     let start = 0;
     let index = 0; // current txtarray index
     let speed = 35; // typing/erasing speed, unit: ms
     let delay = 500; //delay before next text, unit: ms
+    let contentDiv; //for adaptive height of border
+    let borderHeight = '0px';
+
+    //stretch border
+    function updateBorderHeight() {
+        borderHeight = `${contentDiv.offsetHeight}px`;
+    }
+    afterUpdate(updateBorderHeight);
 
     // compare strings & return common starting substring
     function getCommonStart(str1:string, str2:string) {
@@ -29,51 +29,58 @@
     // typewriter effect function with incremental erasure
     async function typeWriter(newText:string, oldText:string = '') {
         let commonStart = getCommonStart(newText, oldText);
-        currentText = oldText // start w/ old text
-        
-        // erase characters not in common
+        currentText = oldText; // start with old text
+        // erase chars not in common
         while (currentText.length > commonStart.length) {
             currentText = currentText.substring(0, currentText.length - 1);
-            await tick(); // wait for next DOM update
             await new Promise(r => setTimeout(r, speed));
         }
-
-        // type new characters
+        // type new chars
         for (let i = commonStart.length; i < newText.length; i++) {
             currentText += newText[i];
-            await tick(); // wait for next DOM update
             await new Promise(r => setTimeout(r, speed));
         }
     }
 
     onMount(() => {
-        (async function typeNext() {
-            await typeWriter(texts[index], texts[index - 1] || '');
+        async function typeNext() {
+            // if just clicked
+            if (!justOpened){
+                await typeWriter(texts[index], index === 0 ? texts[texts.length - 1] : texts[index - 1]);
+            }
+            else {
+                await typeWriter(texts[index], texts[index - 1] || '');
+            }
             await new Promise(r => setTimeout(r, delay)); // delay before next text
-            index = (index + 1) % texts.length; // loop back to 1st text
-            typeNext();
-        })();
+            index = (index + 1) % texts.length; // loop back to beginning
+            justOpened = false;
+            typeNext(); // recursive call to type the next text
+        }
+        typeNext();
     });
-
-    
 </script>
 
 
-<div class="typewriter">{currentText}</div>
+<div class="container">
+    <div bind:this={contentDiv}>
+        <div class="typewriter">{currentText}</div>
+    </div>
+    <div class="border" style="height: {borderHeight};"></div>
+</div>
 
 <style>
-    .typewriter{
-        overflow: hidden;
+    .container{
         position: absolute;
-        z-index: 10;
+        width: var(--txt_pad);
         left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
         top: calc(50%);
-        height: auto;
-        transition: max-height 0.5s ease-out;
-        width: var(--txt_pad);
         font-size: x-large;
-        padding-left: 15px;
-        border-left: 0.1rem solid rgba(240, 240, 210, 0.9);
+    }
+    .typewriter{
+        overflow: hidden;
+        z-index: 10;
+        height: auto;
+        transition: max-height 0.5s ease-out;   
         background-color: #00000000;
         hyphens: auto;
         -webkit-hyphens: auto;
@@ -81,7 +88,13 @@
         -moz-hyphens: auto;
         transition: all 0.3s ease !important;
     }
-
+    .border {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transition: height 0.3s ease-in-out;
+    }
     .typewriter::-webkit-scrollbar {
         width: 0.5em;
         height: 0.5em;
@@ -93,29 +106,28 @@
         background-color: rgba(0, 0, 0, 0);
     }
     @media (max-width: 950px) {
-        .typewriter {
+        .container {
             left: calc(25% - var(--txt_pad)/2);
             top: calc(50%);
         }
     }
     @media (max-width: 820px) {
-        .typewriter {
+        .container {
             left: calc(25% - var(--txt_pad)/2);
             top: calc(50%);
         }
     }
     /*____________________________________________MEDIUM MOBILE SCREEN__________________________________________*/
     @media (max-width: 576px) {
-        .typewriter {
-            left: calc(50% - var(--txt_pad)/2 + 3rem);
-            top: calc(70%);
+        .container {
+            left: calc(50% - var(--txt_pad)/2 + 1rem);
+            top: calc(65%);
             font-size: large;
-            border-left: 0.1rem solid rgba(240, 240, 210, 1);
         }
     }
     /*______________________________________________SMALL PHONE__________________________________________*/
     @media (max-width: 400px) {
-        .typewriter {
+        .container {
             left: calc(25% - var(--txt_pad)/2);
             top: calc(50%);
             font-size: large;
@@ -123,7 +135,7 @@
     }
     /*__________________________________________VERY SMALL PHONE__________________________________________*/
     @media (max-width: 341px) {
-        .typewriter {
+        .container {
             left: calc(50% - var(--txt_pad)/2);
             top: calc(50%);
         }
