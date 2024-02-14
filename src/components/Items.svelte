@@ -1,24 +1,22 @@
 <script lang='ts'>
-    import { onMount, onDestroy } from 'svelte';
-    import { updateTag, rescale } from "../scripts/functions";
+    import { onMount } from 'svelte';
+    import { updateTag } from "../scripts/functions";
     import { currentCircle } from "../stores";
     import Circle from "./Circle.svelte";
     import Typewriter from './Typewriter.svelte';
+    import { transitioned } from "../stores";
     export let index:number = 0;
     export let scrollThreshold: number;
     let max:number = 3;
     let accumulatedDelta:number = 0;
     let resetThreshold;
-
     let rt = document.querySelector(':root') as HTMLElement;
     let labels = ['FRONTEND', 'BACKEND', 'DATA'];
-    
     type ContentItem = string | { src: string; alt: string; link: string; };
     interface Tag {
         id: number;
         content: ContentItem[];
     }
-
     let cur: number;
     currentCircle.subscribe((value) => {
         cur = value;
@@ -38,7 +36,6 @@
         "i like to visualize code.",
         "my hobbies are reading, cooking, and running!",
     ]
-
     let tags: Tag[] = [
 		{ id: 0, content: [``]},
 		{ id: 1, content: [``]},
@@ -75,6 +72,7 @@
                     //go prv, reset start on last
                     if(index > 0) {
                         index --;
+                        transitioned.set(false);
                         currentCircle.set(tags[index].content.length - 1);
                     }
                     //if first, stick to first
@@ -128,58 +126,13 @@
         <Typewriter texts={home_txt}/>
     {:else if index === 1}
         <Typewriter texts={about_txt}/>
-    {:else if index === 3}
-        <div id="content-3" class="content">
-            {#each tags[index].content as tag, i}
-                <Circle idx={i} sz={tags[index].content.length - 1} custom="icon-circle">
-                    <a href={tag.link} tabindex={i} target="_blank" rel="noreferrer nofollow"><img alt={tag.alt} src={tag.src}></a>
-                </Circle>
-            {/each}
-        </div>
-    {:else}
-    <!-- TEXT TAGS -->
-        <div class="content">
-            {#each tags[index].content as tag, i}
-                <Circle idx={i} sz={tags[index].content.length - 1} custom="circle">
-                    {tag}
-                </Circle>
-            {/each}
-        </div>
     {/if}
+    <!-- TEXT TAGS (not in the if block to ensure entry/exit animation)-->
+    <div class="content">
+        {#each tags[2].content as tag, i}
+            <Circle idx={i} sz={tags[index].content.length - 1} custom="circle {(index === 2) ? "":"centered"}">
+                {tag}
+            </Circle>
+        {/each}
+    </div>
 </div>
-
-<style>
-    a {
-        all: unset;
-        cursor: pointer;
-        transition: font 0.17s !important;
-    }
-    #content-3 img:hover{
-        background-color: rgb(0,0,0);
-        border-radius: 50%;
-    }
-    #content-3 img:focus {
-        background-color: rgb(0,0,0);
-        border-radius: 50%;
-    }
-    #content-3 img{
-        filter: invert(1);
-        width: 4rem;
-        transition: width 0.17s ease-in;
-    }
-    @media (max-width: 576px) {
-        #content-3 img{
-            width: 3rem;
-        }
-    }
-    @media (max-width: 400) {
-        #content-3 img{
-            width: 4rem;
-        }
-    }
-    @media (max-width: 341) {
-        #content-3 img{
-            width: 3.5rem;
-        }
-    }
-</style>

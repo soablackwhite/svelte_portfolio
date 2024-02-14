@@ -14,11 +14,10 @@
         }
         setTimeout(() => {
             loaded = true;
-        }, 1750);
+        }, 1250);
     }
     onMount( () => { 
         showPage();
-        // window.addEventListener('resize', updateMedia);
     })
 </script>
 

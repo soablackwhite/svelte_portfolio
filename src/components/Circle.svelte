@@ -2,6 +2,7 @@
     //VARIABLES
     import { rescale } from "../scripts/functions";
     import { currentCircle } from "../stores";
+    import { onMount, tick} from 'svelte';
     export let idx: number;
     export let sz: number; //size of content
     export let custom: string;
@@ -12,7 +13,8 @@
 		cur = value;
 	});
     $: test = generateAlpha(cur, idx, sz); //this is so that it updates with any change to cur, idx, and sz variables
-    function generateTransform() { // circle form 
+    // circle form 
+    function generateTransform() { 
         if (custom === "label"){
             return (`rotate(calc(var(--ang_start) + ${4*idx - 1}*var(--ang) + ${idx}*var(--ang)*var(--isindent))) translateX(var(--dist))`)
         }
@@ -23,6 +25,7 @@
             return (`rotate(calc(var(--ang_start) + ${idx}*var(--ang) + ${Math.floor(idx/4)}*var(--ang)*var(--isindent))) translateX(var(--dist))`)
         }
     }
+    // decremental opacity
     function generateAlpha(cur:number, idx:number, sz:number){
         if (idx === cur){ alpha = 1; }
         else {
@@ -43,7 +46,14 @@
     <slot> </slot>
 </div>
 
+
 <style>
+    .centered{
+        top: 50% !important;
+        left: 50% !important;
+        transform: rotate(0deg) translateX(0rem) !important;
+        opacity: 0 !important;
+    }
     .icon-circle {
         top: calc(50% - 1.5rem + var(--indent_ui));
         left: calc(50% - 2rem);
@@ -64,7 +74,7 @@
         font-size: 1.2rem;
         color: var(--white);
         text-shadow: 1px 1px 1px #000000;
-        border-top: solid 1px var(--white);
+        border-top: solid 1.5px var(--white);
         padding-bottom: 1.5rem;
         transition: opacity 0.13s ease-in-out, transform 0.33s, border-top 0.5s, top 0.33s;
     }
@@ -81,9 +91,9 @@
         height: 2rem;
         width: 12rem;
         text-align: center;
-        font-size: 1.4rem;
-        color: var(--black);
-        text-shadow: 1px 1px 6px #ffffff;
+        font-size: x-large;
+        color: var(--white);
+        text-shadow: 2px 2px 6px #000000;
         padding-bottom: 1.5rem;
         transition: padding-left 0.3s ease-in-out, opacity 0.29s ease-in-out, transform 0.33s, border-top 0.5s, top 0.33s;
     }

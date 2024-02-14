@@ -34,12 +34,9 @@
     import Typewriter from '../components/Typewriter.svelte';
     import { currentCircle } from '../stores';
     import Loader from '../components/Loader.svelte';
+    import Gallery from '../components/Gallery.svelte';
     let index:number = 0;
     let scrollThreshold:number = 70;
-    onMount(() => {
-        // Initialize AOS
-        AOS.init();
-    });
 </script>
 <Manager>
         <!--------------------------------------LOADER----------------------------------------------------->
@@ -48,9 +45,11 @@
         <div slot="bs" id="blackscreen"> </div>
         <!----------------------------------CONTENT WRAPPER------------------------------------------------>
         <div slot="main" id="wrapper" style="z-index: 0;">
-            <Logo bind:index={index}/>
+            {#if (index != 3)}
+                <Logo bind:index={index}/>
+            {/if}
             <!----------------------------------CANVAS----------------------------------------------------->
-            <Sketch />
+            <!-- <Sketch /> -->
             <!------------------------------------UI------------------------------------------------------->
             <Thumbnail bind:index={index} />
             <!--------------------------------SLIDER------------------------------------------------------->
@@ -59,8 +58,8 @@
             <Menu bind:index={index} />
             <!------------------------------CONTENT WHEEL-------------------------------------------------->
             <Items bind:index={index} bind:scrollThreshold={scrollThreshold}/>
-            <!-------------------------------TYPEWRITERL--------------------------------------------------->
-            <div id="about">  </div>
+            <!------------------------------GALLERY GRID--------------------------------------------------->
+            <Gallery bind:index={index} />
         </div>  
 </Manager>
 

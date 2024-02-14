@@ -15,3 +15,4 @@ export const variables = writable({
   });
 
 export let currentCircle = writable(0);
+export let transitioned = writable(false);
