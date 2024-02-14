@@ -2,20 +2,47 @@
     export let index: number;
     import { fade, slide, scale, fly, blur} from "svelte/transition";
     import { quintOut } from 'svelte/easing';
-    import { tick } from "svelte";
+    import { onMount, tick } from "svelte";
     import { contents } from "../scripts/functions";
     import { transitioned } from "../stores";
-    let t: boolean;
-    let t2: boolean = false;
+    import Skeleton from './Skeleton.svelte';
+    let t: boolean; //transitioned variable
     $: page = 0;
+    $: mediaElements = document.querySelectorAll('.media_container');
     let delay = 60;
     let magic = 345;
     transitioned.subscribe((value) => {
         t = value;
     });
     let documentation: boolean = false;
+    let contentLoaded = false; // Assuming you fetch or determine content readiness somehow
+    // Simulating content loading
+    onMount(() => {
+        checkLoaded()
+    });
+    async function checkLoaded(){
+        await tick();
+        mediaElements = document.querySelectorAll('.media_container');
+        // Correcting for TypeScript: Specifying 'void' as the type argument for Promise
+        const mediaPromises: Promise<void>[] = Array.from(mediaElements).map((media: Element) => {
+            return new Promise<void>((resolve) => {
+                if (media.tagName === 'VIDEO') {
+                    media.addEventListener('loadeddata', () => resolve(), { once: true });
+                } 
+                else if ((media as HTMLImageElement).complete) {
+                    resolve();
+                } else {
+                    media.addEventListener('load', () => resolve(), { once: true });
+                }
+            });
+        })
+        Promise.all(mediaPromises).then(() => {
+            contentLoaded = true;
+            console.log('All media elements are loaded');
+        });
+        console.log(mediaElements);
+    }
 </script>
-
 
 {#if (index===3 && t)}
     <div class="frame" transition:scale>
@@ -25,8 +52,7 @@
                 <button class="gallery-item" 
                 in:scale|global = {{ duration: 125, delay: magic + i * delay, easing:quintOut}}  
                 out:slide|global = {{ duration: 300, easing:quintOut}}
-                on:click={()=>{documentation = true; page = i}}
-                on:transitionend={()=> t2 = true}>
+                on:click={()=>{documentation = true; page = i; checkLoaded()}}>
                     {#if content.video}
                         <video transition autoplay="autoplay" muted loop preload="metadata" onmouseover="this.pause()" onmouseout="this.play()" class="thumbnail" style="float:right; right:0rem; width:100%; height:100%">
                             <source src={content.src} type="video/mp4">
@@ -37,16 +63,52 @@
                     {/if}
                     <div class="gallery-item-overlay">
                         <h3> {content.title} </h3>
-                        <p> {content.description} </p>
+                        <p> {content.category}: {content.tech} </p>
                     </div>
                 </button>
             {/each}
         <!-- show current selection of gallery in docu mode -->
-        {:else if t2}
-            <button id="back" in:fly|global = {{duration: magic, delay: magic, easing:quintOut}} out:slide|global = {{duration:magic, easing:quintOut, axis:'y'}} on:click={()=>documentation=false}> ← back</button>
+        {:else}
+            <button id="back" in:fly|global = {{duration: magic, delay: magic, easing:quintOut}} out:slide|global = {{duration:magic, easing:quintOut, axis:'y'}} on:click={()=>{documentation=false; contentLoaded=false}}> ← back</button>
             <div class="page" in:fly|global = {{duration: magic, delay: magic, easing:quintOut}} out:slide|global = {{duration:magic, easing:quintOut, axis:'x'}}>
-                <h1> {contents[page].title} </h1>
-                <h3> {contents[page].description} </h3>
+                {#if contentLoaded}
+                    <h1> {contents[page].title} </h1>
+                    <h3><mark>{contents[page].category}:</mark> {contents[page].tech} </h3>
+                    <p> {contents[page].content}</p>
+                    {#if contents[page].media.type === "pic"}
+                        <img class="media_container" src={contents[page].media.src} alt={contents[page].alt}>
+                    {:else if contents[page].media.type === "pics"}
+                        {#each contents[page].media.src as pic, i}
+                            <img class="media_container" src={pic} alt="image {i}">
+                        {/each}
+                    {:else if contents[page].media.type === "vids"}
+                        {#each contents[page].media.src as vid, i}
+                            <video transition autoplay="autoplay" muted loop preload="metadata" onmouseout="this.play()" class="media_container" style="float:right; right:0rem; width:100%; height:100%">
+                                <source src={vid} type="video/mp4">
+                                    Your browser does not support the video tag.
+                            </video>
+                        {/each}
+                    {:else if contents[page].media.type === "yt"}
+                        <iframe
+                            class="media_container"
+                            src={contents[page].media.src}
+                            title="YT video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    {:else if contents[page].media.type === "video"}
+                        <video transition autoplay="autoplay" muted loop preload="metadata" onmouseout="this.play()" class="media_container" style="float:right; right:0rem; width:100%; height:100%">
+                            <source src={contents[page].media.src} type="video/mp4">
+                                Your browser does not support the video tag.
+                        </video>
+                    {/if}
+                {:else}
+                    <Skeleton type="skeleton-title" />
+                    <Skeleton type="skeleton-subtitle" />
+                    <Skeleton type="skeleton-text" />
+                    <Skeleton type="skeleton-media" />
+                {/if}
             </div>
         {/if}
     </div>
@@ -54,7 +116,7 @@
 
 <style>
     #back{
-        position:relative;
+        position:fixed !important;
         display: block;
         all: unset;
         cursor: pointer;
@@ -62,23 +124,31 @@
         transition: all 0.19s ease-in-out;
         margin: 1rem;
         text-shadow: 1px 1px 5px black;
-
     }
     #back:hover{
         scale: 1.13;
         text-shadow: 2px 2px 10px black;
+    }
+    .media_container{
+        height: 400px !important;
+        width: 560px !important;
+    }
+    .page {
+        display: block;
+        position:relative;
+        margin: 5rem;
+    }
+    .page p{
+        font-size: large;
+    }
+    .page h3{
+        font-size: xx-large;
     }
     .page h1{
         display: block;
         position:relative;
         margin-top: 0rem !important;
         text-align: center ;
-    }
-    .page {
-        display: block;
-        position:relative;
-        margin: 5rem;
-        display: block;
     }
     .frame{
         position: absolute;
@@ -157,7 +227,7 @@
         margin-right: 1rem;
     }
     .gallery-item-overlay p {
-        font-size: medium;
+        font-size: large;
         margin-left: 0.3rem;
         margin-right: 0.3rem;
     }
@@ -180,6 +250,4 @@
             height: 100vh !important;
         }
     }
-
-
 </style>

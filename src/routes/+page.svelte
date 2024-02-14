@@ -23,7 +23,6 @@
 </header>
 
 <script lang="ts">
-    export const prerender = true;
     import P5 from 'p5-svelte';
     import { onMount } from 'svelte';
     import Manager from '../components/Manager.svelte';
@@ -47,11 +46,9 @@
         <div slot="bs" id="blackscreen"> </div>
         <!----------------------------------CONTENT WRAPPER------------------------------------------------>
         <div slot="main" id="wrapper" style="z-index: 0;">
-            {#if (index != 3)}
-                <Logo bind:index={index}/>
-            {/if}
+            <Logo bind:index={index}/>
             <!----------------------------------CANVAS----------------------------------------------------->
-            <!-- <Sketch /> -->
+            <Sketch />
             <!------------------------------------UI------------------------------------------------------->
             <Thumbnail bind:index={index} />
             <!--------------------------------SLIDER------------------------------------------------------->
