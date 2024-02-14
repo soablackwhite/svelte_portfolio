@@ -1,0 +1,117 @@
+:root {
+  --black: #121212;
+  --white: #faf5f5;
+  --yellow: rgb(249, 223, 77);
+  --dist: -16rem;
+  --ang: -18deg;
+  --ang_start: 0deg;
+  --ang_img: -33deg;
+  --dist_img: -13rem;
+  --indent_ui: 0rem;
+  --isindent: 0deg;
+  --vidy : 1rem;
+  --vidx : 0rem;
+  --txt_pad: 20rem;
+}
+html{
+  overflow: hidden;
+}
+mark{
+  background-color: var(--white);
+}
+mark::selection{
+  background-color: var(--black);
+  color: var(--white);
+}
+body{
+  font-family: "Proxima Nova", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--black);
+  scroll-behavior: smooth;
+  overflow: hidden;
+  z-index: 3;
+  color: white;
+}
+h1 {
+  font-family: 'Proxima Nova', sans-serif;
+  font-size: 3rem;
+  text-align: justify;
+  font-weight: 900;
+  margin: 0;
+  margin-bottom: 2rem;
+  padding: 0;
+}
+h2{
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 3rem;
+}
+section {
+  padding: 50px;
+  font-family: 'Proxima Nova', sans-serif;
+  color: var(--white);
+}
+p{
+  /* background-color: #ffffff07; */
+  color: #ffffffb8;
+  line-height: 2rem;
+}
+::selection {
+  color: rgb(18, 18, 18);
+  background: var(--white);
+}
+/*___________________________________________FADE ANIMATION__________________________________________*/
+#blackscreen{
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height:100%;
+  background-color: #121212;
+  z-index: 5;
+}
+@keyframes fadeMeOut{
+  0%{opacity:1; visibility:visible;}
+  100%{opacity:0; visibility:hidden;}
+}
+
+/*__________________________________________MEDIA QUERY & FONTS__________________________________________*/
+@font-face {
+  font-family: 'Proxima Nova';
+  src: url('../fonts/proximanova.otf') format('truetype');
+}
+/*____________________________________________MEDIUM MOBILE SCREEN__________________________________________*/
+@media (max-width: 576px) {
+  :root{
+    --dist: -9.5rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -8rem;
+    --txt_pad: 15rem;
+  }
+}
+
+/*______________________________________________SMALL PHONE__________________________________________*/
+@media (max-width: 400px) {
+  :root{
+    --dist: -12rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -10rem;
+    --txt_pad: 9rem;
+  }
+}
+/*__________________________________________VERY SMALL PHONE__________________________________________*/
+@media (max-width: 341px) {
+  :root{
+    --dist: -10rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -8rem;
+    --txt_pad: 19rem;
+  }
+}

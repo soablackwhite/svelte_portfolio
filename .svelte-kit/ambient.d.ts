@@ -52,6 +52,7 @@ declare module '$env/static/private' {
 	export const __CF_USER_TEXT_ENCODING: string;
 	export const npm_execpath: string;
 	export const PATH: string;
+	export const _: string;
 	export const npm_package_json: string;
 	export const __CFBundleIdentifier: string;
 	export const USER_ZDOTDIR: string;
@@ -63,7 +64,6 @@ declare module '$env/static/private' {
 	export const npm_lifecycle_event: string;
 	export const LANG: string;
 	export const npm_package_name: string;
-	export const NODE_PATH: string;
 	export const XPC_FLAGS: string;
 	export const VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 	export const npm_config_npm_version: string;
@@ -146,6 +146,7 @@ declare module '$env/dynamic/private' {
 		__CF_USER_TEXT_ENCODING: string;
 		npm_execpath: string;
 		PATH: string;
+		_: string;
 		npm_package_json: string;
 		__CFBundleIdentifier: string;
 		USER_ZDOTDIR: string;
@@ -157,7 +158,6 @@ declare module '$env/dynamic/private' {
 		npm_lifecycle_event: string;
 		LANG: string;
 		npm_package_name: string;
-		NODE_PATH: string;
 		XPC_FLAGS: string;
 		VSCODE_GIT_ASKPASS_EXTRA_ARGS: string;
 		npm_config_npm_version: string;

@@ -21,7 +21,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
 </header>
+
 <script lang="ts">
+    export const prerender = true;
     import P5 from 'p5-svelte';
     import { onMount } from 'svelte';
     import Manager from '../components/Manager.svelte';
