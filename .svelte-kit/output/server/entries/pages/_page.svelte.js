@@ -1,14 +1,104 @@
-import { c as create_ssr_component, b as add_attribute, a as subscribe, d as each, e as escape, v as validate_component } from "../../chunks/ssr.js";
+import { c as create_ssr_component, b as createEventDispatcher, d as add_attribute, v as validate_component, a as subscribe, f as each, e as escape } from "../../chunks/ssr.js";
 import { w as writable } from "../../chunks/index.js";
-const css$8 = {
+const P5 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let { target = void 0 } = $$props;
+  let { sketch = void 0 } = $$props;
+  let { parentDivStyle = "display: block;" } = $$props;
+  let { debug = false } = $$props;
+  createEventDispatcher();
+  if ($$props.target === void 0 && $$bindings.target && target !== void 0)
+    $$bindings.target(target);
+  if ($$props.sketch === void 0 && $$bindings.sketch && sketch !== void 0)
+    $$bindings.sketch(sketch);
+  if ($$props.parentDivStyle === void 0 && $$bindings.parentDivStyle && parentDivStyle !== void 0)
+    $$bindings.parentDivStyle(parentDivStyle);
+  if ($$props.debug === void 0 && $$bindings.debug && debug !== void 0)
+    $$bindings.debug(debug);
+  return `<div${add_attribute("style", parentDivStyle, 0)} class="m-0"></div>`;
+});
+const css$9 = {
   code: ":root{--black:#121212;--white:#faf5f5;--yellow:rgb(249, 223, 77);--dist:-16rem;--ang:-18deg;--ang_start:0deg;--ang_img:-33deg;--dist_img:-13rem;--indent_ui:0rem;--isindent:0deg;--vidy:1rem;--vidx:0rem}",
   map: null
 };
 const Manager = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let loaded;
   loaded = false;
-  $$result.css.add(css$8);
+  $$result.css.add(css$9);
   return `${loaded ? ` <transition${add_attribute("in", true, 0)}${add_attribute("out", false, 0)}>${slots.main ? slots.main({}) : ` `}</transition>` : ` <transition${add_attribute("in", true, 0)}${add_attribute("out", false, 0)}>${slots.loader ? slots.loader({}) : ` `} ${slots.bs ? slots.bs({}) : ` `}</transition>`}`;
+});
+const css$8 = {
+  code: "#p5.svelte-18i73jk{width:100vw;height:100vh;position:fixed !important;left:0%;top:0%;z-index:0}",
+  map: null
+};
+let mode = false;
+let frq = 199;
+const size = 50;
+const inc = 0.05;
+const density = 10;
+const Sketch = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let innerWidth;
+  let innerHeight;
+  let xoff, yoff;
+  const sketch = (p5) => {
+    p5.setup = () => {
+      p5.createCanvas(innerWidth, innerHeight);
+      p5.pixelDensity(p5.displayDensity());
+      p5.background(p5.color("#121212"));
+      p5.rectMode(p5.CENTER);
+      xoff = p5.random(1);
+      yoff = p5.random(1);
+    };
+    function draw_tissue(auto) {
+      p5.noFill();
+      p5.strokeWeight(1);
+      xoff += (inc - 0.02) * auto;
+      for (let i = 0; i < density; i++) {
+        p5.push();
+        let _x = p5.noise(xoff) * p5.width;
+        let _y = p5.noise(yoff) * p5.height;
+        if (!auto) {
+          _x = p5.mouseX;
+          _y = p5.mouseY;
+        }
+        let _r = p5.random(7 - 4 * (p5.frameCount % frq == 0));
+        let _hyp = p5.sqrt(p5.pow(p5.width / 2, 2) + p5.pow(p5.height / 2, 2));
+        let _d = p5.map(p5.dist(_x, _y, p5.width / 2, p5.height / 2), 1, _hyp, 0, 1);
+        let _s;
+        if (i == 0 && p5.frameCount % frq == 0) {
+          _s = size + p5.random(75, 250);
+          p5.stroke(255 - mode * 237, mode * 10 + p5.random(25));
+        } else {
+          _s = size + p5.random(-20, 20);
+          p5.stroke(255 - mode * 237, (5 + 15 * mode) * _d);
+        }
+        if (_r < 1)
+          p5.rect(_x, _y, _s, _s);
+        else if (_r < 2)
+          p5.circle(_x, _y, _s);
+        else {
+          let _angle = p5.random(0, 2 * p5.PI);
+          let _angle2 = p5.random(0, 2 * p5.PI);
+          let _angle3 = p5.random(0, 2 * p5.PI);
+          p5.triangle(_x + _s * p5.cos(_angle), _y + _s * p5.sin(_angle), _x + _s * p5.cos(_angle2), _y + _s * p5.sin(_angle2), _x + _s * p5.cos(_angle3), _y + _s * p5.sin(_angle3));
+        }
+        p5.pop();
+      }
+      yoff += inc * auto;
+    }
+    p5.draw = () => {
+      if (p5.pmouseX != p5.mouseX || p5.pmouseY != p5.mouseY) {
+        draw_tissue(false);
+      }
+      draw_tissue(true);
+    };
+    p5.windowResized = () => {
+      p5.resizeCanvas(innerWidth, innerHeight);
+    };
+  };
+  $$result.css.add(css$8);
+  innerWidth = 0;
+  innerHeight = 0;
+  return `<div id="p5" style="width:100vw; height:100vh" class="svelte-18i73jk"></div>   ${validate_component(P5, "P5").$$render($$result, { sketch }, {}, {})}`;
 });
 function get_css_var(v) {
   return getComputedStyle(document.documentElement).getPropertyValue(v);
@@ -43,84 +133,156 @@ let contents = [
     "video": false,
     "src": "/media/thumbnails/comic.png",
     "alt": "Comic thumbnail",
-    "description": "Web Project: HTML, CSS, JS"
+    "category": "Web Project",
+    "tech": "HTML, CSS, JS",
+    "content": "This is a web project where I implemented a website to navigate a comic based on a short fiction piece by my friend Noora. The comic was drawn by the artist Derouich. Basic vanilla JS with HTML and CSS, hosted and deployed on a free platform.",
+    "media": {
+      "type": "pic",
+      "src": "/media/thumbnails/comic_doc.png"
+    }
   },
   {
     "title": "ML Rock Paper Scissors",
     "video": false,
     "src": "/media/thumbnails/rps.png",
     "alt": "ML Rock Paper Scissors video",
-    "description": "Web Project: ml5.js, p5.js, Teachable Machine"
+    "category": "Web Project",
+    "tech": "ml5.js, p5.js, Teachable Machine",
+    "content": "This is a small project I started to have a little fun with Google’s Teachable Machine. ML Rock Paper Scissors is a game that uses image recognition input from the camera in a turn-by-turn rps-like battle against the computer. I’m using the ml5 module of p5.js here, which allows lightweight machine learning for creative purposes. I trained a model with the Teachable Machine Google app by uploading a couple of thousand images of hand signs under different angles and positions with differen...",
+    "media": {
+      "type": "pics",
+      "src": ""
+    }
   },
   {
     "title": "OFx Tunnel Maker",
     "video": false,
     "src": "/media/thumbnails/tunnel.png",
     "alt": "OFx Tunnel Maker image",
-    "description": "Generative Art: C++, openFrameworks"
+    "category": "Generative Art",
+    "tech": "C++, openFrameworks",
+    "content": "A desktop application I built on openFrameworks for creating tunnel visuals. Two circle equations combined to make a parametrised 3D Torus bound to a GUI that allows the user to capture the specific view and stylization of the tunnel. Inspired by that one Code Lyoko intro.",
+    "media": {
+      "type": "video",
+      "src": ""
+    }
   },
   {
-    "title": "Unity Gallery",
+    "title": "Algo Gallery",
     "video": true,
-    "src": "/media/animated/art.mp4",
-    "alt": "Unity Gallery video",
-    "description": "Generative Art: Unity, C#, GLSL"
+    "src": "/media/animated/art_docu.mp4",
+    "alt": "Algorithm Gallery video",
+    "category": "Generative Art",
+    "tech": "Processing, Unity, openFrameworks",
+    "content": "Visualizations of algorithms using openFrameworks (C++), Unity (C#), and Processing (Java). Experimented with 3D matrix transformations for computer graphics, visualized Conway’s Game Of Life, and implemented motion blur effect and ripple effect through pixel displacement and filtering.",
+    "media": {
+      "type": "vids",
+      "src": ["/media/animated/art_docu.mp4", "/media/animated/art_docu2.mp4", "/media/animated/art_docu3.mp4"]
+    }
   },
   {
     "title": "OS GIFs",
     "video": false,
     "src": "/media/animated/osgif.webp",
     "alt": "OS GIFs image",
-    "description": "Generative Art: p5.js, OpenFrameworks, Processing"
+    "category": "Generative Art",
+    "tech": "p5.js, OpenFrameworks, Processing",
+    "content": "OS GIFs (open-source GIFs) was my Interactive Media Capstone Project. The gallery is a collection of artistic experiments exploring the processes behind algorithmic art in an attempt to redefine what “open-source” means. This redefinition is essential in a time where the term is thrown around loosely when often we can see code but not understand or access it optimally. After all, is code truly open source if I can read it without understanding? Some of the art breaks down its own algorithm into smaller chunks and processes that it visualizes, while others take the “open-source” literally by showing the code as it is typed.",
+    "media": {
+      "type": "pic",
+      "src": ""
+    }
   },
   {
     "title": "NYU Algorave",
     "video": true,
     "src": "/media/animated/cube.mp4",
     "alt": "NYU Algorave video",
-    "description": "Live Coding: Hydra, Javascript, GLSL, TidalCycles"
+    "category": "Live Coding",
+    "tech": "Hydra, Javascript, GLSL, TidalCycles",
+    "content": "Music and visuals generated via live-compiled code and synchronized dynamically. The first piece was a solo project where I used Hydra, a live-coding environment for video and shader synthesis, and TidalCycles, a live-coding environment for algorithmic patterns, which, when combined with sound samples, can generate music algorithmically. In the second project, I collaborated with two other coders to incorporate more complex shader control (via GLSL) and dynamic visuals (via p5.js) into the project. The final piece was performed live in front of an audience at NYU, which you can see in the video down below.",
+    "media": {
+      "type": "yt",
+      "src": "https://www.youtube.com/embed/l7t5j4vmwBE?si=PoQnUvbIRjhm9iuA"
+    }
   },
   {
     "title": "postcARds",
     "video": true,
     "src": "/media/animated/postcARds.mp4",
     "alt": "postcARds video",
-    "description": "AR App: Unity, C#"
+    "category": "AR App",
+    "tech": "Unity, C#",
+    "content": "An augmented reality app to interact with the commercial postcards at Museum für Kommunikation in Berlin that I built and deployed with my team at NYU as part of a commission by the museum. The app utilized Unity’s ARCore and ARKit environments for raycasting to edit the postcards using the phone’s camera, and save the customized versions of the postcards into the visitor’s portable devices.",
+    "media": {
+      "type": "pics",
+      "src": ""
+    }
   },
   {
     "title": "Reccie",
     "video": true,
-    "src": "/media/animated/genuary.mp4",
+    "src": "/media/animated/art_docu2.mp4",
     "alt": "Reccie video",
-    "description": "Recommendation system: p5.js  "
+    "category": "Recommendation system",
+    "tech": "p5.js",
+    "content": "Reccie is a sketch I made for friends, prototyping a recommender system by taking the approach of collaborative filtering to recommend TV shows based on our movie tastes. It builds a taste profile based on the user’s answers and recommends TV shows based on people with similar tastes. The algorithm is pretty straightforward: you calculate similarities between users, assign a weight to each user based on similarity, then every series gets a weighted sum of the users’ ratings, and the user gets recommended the series with the highest weighted sum.",
+    "media": {
+      "type": "pics",
+      "src": ""
+    }
   },
   {
     "title": "Mistborn",
     "video": false,
     "src": "/media/animated/mistborn.gif",
     "alt": "Mistborn image",
-    "description": "Game: Processing, Java"
+    "category": "Game",
+    "tech": "Processing, Java",
+    "content": "A small experimental game named after the book that inspired it. In the game, you can pull or push against referential objects to apply a force that redirects your movements. I built the physics logic using vector math, with basic collision detection for the characters and friction effects for the ashfall graphic. Thought the game would be more fun with a controller but I didn’t have one, so I built one using an Arduino board and created a multiplayer mode.",
+    "media": {
+      "type": "pics",
+      "src": ""
+    }
   },
   {
     "title": "Gemstone",
     "video": false,
     "src": "/media/thumbnails/gemstone.png",
     "alt": "Gemstone video",
-    "description": "Game: GMS2, GLSL"
+    "category": "Game",
+    "tech": "GMS2, GLSL",
+    "content": "A 2D platformer game where you can manipulate the direction of gravity and shoot enemies above you! Used Game Maker Studio 2 coupled with some GLSL for animations. I’m no Da Vinci but I tried making some pixel art myself. The openGL code for the ripple effect is based on another Java algorithm that I worked on in some of my algo art.",
+    "media": {
+      "type": "yt",
+      "src": ""
+    }
   },
   {
     "title": "Mad Socks",
     "video": false,
     "src": "/media/thumbnails/madsocks.png",
     "alt": "Mad Socks image",
-    "description": "Game: Unity, C#"
+    "category": "Game",
+    "tech": "Unity, C#",
+    "content": "In January 2021, I and six other friends decided to team up and participate in the annual Global Game Jam. For this game-making hackathon, I was put in charge of Game Design, Story, and Programming. Mad Socks came to be as the result of 3 sleepless nights of dogged labour. And while it was far from a finished product, our omnium-gatherum of botched ideas, pervasive glitches and unresolved memory leaks was nominated for the Best Game Design and Best Art Direction award. The game loop is the coupling of a linear narrative part and a local multiplayer 2D top-down game where the goal is finding your sister-sock in a procedurally generated maze before the time limit, after which the washing machine runs and both of the socks’ (players) controls are randomized.",
+    "media": {
+      "type": "pics",
+      "src": ""
+    }
   },
   {
     "title": "Switch",
     "video": false,
     "src": "/media/thumbnails/switch.png",
     "alt": "Switch image",
-    "description": "Game: GMS2"
+    "category": "Game",
+    "tech": "GMS2",
+    "content": "A small game made using GMS2. The challenge of this project was that I was only allowed to use two colours, no shading and no lighting. So I opted for black and white and made colour colour-switching part of the gameplay to improve cohesion. The game is a 2D platformer multiplayer game where two players wrestle to get the ball into their opponent’s net. Every time a player touches the ball the background switches to their colour, making it impossible for the player controlling the ball to distinguish their character as it blends into the environment, save for a small pair of eyes that contrasts with the background.",
+    "media": {
+      "type": "yt",
+      "src": ""
+    }
   }
 ];
 let currentCircle = writable(0);
@@ -193,7 +355,7 @@ const Slider = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.scrollThreshold === void 0 && $$bindings.scrollThreshold && scrollThreshold !== void 0)
     $$bindings.scrollThreshold(scrollThreshold);
   $$result.css.add(css$5);
-  return `<div class="slidecontainer svelte-1rbw8cf"><input type="range" min="10" max="200" class="slider svelte-1rbw8cf" id="sensitivity"${add_attribute("value", scrollThreshold, 0)}> <label for="html" class="svelte-1rbw8cf" data-svelte-h="svelte-s9qfyl">scroll sensitivity</label><br> </div>`;
+  return `<div class="slidecontainer svelte-1rbw8cf"><input type="range" min="10" max="200" class="slider svelte-1rbw8cf" id="sensitivity"${add_attribute("value", scrollThreshold, 0)}> <label for="#sensitivity" class="svelte-1rbw8cf" data-svelte-h="svelte-18m74kg">scroll sensitivity</label><br> </div>`;
 });
 const css$4 = {
   code: ".bigger.svelte-1s2zdpl.svelte-1s2zdpl{border-radius:0% !important;z-index:0 !important;position:relative}.bigger2.svelte-1s2zdpl.svelte-1s2zdpl{border-radius:0px !important;width:50vw !important;height:100vh !important;z-index:0 !important;position:relative;opacity:0 !important}#zoomer.svelte-1s2zdpl.svelte-1s2zdpl{transition:transform 0.33s;z-index:3;border-radius:100px;background-color:var(--black);width:250px;height:250px;display:flex;justify-content:center;transition:transform 0.13s, width 0.33s ease-in-out, height 0.33s ease-in-out, border-radius 0.72s ease-in-out, opacity 0.4s ease-in-out;;}#zoomer.svelte-1s2zdpl.svelte-1s2zdpl:hover{transform:scale(3.25)}#profile.svelte-1s2zdpl.svelte-1s2zdpl{width:100px;height:auto;transition:transform 0.13s, width 0.33s ease-in-out, height 0.33s ease-in-out;fill:var(--white)}.image-container.svelte-1s2zdpl.svelte-1s2zdpl{top:calc(50% + var(--indent_ui));left:50%;transform:translate(-50%, -50%);border:solid 2px var(--white);border-radius:50%;overflow:hidden;box-shadow:0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(204, 255, 20, 0);transition:top 0.42s ease-in-out, border-radius 0.72s ease-in-out;z-index:3}.image-container.svelte-1s2zdpl video.svelte-1s2zdpl{position:absolute;margin:auto;width:250px;height:250px;transition:transform 0.13s, width 0.33s ease-in-out, height 0.33s ease-in-out}.image-container.svelte-1s2zdpl video.svelte-1s2zdpl:hover{transform:translate(var(--vidx), var(--vidy))}.ui.svelte-1s2zdpl.svelte-1s2zdpl{position:fixed !important}@media(max-width: 576px){.image-container.svelte-1s2zdpl video.svelte-1s2zdpl{width:150px;height:150px}#zoomer.svelte-1s2zdpl.svelte-1s2zdpl{width:150px;height:150px}#profile.svelte-1s2zdpl.svelte-1s2zdpl{width:65px;height:auto}.bigger2.svelte-1s2zdpl.svelte-1s2zdpl{width:100vw !important;height:100vh !important}}@media(max-width: 400px){.image-container.svelte-1s2zdpl video.svelte-1s2zdpl{width:175px;height:175px}.image-container.svelte-1s2zdpl.svelte-1s2zdpl{top:calc(50% + var(--indent_ui));left:70%}#zoomer.svelte-1s2zdpl.svelte-1s2zdpl{width:175px;height:175px}#profile.svelte-1s2zdpl.svelte-1s2zdpl{width:65px;height:auto}.bigger2.svelte-1s2zdpl.svelte-1s2zdpl{width:50vw !important;height:100vh !important}}@media(max-width: 341px){.image-container.svelte-1s2zdpl video.svelte-1s2zdpl{width:150px;height:150px}.image-container.svelte-1s2zdpl.svelte-1s2zdpl{top:calc(50% + var(--indent_ui));left:70%}#zoomer.svelte-1s2zdpl.svelte-1s2zdpl{width:150px;height:150px}#profile.svelte-1s2zdpl.svelte-1s2zdpl{width:65px;height:auto}}",
@@ -463,7 +625,7 @@ const Loader = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<div id="loading" class="svelte-10mlhld" data-svelte-h="svelte-1mlx9lr"><div class="loader svelte-10mlhld"></div> </div>`;
 });
 const css = {
-  code: "#back.svelte-1flos14.svelte-1flos14{position:relative;display:block;all:unset;cursor:pointer;font-size:x-large;transition:all 0.19s ease-in-out;margin:1rem;text-shadow:1px 1px 5px black}#back.svelte-1flos14.svelte-1flos14:hover{scale:1.13;text-shadow:2px 2px 10px black}.page.svelte-1flos14 h1.svelte-1flos14{display:block;position:relative;margin-top:0rem !important;text-align:center }.page.svelte-1flos14.svelte-1flos14{display:block;position:relative;margin:5rem;display:block}.frame.svelte-1flos14.svelte-1flos14{position:absolute;z-index:4;top:0%;left:25%;width:50vw !important;height:100vh !important;overflow:scroll;background-color:var(--black)}.frame.svelte-1flos14.svelte-1flos14::-webkit-scrollbar{width:0.5em;height:0.5em}.frame.svelte-1flos14.svelte-1flos14::-webkit-scrollbar-thumb{background-color:var(--white)}.frame.svelte-1flos14.svelte-1flos14::-webkit-scrollbar-track{background-color:rgba(0, 0, 0, 0)}.gallery-item.svelte-1flos14.svelte-1flos14{all:unset;cursor:pointer;display:inline-block;position:relative;width:200px;height:200px;margin:1.1rem;overflow:hidden}.gallery-item.svelte-1flos14.svelte-1flos14:focus{outline:solid rgba(255, 255, 255, 0.1) 20px}.gallery-item.svelte-1flos14 img.svelte-1flos14{width:100%;height:100%;object-fit:fill;transition:transform 0.3s}.gallery-item.svelte-1flos14:hover img.svelte-1flos14{transform:scale(1.15);box-sizing:content-box;transform-origin:50% 50%;filter:none}.gallery-item-overlay.svelte-1flos14.svelte-1flos14{position:absolute;top:0;left:0;width:100%;height:100%;opacity:1;background-color:rgba(0, 0, 0, 0.7);display:flex;flex-direction:column;justify-content:center;align-items:center;transition:opacity 0.3s ease-in-out}.gallery-item.svelte-1flos14:hover .gallery-item-overlay.svelte-1flos14{opacity:1;border:0.3rem solid var(--white);background-color:rgba(0, 0, 0, 0.2);transition:background-color 0.3s ease-in-out;transition:border 0.15s ease-in-out}.gallery-item-overlay.svelte-1flos14 h3.svelte-1flos14,.gallery-item-overlay.svelte-1flos14 p.svelte-1flos14{color:var(--white);text-align:center}.gallery-item-overlay.svelte-1flos14 h3.svelte-1flos14{font-size:x-large;margin-left:1rem;margin-right:1rem}.gallery-item-overlay.svelte-1flos14 p.svelte-1flos14{font-size:medium;margin-left:0.3rem;margin-right:0.3rem}.thumbnail.svelte-1flos14.svelte-1flos14{max-width:45rem;width:100%;height:auto;position:absolute;bottom:0rem}@media(max-width: 576px){.frame.svelte-1flos14.svelte-1flos14{width:100vw !important;height:100vh !important}}@media(max-width: 400){.frame.svelte-1flos14.svelte-1flos14{width:50vw !important;height:100vh !important}}",
+  code: "#back.svelte-1cymbox.svelte-1cymbox{position:fixed !important;display:block;all:unset;cursor:pointer;font-size:x-large;transition:all 0.19s ease-in-out;margin:1rem;text-shadow:1px 1px 5px black}#back.svelte-1cymbox.svelte-1cymbox:hover{scale:1.13;text-shadow:2px 2px 10px black}.media_container.svelte-1cymbox.svelte-1cymbox{height:400px !important;width:560px !important}.page.svelte-1cymbox.svelte-1cymbox{display:block;position:relative;margin:5rem}.page.svelte-1cymbox p.svelte-1cymbox{font-size:large}.page.svelte-1cymbox h3.svelte-1cymbox{font-size:xx-large}.page.svelte-1cymbox h1.svelte-1cymbox{display:block;position:relative;margin-top:0rem !important;text-align:center }.frame.svelte-1cymbox.svelte-1cymbox{position:absolute;z-index:4;top:0%;left:25%;width:50vw !important;height:100vh !important;overflow:scroll;background-color:var(--black)}.frame.svelte-1cymbox.svelte-1cymbox::-webkit-scrollbar{width:0.5em;height:0.5em}.frame.svelte-1cymbox.svelte-1cymbox::-webkit-scrollbar-thumb{background-color:var(--white)}.frame.svelte-1cymbox.svelte-1cymbox::-webkit-scrollbar-track{background-color:rgba(0, 0, 0, 0)}.gallery-item.svelte-1cymbox.svelte-1cymbox{all:unset;cursor:pointer;display:inline-block;position:relative;width:200px;height:200px;margin:1.1rem;overflow:hidden}.gallery-item.svelte-1cymbox.svelte-1cymbox:focus{outline:solid rgba(255, 255, 255, 0.1) 20px}.gallery-item.svelte-1cymbox img.svelte-1cymbox{width:100%;height:100%;object-fit:fill;transition:transform 0.3s}.gallery-item.svelte-1cymbox:hover img.svelte-1cymbox{transform:scale(1.15);box-sizing:content-box;transform-origin:50% 50%;filter:none}.gallery-item-overlay.svelte-1cymbox.svelte-1cymbox{position:absolute;top:0;left:0;width:100%;height:100%;opacity:1;background-color:rgba(0, 0, 0, 0.7);display:flex;flex-direction:column;justify-content:center;align-items:center;transition:opacity 0.3s ease-in-out}.gallery-item.svelte-1cymbox:hover .gallery-item-overlay.svelte-1cymbox{opacity:1;border:0.3rem solid var(--white);background-color:rgba(0, 0, 0, 0.2);transition:background-color 0.3s ease-in-out;transition:border 0.15s ease-in-out}.gallery-item-overlay.svelte-1cymbox h3.svelte-1cymbox,.gallery-item-overlay.svelte-1cymbox p.svelte-1cymbox{color:var(--white);text-align:center}.gallery-item-overlay.svelte-1cymbox h3.svelte-1cymbox{font-size:x-large;margin-left:1rem;margin-right:1rem}.gallery-item-overlay.svelte-1cymbox p.svelte-1cymbox{font-size:large;margin-left:0.3rem;margin-right:0.3rem}.thumbnail.svelte-1cymbox.svelte-1cymbox{max-width:45rem;width:100%;height:auto;position:absolute;bottom:0rem}@media(max-width: 576px){.frame.svelte-1cymbox.svelte-1cymbox{width:100vw !important;height:100vh !important}}@media(max-width: 400){.frame.svelte-1cymbox.svelte-1cymbox{width:50vw !important;height:100vh !important}}",
   map: null
 };
 const Gallery = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -475,18 +637,16 @@ const Gallery = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.index === void 0 && $$bindings.index && index !== void 0)
     $$bindings.index(index);
   $$result.css.add(css);
-  return `${index === 3 && t ? `<div class="frame svelte-1flos14"> ${`${each(contents, (content, i) => {
-    return `<button class="gallery-item svelte-1flos14">${content.video ? `<video transition autoplay="autoplay" muted loop preload="metadata" onmouseover="this.pause()" onmouseout="this.play()" class="thumbnail svelte-1flos14" style="float:right; right:0rem; width:100%; height:100%" data-svelte-h="svelte-bvajhi"><source${add_attribute("src", content.src, 0)} type="video/mp4">
+  document.querySelectorAll(".media_container");
+  return `${index === 3 && t ? `<div class="frame svelte-1cymbox"> ${`${each(contents, (content, i) => {
+    return `<button class="gallery-item svelte-1cymbox">${content.video ? `<video transition autoplay="autoplay" muted loop preload="metadata" onmouseover="this.pause()" onmouseout="this.play()" class="thumbnail svelte-1cymbox" style="float:right; right:0rem; width:100%; height:100%" data-svelte-h="svelte-bvajhi"><source${add_attribute("src", content.src, 0)} type="video/mp4">
                             Your browser does not support the video tag.
-                        </video>` : `<img${add_attribute("src", content.src, 0)}${add_attribute("alt", content.alt, 0)} class="svelte-1flos14">`} <div class="gallery-item-overlay svelte-1flos14"><h3 class="svelte-1flos14">${escape(content.title)}</h3> <p class="svelte-1flos14">${escape(content.description)} </p></div> </button>`;
+                        </video>` : `<img${add_attribute("src", content.src, 0)}${add_attribute("alt", content.alt, 0)} class="svelte-1cymbox">`} <div class="gallery-item-overlay svelte-1cymbox"><h3 class="svelte-1cymbox">${escape(content.title)}</h3> <p class="svelte-1cymbox">${escape(content.category)}: ${escape(content.tech)} </p></div> </button>`;
   })} `}</div>` : ``}`;
 });
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  const prerender = true;
   let index = 0;
   let scrollThreshold = 70;
-  if ($$props.prerender === void 0 && $$bindings.prerender && prerender !== void 0)
-    $$bindings.prerender(prerender);
   let $$settled;
   let $$rendered;
   let previous_head = $$result.head;
@@ -495,7 +655,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$result.head = previous_head;
     $$rendered = `<header data-svelte-h="svelte-12zoxwx"><title>Omar Ouldali</title> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <link rel="icon" type="image/x-icon" href="/media/icons/favicon.ico">  <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet"> <link href="/fonts/proximanova.otf" rel="stylesheet">  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> <link rel="stylesheet" href="/style/style.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"><\/script> <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"><\/script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"><\/script> <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"><\/script> <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"><\/script> <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"><\/script> <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"><\/script></header>  ${validate_component(Manager, "Manager").$$render($$result, {}, {}, {
       main: () => {
-        return `<div slot="main" id="wrapper" style="z-index: 0;">${index != 3 ? `${validate_component(Logo, "Logo").$$render(
+        return `<div slot="main" id="wrapper" style="z-index: 0;">${validate_component(Logo, "Logo").$$render(
           $$result,
           { index },
           {
@@ -505,7 +665,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
             }
           },
           {}
-        )}` : ``}    ${validate_component(Thumbnail, "Thumbnail").$$render(
+        )}  ${validate_component(Sketch, "Sketch").$$render($$result, {}, {}, {})}  ${validate_component(Thumbnail, "Thumbnail").$$render(
           $$result,
           { index },
           {

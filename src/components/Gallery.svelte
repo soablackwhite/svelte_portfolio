@@ -2,13 +2,12 @@
     export let index: number;
     import { fade, slide, scale, fly, blur} from "svelte/transition";
     import { quintOut } from 'svelte/easing';
-    import { onMount, tick } from "svelte";
+    import { afterUpdate, onMount, tick } from "svelte";
     import { contents } from "../scripts/functions";
     import { transitioned } from "../stores";
     import Skeleton from './Skeleton.svelte';
     let t: boolean; //transitioned variable
-    $: page = 0;
-    $: mediaElements = document.querySelectorAll('.media_container');
+    let page = 0;
     let delay = 60;
     let magic = 345;
     transitioned.subscribe((value) => {
@@ -20,9 +19,12 @@
     onMount(() => {
         checkLoaded()
     });
+    afterUpdate(() =>{
+        checkLoaded();
+    })
     async function checkLoaded(){
         await tick();
-        mediaElements = document.querySelectorAll('.media_container');
+        const mediaElements = document.querySelectorAll('.media_container');
         // Correcting for TypeScript: Specifying 'void' as the type argument for Promise
         const mediaPromises: Promise<void>[] = Array.from(mediaElements).map((media: Element) => {
             return new Promise<void>((resolve) => {
@@ -74,7 +76,7 @@
                 {#if contentLoaded}
                     <h1> {contents[page].title} </h1>
                     <h3><mark>{contents[page].category}:</mark> {contents[page].tech} </h3>
-                    <p> {contents[page].content}</p>
+                    <p> {contents[page].description}</p>
                     {#if contents[page].media.type === "pic"}
                         <img class="media_container" src={contents[page].media.src} alt={contents[page].alt}>
                     {:else if contents[page].media.type === "pics"}
@@ -82,7 +84,7 @@
                             <img class="media_container" src={pic} alt="image {i}">
                         {/each}
                     {:else if contents[page].media.type === "vids"}
-                        {#each contents[page].media.src as vid, i}
+                        {#each contents[page].media.src as vid, i}``
                             <video transition autoplay="autoplay" muted loop preload="metadata" onmouseout="this.play()" class="media_container" style="float:right; right:0rem; width:100%; height:100%">
                                 <source src={vid} type="video/mp4">
                                     Your browser does not support the video tag.
