@@ -2,7 +2,6 @@
     //VARIABLES
     import { rescale } from "../scripts/functions";
     import { currentCircle } from "../stores";
-    import { onMount, tick} from 'svelte';
     export let idx: number;
     export let sz: number; //size of content
     export let custom: string;

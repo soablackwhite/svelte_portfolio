@@ -2,21 +2,14 @@
     import { onMount } from 'svelte'
     import { fade } from 'svelte/transition';
     let loaded:boolean;
-
     loaded = false;
     //_______________________________________LOADER_____________________________________________
     function showPage() {
-        // select all img and set max size
-        let svgs = document.querySelectorAll("svg");
-        // onload, run the function
-        for (let i = 0; i < svgs.length; i++){
-            svgs[i].style["max-height"]="0rem";
-        }
         setTimeout(() => {
             loaded = true;
-        }, 1250);
+        }, 550);
     }
-    onMount( () => { 
+    onMount( async () => { 
         showPage();
     })
 </script>

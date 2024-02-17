@@ -52,7 +52,7 @@
 
 <style>
     .indented{
-        left: calc(25% + 50vw) !important;
+        left: calc(15% + 70vw) !important;
         top: calc(50% - 4rem + var(--indent_ui)) !important;
         border: solid color(var(--white));
     }

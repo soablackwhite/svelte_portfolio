@@ -8,7 +8,7 @@
     let index = 0; // current txtarray index
     let speed = 35; // typing/erasing speed, unit: ms
     let delay = 500; //delay before next text, unit: ms
-    let contentDiv; //for adaptive height of border
+    let contentDiv: HTMLElement; //for adaptive height of border
     let borderHeight = '0px';
 
     //stretch border

@@ -1,6 +1,5 @@
-<script>
-  import { onMount } from 'svelte';
-  import P5 from 'p5-svelte';
+<script lang="ts">
+  import P5, { type p5 } from 'p5-svelte';
 
   //RESPONSIVE
   let frameW = 0;
@@ -9,16 +8,16 @@
 	$: innerWidth = 0
 	$: outerHeight = 0
 	$: innerHeight = 0
-
+  
   //Parameters
-  let xoff, yoff;
+  let xoff:number, yoff:number;
   let mode = false;
   let frq = 199; //frequency of big shapes, every frq frames
   const size = 50;
   const inc = 0.05;
   const density = 10;
 
-  const sketch = (p5) => {
+  const sketch = (p5: p5) => {
     p5.setup = () => {
       p5.createCanvas(innerWidth, innerHeight);
       p5.pixelDensity(p5.displayDensity());
