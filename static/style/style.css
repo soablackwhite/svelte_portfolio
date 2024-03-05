@@ -11,7 +11,7 @@
   --isindent: 0deg;
   --vidy : 1rem;
   --vidx : 0rem;
-  --txt_pad: 20rem;
+  --txt_pad: 25vw;
 }
 html{
   overflow: hidden;

@@ -75,6 +75,7 @@
         left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
         top: calc(50%);
         font-size: x-large;
+        transition: left 0.23s ease-in-out;
     }
     .typewriter{
         overflow: hidden;
@@ -107,13 +108,13 @@
     }
     @media (max-width: 950px) {
         .container {
-            left: calc(25% - var(--txt_pad)/2);
+            left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
             top: calc(50%);
         }
     }
     @media (max-width: 820px) {
         .container {
-            left: calc(25% - var(--txt_pad)/2);
+            left: calc(50% - var(--txt_pad)/2 - 250px + 2rem);
             top: calc(50%);
         }
     }

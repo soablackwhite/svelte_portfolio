@@ -3,16 +3,11 @@
     import { fade, slide, scale, fly} from "svelte/transition";
     import { quintOut } from 'svelte/easing';
     import { contents } from "../scripts/functions";
-    import { transitioned } from "../stores";
     import Skeleton from './Skeleton.svelte';
     import Thumbnail from "./Thumbnail.svelte";
     import Documentation from "./Documentation.svelte";
-    let t: boolean; //transitioned variable
     let page = 0;
-    let magic = 345;
-    transitioned.subscribe((value) => {
-        t = value;
-    });
+    let magic = 345; //this magic number should depend on profile's end of animations, most of which end after 300ms.
     let documentation: boolean = false;
     let contentLoaded: boolean = false;
     function checkLoad(event: CustomEvent){
@@ -24,7 +19,7 @@
     }
 </script>
 
-{#if (index===3 && t)}
+{#if (index===3)}
     <div class="frame" transition:scale>
         <!-- for each element in gallery, create thumbnail. only show if not in docu mode-->
         {#if (!documentation)}
@@ -73,15 +68,16 @@
         margin: 5rem;
     }
     .frame{
-        position: absolute;
+        position: fixed;
         align-content: center;
         z-index: 4;
         top: 0%;
         left: 15%;
         width: 70vw !important;
         height: 100vh !important;
+        border-radius: 0%;
         overflow:scroll;
-        background-color: var(--black);
+        background-color: rgba(var(--black), 0.5);
     }
     .frame::-webkit-scrollbar {
         width: 0.5em;

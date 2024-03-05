@@ -49,9 +49,9 @@ on:click={docuToggle}>
         height: 200px;
         margin: 1.1rem; 
         overflow: hidden;
-    }
-    .gallery-item:focus {
-        outline: solid rgba(255, 255, 255, 0.1) 20px;
+        outline: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 0px;
+        transition: outline 0.15s;
     }
     .gallery-item img {
         width: 100%;
@@ -81,10 +81,12 @@ on:click={docuToggle}>
     }
     .gallery-item:hover .gallery-item-overlay {
         opacity: 1;
-        border: 0.3rem solid var(--white);
         background-color: rgba(0, 0, 0, 0.2);
         transition: background-color 0.3s ease-in-out;
         transition: border 0.15s ease-in-out;
+    }
+    .gallery-item:hover{
+        outline: 4px solid rgba(255, 255, 255, 0.9);
     }
     .gallery-item-overlay h3,
     .gallery-item-overlay p {

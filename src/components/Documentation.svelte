@@ -69,5 +69,4 @@
         margin-top: 0rem !important;
         text-align: center ;
     }
-
 </style>

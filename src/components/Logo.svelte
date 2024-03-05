@@ -2,6 +2,7 @@
     export let index:number;
     import { updateTag } from "../scripts/functions";
     import { currentCircle } from "../stores";
+    $: left = (index === 3) ? true : false;
     function update(){
         index = 0;
         let rt = document.querySelector(":root") as HTMLElement;
@@ -12,6 +13,7 @@
 <svg
     viewBox="0 0 32 32"
     version="1.1"
+    class:left
     id="logo"
     on:click={update}
     sodipodi:docname="file_type_stata_icon_130148 (1).svg"
@@ -124,6 +126,12 @@
 </svg>
 
 <style>
+    :root {
+        --translate-x: 0rem;
+        --translate-y: 0rem;
+        --scale: 1;
+        --rotate: 0deg;
+    }
     #logo{
         z-index:1;
         width : 10rem;
@@ -131,27 +139,72 @@
         position: fixed;
         top: -2rem;
         left: 1rem;
-        transition: transform 0.2s ease-in-out;
+        transition: all 0.3s ease;
         opacity:1;
         fill: #00000031;
+        animation: enter 0.2s forwards;
+    }
+    .left {
+        animation: exit 0.2s forwards !important;
     }
     #logo path{
         cursor: pointer;
     }
-
     @media (max-height: 576px) {
-        #logo {
-            transform: translate(-4rem, 2rem) rotate(90deg) scale(0.8);
-        }
-    }
-    @media (max-width: 341px) {
-        #logo {
-            transform: translate(-4.5rem, 1rem) rotate(90deg) scale(0.8);
+        :root {
+            --translate-x: -4rem;
+            --translate-y: 2rem;
+            --scale: 0.8;
+            --rotate: 90deg;
         }
     }
     @media (max-width: 400px) {
-        #logo {
-            transform: translate(-4rem, 2rem) rotate(90deg);
+        :root {
+            --translate-x: -4.5rem;
+            --translate-y: 1rem;
+            --scale: 0.8;
+            --rotate: 90deg;
         }
     }
+    @media (max-width: 341px) {
+        :root {
+            --translate-x: -4.5rem;
+            --translate-y: 1rem;
+            --scale: 0.8;
+            --rotate: 90deg;
+        }
+    }
+    @keyframes enter {
+        0% {
+            transform: translate(-12rem, var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
+            filter: blur(5px);
+        }
+        25% {
+            filter: blur(3px);
+        }
+        75% {
+            filter: blur(2px);
+        }
+        100% {
+            transform: translate(var(--translate-x), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
+            filter: blur(0px);
+        }
+    }
+    @keyframes exit {
+        0% {
+            transform: translate(var(--translate-x), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
+            filter: blur(0px);
+        }
+        25% {
+            filter: blur(1px);
+        }
+        75% {
+            filter: blur(3px);
+        }
+        100% {
+            transform: translate(-12rem, var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
+            filter: blur(0px);
+        }
+    }
+    
 </style>

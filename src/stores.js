@@ -14,5 +14,5 @@ export const variables = writable({
     vidx : "0rem",
   });
 
-export let currentCircle = writable(0);
-export let transitioned = writable(false);
+export const currentCircle = writable(0);
+export const transitioned = writable(false);

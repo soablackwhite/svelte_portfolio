@@ -48,7 +48,7 @@ export const contents = [
     "alt": "Comic thumbnail",
     "category": "Web Project",
     "tech": "HTML, CSS, JS",
-    "description": "This is a web project where I implemented a website to navigate a comic based on a short fiction piece by my friend Noora. The comic was drawn by the artist Derouich. Basic vanilla JS with HTML and CSS, hosted and deployed on a free platform.",
+    "description": "'The End' was a web project where I implemented a platform to navigate a comic based on a short fiction piece by my friend Noora, in collaboration with artist Simran who drew the art. The language would change dynamically based on the user's choice. It was an academic project to familiarize myself with jQuery and custom CSS animations.",
     "media": [
       {
         "src": "/media/thumbnails/comic_doc.png",
@@ -65,7 +65,7 @@ export const contents = [
     "alt": "ML Rock Paper Scissors video",
     "category": "Web Project",
     "tech": "ml5.js, p5.js, Teachable Machine",
-    "description": "This is a small project I started to have a little fun with Google's Teachable Machine. ML Rock Paper Scissors is a game that uses image recognition input from the camera in a turn-by-turn rps-like battle against the computer.I'm using the ml5 module of p5.js here, which allows lightweight machine learning for creative purposes. I trained a model with the 'Teachable Machine' Google app by uploading a couple of thousand images of hand signs under different angles and positions with different light exposition to make a comprehensive dataset. Then I trained the model by tweaking some of the preset parameters. It's a useful prototype to piece up something bigger.",
+    "description": "This is a small project I started to have a little fun with Google's Teachable Machine. ML Rock Paper Scissors is a game that uses image recognition input from the camera in a turn-by-turn rps-like battle against the computer.I'm using the ml5 module of p5.js here, which allows lightweight machine learning for creative purposes. I started with creating a large dataset by uploading thousands of photos I took of hand signs under different angles and positions with different light exposition. Then I trained the machine learning model based on Google's 'Teachable Machine' by tweaking some of the preset parameters until I was satisfied with its success rate. The model ended up being a very useful prototype, and I'm likely going to use it in the future to piece up something bigger.",
     "media": [
       {
         "src": "",
