@@ -1,10 +1,10 @@
 <script lang="ts">
     import { fade, slide, scale, fly, blur} from "svelte/transition";
-    import { quintOut } from 'svelte/easing';
+    import { elasticOut, elasticIn, quintIn, quintOut } from 'svelte/easing';
     export let data_export;
     export let id: number;
     let delay = 60;
-    let magic = 345;
+    let magic = 200;
     let loaded = false;
     const { title, tech, category, alt, thumbnail }  = data_export;
     import {  createEventDispatcher} from "svelte";
@@ -18,7 +18,7 @@
 </script>
 
 <button class="gallery-item" 
-in:scale|global = {{ duration: 125, delay: magic + id * delay, easing:quintOut}}  
+in:scale|global = {{ duration: 400, delay: magic + id * delay, easing:quintIn}}  
 out:slide|global = {{ duration: 300, easing: quintOut}}
 on:click={docuToggle}>
     {#if thumbnail.type =="video"}
@@ -32,7 +32,6 @@ on:click={docuToggle}>
     {:else}
         <img src={thumbnail.src} alt={alt}>
     {/if}
-                
     <div class="gallery-item-overlay">
         <h3> {title} </h3>
         <p> {category}: {tech} </p>
@@ -45,9 +44,9 @@ on:click={docuToggle}>
         cursor: pointer;
         display: inline-block;
         position: relative;
-        width: 200px;
-        height: 200px;
-        margin: 1.1rem; 
+        width: 250px;
+        height: 250px;
+        margin: 1rem; 
         overflow: hidden;
         outline: 2px solid rgba(255, 255, 255, 0.6);
         border-radius: 0px;
@@ -86,7 +85,7 @@ on:click={docuToggle}>
         transition: border 0.15s ease-in-out;
     }
     .gallery-item:hover{
-        outline: 4px solid rgba(255, 255, 255, 0.9);
+        outline: 3px solid rgba(255, 255, 255, 1);
     }
     .gallery-item-overlay h3,
     .gallery-item-overlay p {

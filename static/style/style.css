@@ -12,6 +12,8 @@
   --vidy : 1rem;
   --vidx : 0rem;
   --txt_pad: 25vw;
+  --media_width: 560px;
+  --media_height: 400px;
 }
 html{
   overflow: hidden;
@@ -90,6 +92,8 @@ p{
     --ang_img: -32deg;
     --dist_img: -8rem;
     --txt_pad: 15rem;
+    --media_height: 200px !important;
+    --media_width: 280px !important;
   }
 }
 
@@ -102,6 +106,8 @@ p{
     --ang_img: -32deg;
     --dist_img: -10rem;
     --txt_pad: 9rem;
+    --media_height: 200px !important;
+    --media_width: 280px !important;
   }
 }
 /*__________________________________________VERY SMALL PHONE__________________________________________*/
@@ -113,5 +119,7 @@ p{
     --ang_img: -32deg;
     --dist_img: -8rem;
     --txt_pad: 19rem;
+    --media_height: 200px !important;
+    --media_width: 280px !important;
   }
 }

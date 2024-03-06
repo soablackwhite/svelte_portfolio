@@ -9,7 +9,7 @@
     export let scrollThreshold: number;
     let max:number = 3;
     let accumulatedDelta:number = 0;
-    let resetThreshold;
+    let resetThreshold: number;
     let rt = document.querySelector(':root') as HTMLElement;
     let labels = ['FRONTEND', 'BACKEND', 'DATA'];
     type ContentItem = string | { src: string; alt: string; link: string; };

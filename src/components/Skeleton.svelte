@@ -20,7 +20,7 @@
     background: linear-gradient(90deg, #dbdada, var(--white), #dbdada);
     background-size: 200%;
     animation: loading 0.89s infinite reverse;
-    border-radius: 2px;
+    border-radius: 8px;
   }
   @keyframes loading {
       0% {
@@ -30,24 +30,36 @@
           background-position: 100% 0%;
       }
   }
+  @keyframes pulse {
+      0% {
+          opacity: 0.85;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+          opacity: 0.85;
+      }
+  }
   .skeleton {
     background-color: #f0f0f0;
     display: block;
     position:relative;
     margin: 0rem 0rem 1rem 0rem;
     color: rgba(0,0,0,0);
+    animation: pulse 2.3s infinite reverse;
   }
 
   .skeleton-text {
       font-size: large;
       text-align: left ;
-      border-radius: 4px;
+      border-radius: 8px;
       height: 300px;
   }
   .skeleton-subtitle {
       font-size: x-large;
       text-align: left ;
-      border-radius: 4px;
+      border-radius: 8px;
   }
   .skeleton-title {
       display: block;
@@ -55,13 +67,12 @@
       position:relative;
       text-align: center ;
       width: 60%;
-      border-radius: 4px;
+      border-radius: 8px;
       margin:  auto !important;
   }
   .skeleton-media { 
-    height: 400px; 
-    width: 560px; 
+    height: var(--media_height); 
+    width: var(--media_width);
     border-radius: 8px; 
   }
-
 </style>

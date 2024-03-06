@@ -27,7 +27,6 @@
         }
         index = n;
         const elem = document.querySelector(".menu") as HTMLElement;
-        elem.classList.add("animate");
         currentCircle.set(0);
         updateTag(index, cur, rt);
         const active = document.activeElement as HTMLElement;
