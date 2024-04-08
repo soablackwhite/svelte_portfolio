@@ -2,8 +2,6 @@
   import P5, { type p5 } from 'p5-svelte';
 
   //RESPONSIVE
-  let frameW = 0;
-  let frameH = 0;
   $: outerWidth = 0
 	$: innerWidth = 0
 	$: outerHeight = 0
@@ -11,7 +9,8 @@
   
   //Parameters
   let xoff:number, yoff:number;
-  let mode = false;
+  let mode: any;
+  mode = false;
   let frq = 199; //frequency of big shapes, every frq frames
   const size = 50;
   const inc = 0.05;
@@ -27,7 +26,8 @@
       yoff = p5.random(1);
     };
 
-    function draw_tissue(auto) {
+    function draw_tissue(auto: any) {
+      // p5.background(0,0,0, 2);
       p5.noFill();
       p5.strokeWeight(1);
       xoff += (inc - .02) * auto;
@@ -41,12 +41,14 @@
             _x = p5.mouseX;
             _y = p5.mouseY;
         }
-        let _r = p5.random(7-4*(p5.frameCount%frq==0)); //if big shape time, make it fair chances to get any shape 
+        let isBig:any;
+        isBig = (p5.frameCount%frq === 0);
+        let _r = p5.random(7-4*isBig); //if big shape time, make it fair chances to get any shape 
         let _hyp = p5.sqrt(p5.pow(p5.width/2, 2) + p5.pow(p5.height/2, 2));
         let _d = p5.map(p5.dist(_x, _y, p5.width/2, p5.height/2), 1, _hyp, 0, 1);
         //only first shape gets bold on drums
         let _s;
-        if(i == 0 && p5.frameCount%frq==0)
+        if(i === 0 && p5.frameCount%frq==0)
         {
           _s = size + p5.random(75,250);
           p5.stroke(255 - mode*237, mode*10 + p5.random(25));

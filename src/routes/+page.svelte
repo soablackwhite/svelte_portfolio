@@ -27,30 +27,57 @@
     import Profile from '../components/Profile.svelte';
     import Items from '../components/Items.svelte';
     import Loader from '../components/Loader.svelte';
-    import Gallery from '../components/Gallery.svelte';
+    import CarouselCube from '../components/CarouselCube.svelte';
+    import CarouselStack from '../components/CarouselStack.svelte';
+    import GUI from '../components/GUI.svelte';
+    import { transitioned } from '../stores';
+    import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline } from "../stores";
+    let t: boolean;
+    $:console.log($gui_motion);
+    const unsubscribe = transitioned.subscribe(($transitioned) => {
+        t = $transitioned;
+    });
     let index:number = 0;
     let scrollThreshold:number = 70;
 </script>
-
+ <!----------------------------------CANVAS----------------------------------------------------->
+ <Sketch />
 <Manager>
-        <!--------------------------------------LOADER----------------------------------------------------->
-        <Loader slot="loader" />
-        <!-----------------------------------BLACK SCREEN-------------------------------------------------->
-        <div slot="bs" id="blackscreen"> </div>
-        <!----------------------------------CONTENT WRAPPER------------------------------------------------>
-        <div slot="main" id="wrapper" style="z-index: 0;">
-            <Logo bind:index={index}/>
-            <!----------------------------------CANVAS----------------------------------------------------->
-            <Sketch />
-            <!------------------------------------UI------------------------------------------------------->
-            <Profile bind:index={index}/>
-            <!--------------------------------SLIDER------------------------------------------------------->
-            <Slider bind:scrollThreshold={scrollThreshold}/>
-            <!-----------------------------------MENU------------------------------------------------------>
-            <Menu bind:index={index} />
-            <!------------------------------CONTENT WHEEL-------------------------------------------------->
+    <!--------------------------------------LOADER----------------------------------------------------->
+    <Loader slot="loader" />
+    <!-----------------------------------BLACK SCREEN-------------------------------------------------->
+    <div slot="bs" id="blackscreen"> </div>
+    <!----------------------------------CONTENT WRAPPER------------------------------------------------>
+    <div slot="main" id="wrapper" style="z-index: 0;">
+        <Logo bind:index={index}/>
+        <Menu bind:index={index} bind:type={$gui_menu} bind:outline={$gui_outline}/>
+        <!------------------------------------UI------------------------------------------------------->
+        <Profile bind:index={index}/>
+        <!--------------------------------SLIDER------------------------------------------------------->
+        <Slider bind:scrollThreshold={scrollThreshold}/>
+        <!-----------------------------------MENU------------------------------------------------------>
+        <!------------------------------CONTENT WHEEL-------------------------------------------------->
+        {#if index != 3}
             <Items bind:index={index} bind:scrollThreshold={scrollThreshold}/>
-            <!------------------------------GALLERY GRID--------------------------------------------------->
-            <Gallery bind:index={index} />
-        </div>  
+        <!------------------------------GALLERY GRID--------------------------------------------------->
+        {:else if t && $gui_carousel === "stack"}
+            <CarouselStack bind:motion={$gui_motion}/>
+        {:else if t}
+            <CarouselCube bind:direction={$gui_angle} bind:motion={$gui_motion} bind:cardtype={$gui_carousel}/>
+        {/if}
+    </div> 
 </Manager>
+<!-- <GUI /> -->
+
+<style>
+    #wrapper{
+        /* display: flex; */
+        position: absolute !important;
+        top: 0%;
+        left: calc(0% + var(--indent_ui));
+        width: calc(100vw - var(--indent_ui)) !important;
+        height: 100%;
+        transition: all 0.33s ease-in-out;
+        z-index: 5;
+    }
+</style>

@@ -16,10 +16,10 @@
     }
     .loader {
         position: fixed;
-        left: calc(50% - 7.5rem);
-        top: calc(50% - 7.5rem);
-        width: 15rem;
-        height: 15rem;
+        left: calc(50% - 5rem);
+        top: calc(50% - 5rem);
+        width: 10rem;
+        height: 10rem;
         border-radius: 50%;
         border: 1px solid transparent;
         border-top-color: #ffffffd5;

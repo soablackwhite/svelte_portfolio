@@ -5,18 +5,28 @@
     loaded = false;
     //_______________________________________LOADER_____________________________________________
     function showPage() {
-        setTimeout(() => {
-            loaded = true;
-        }, 550);
+        loaded = true; // Assuming showPage is an async function
     }
-    onMount( async () => { 
-        showPage();
-    })
+    // onMount( () => { 
+    //     window.onload = function () {showPage();};
+    // })
+    onMount(() => {
+        // if page loaded
+        if (document.readyState === 'complete') {
+            showPage();
+        } else {
+            // if still loading
+            window.addEventListener('load', showPage);
+
+            // clean up
+            return () => window.removeEventListener('load', showPage);
+        }
+    });
 </script>
 
 {#if loaded}
     <!------ MAIN CONTENT ------>
-    <transition in={true} out={false} transition:fade>
+    <transition in={true} out={false} transition:fade={{delay:250}}>
         <slot name="main"> </slot>
     </transition>
 {:else}

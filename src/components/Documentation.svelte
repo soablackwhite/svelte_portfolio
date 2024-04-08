@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, createEventDispatcher, afterUpdate } from "svelte";
-    import { fade, slide, scale, fly} from "svelte/transition";
+    import { fade} from "svelte/transition";
     import Skeleton from "./Skeleton.svelte";
     export let data_export;
     // export let contentLoaded: boolean;
@@ -38,7 +38,7 @@
                 <img on:load={()=> loadHandler(i)} class="media_container" src={m.src} alt={alt} >
             {:else if m.type === "video"}
             <!-- there was a transition property in this video tag maybe i should put it back -->
-                <video on:canplaythrough={()=> loadHandler(i)} class="media_container" autoplay="autoplay" muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
+                <video on:canplaythrough={()=> loadHandler(i)} class="media_container" autoplay muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
                     <source src={m.src} type="video/mp4">
                         Your browser does not support the video tag.
                 </video>

@@ -1,19 +1,14 @@
 <script lang="ts">
     export let index:number;
-    import { updateTag } from "../scripts/functions";
-    import { currentCircle } from "../stores";
     $: left = (index === 3) ? true : false;
     function update(){
         index = 0;
-        let rt = document.querySelector(":root") as HTMLElement;
-        updateTag(index, $currentCircle, rt);
     }
 </script>
 
 <svg
     viewBox="0 0 32 32"
     version="1.1"
-    class:left
     id="logo"
     on:click={update}
     sodipodi:docname="file_type_stata_icon_130148 (1).svg"
@@ -91,12 +86,12 @@
         d="m 11,16 a 4.9999995,4.9999995 0 0 1 -5,5 4.9999995,4.9999995 0 0 1 -5,-5 4.9999995,4.9999995 0 0 1 5,-5 4.9999995,4.9999995 0 0 1 5,5 z" />
     <path
         id="circle148"
-        style="opacity:0.257778;fill:none;stroke:#000000;stroke-width:1.72809;filter:url(#a)"
+        style="opacity:0.17778;fill:none;stroke:#000000;stroke-width:1.72809;filter:url(#a)"
         transform="matrix(0.84887562,0,0,0.85323718,0.881154,2.5143491)"
         d="m 10.989192,16.225269 a 4.9999995,4.9999995 0 0 1 -4.999999,5 4.9999995,4.9999995 0 0 1 -4.99999956,-5 4.9999995,4.9999995 0 0 1 4.99999956,-4.999999 4.9999995,4.9999995 0 0 1 4.999999,4.999999 z" />
     <path
         id="circle150"
-        style="opacity:0.257778;fill:none;stroke:#000000;stroke-width:1.72809;filter:url(#b)"
+        style="opacity:0.17778;fill:none;stroke:#000000;stroke-width:1.72809;filter:url(#b)"
         transform="matrix(0.84887562,0,0,0.85323718,11.406045,2.5145365)"
         d="m 10.989192,16.225269 a 4.9999995,4.9999995 0 0 1 -4.999999,5 4.9999995,4.9999995 0 0 1 -4.99999956,-5 4.9999995,4.9999995 0 0 1 4.99999956,-4.999999 4.9999995,4.9999995 0 0 1 4.999999,4.999999 z" />
     <path
@@ -127,16 +122,18 @@
 
 <style>
     :root {
-        --translate-x: 0rem;
-        --translate-y: 0rem;
-        --scale: 1;
+        /* was -1.5 */
+        --translate-x: 0.5rem; 
+        --translate-y: -.5rem;
+        /* was 1 */
+        --scale: 1.25;
         --rotate: 0deg;
     }
     #logo{
         z-index:1;
         width : 10rem;
         height: auto;
-        position: fixed;
+        position: absolute;
         top: -2rem;
         left: 1rem;
         transition: all 0.3s ease;
@@ -149,30 +146,6 @@
     }
     #logo path{
         cursor: pointer;
-    }
-    @media (max-height: 576px) {
-        :root {
-            --translate-x: -4rem;
-            --translate-y: 2rem;
-            --scale: 0.8;
-            --rotate: 90deg;
-        }
-    }
-    @media (max-width: 400px) {
-        :root {
-            --translate-x: -4.5rem;
-            --translate-y: 1rem;
-            --scale: 0.8;
-            --rotate: 90deg;
-        }
-    }
-    @media (max-width: 341px) {
-        :root {
-            --translate-x: -4.5rem;
-            --translate-y: 1rem;
-            --scale: 0.8;
-            --rotate: 90deg;
-        }
     }
     @keyframes enter {
         0% {

@@ -3,11 +3,9 @@
     export let texts: string[];
     let justOpened = true;
     let currentText = '';
-    let end = 0;
-    let start = 0;
     let index = 0; // current txtarray index
-    let speed = 35; // typing/erasing speed, unit: ms
-    let delay = 500; //delay before next text, unit: ms
+    let speed = 20; // typing/erasing speed, unit: ms
+    let delay = 1000; //delay before next text, unit: ms
     let contentDiv: HTMLElement; //for adaptive height of border
     let borderHeight = '0px';
 
@@ -73,7 +71,7 @@
         position: absolute;
         width: var(--txt_pad);
         left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
-        top: calc(50%);
+        top: calc(47%);
         font-size: x-large;
         transition: left 0.23s ease-in-out;
     }
@@ -109,13 +107,13 @@
     @media (max-width: 950px) {
         .container {
             left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
-            top: calc(50%);
+            top: calc(47%);
         }
     }
     @media (max-width: 820px) {
         .container {
             left: calc(50% - var(--txt_pad)/2 - 250px + 2rem);
-            top: calc(50%);
+            top: calc(47%);
         }
     }
     /*____________________________________________MEDIUM MOBILE SCREEN__________________________________________*/
@@ -130,15 +128,16 @@
     @media (max-width: 400px) {
         .container {
             left: calc(25% - var(--txt_pad)/2);
-            top: calc(50%);
+            top: calc(45%);
             font-size: large;
         }
-    }
+    }   
     /*__________________________________________VERY SMALL PHONE__________________________________________*/
     @media (max-width: 341px) {
         .container {
-            left: calc(50% - var(--txt_pad)/2);
+            left: calc(2%);
             top: calc(50%);
+            font-size: small;
         }
     }
 </style>

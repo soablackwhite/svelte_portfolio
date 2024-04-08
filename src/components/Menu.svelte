@@ -1,10 +1,14 @@
 <script lang="ts">
     export let index = 0;
+    export let type = "menu2";
+    export let outline = "nooutline";
+    let type2 = `${type}-item`
     $: indented = (index === 3) ? true : false;
-    import { currentCircle } from "../stores";
+    import { currentCircle, transitioned } from "../stores";
     import { updateTag } from "../scripts/functions";
-    import { transitioned } from "../stores";
+    import { slide} from "svelte/transition";
     let items = ["home", "about", "skills", "projects"]
+    // let items = ["home", "about", "skills", "projects"]
     let links = [
         {src: `/media/icons/github.svg`, alt: `github icon`, link: `https://github.com/soablackwhite`},
         {src: `/media/icons/linkedin.svg`, alt: `linkedin icon`, link: `https://www.linkedin.com/in/omarouldali/`}, 
@@ -26,9 +30,8 @@
             transitioned.set(false);
         }
         index = n;
-        const elem = document.querySelector(".menu") as HTMLElement;
         currentCircle.set(0);
-        updateTag(index, cur, rt);
+        updateTag(index, cur, 0, rt, 0);
         const active = document.activeElement as HTMLElement;
         if (active)
         {
@@ -36,24 +39,45 @@
         }
     }
 </script>
-
-<!-- MENU -->
-<div class="menu ui" class:indented>
-    {#each items as item, i}
-        <button class="menu-item" class:selected={index === i} on:click={ ()=> changeIndex(i)}> {item} </button>
-    {/each}
-</div>
-<!-- LINKS & SOCIALS -->
-
-<!-- {#if index !=3} -->
-    <div class="links {(index===3) ? "up" : "" }">
+<!-- MENU TRANSITION -->
+<!-- used to have ui as class of menu -->
+<div class="gui">
+    {#if type === "menu"}
+        <div class="menu" transition:slide>
+            {#each items as item, i}
+                <button class="menu-item {outline}" class:selected={index === i} on:click={ ()=> changeIndex(i)}> {item} </button>
+            {/each}
+        </div>
+    {:else}
+        <div class="menu2" transition:slide>
+            {#each items as item, i}
+                <button class="menu2-item {outline}" class:selected={index === i} on:click={ ()=> changeIndex(i)}> {item} </button>
+            {/each}
+        </div>
+    {/if}
+    <!-- MENU REACTIVE -->
+    <!-- <div class="{type} ui">
+        {#each items as item, i}
+            <button class="{type2}" class:selected={index === i} on:click={ ()=> changeIndex(i)}> {item} </button>
+        {/each}
+    </div> -->
+    <!-- LINKS & SOCIALS -->
+    <div class="links {(index===3) ? "" : "" }">
         {#each links as link, i}
                 <a href={link.link} tabindex={i} target="_blank" rel="noreferrer nofollow"><img alt={link.alt} src={link.src}></a>
         {/each}
     </div>
-<!-- {/if} -->
+</div>
+
 
 <style>
+    /* gui modifiable */
+    .outline{
+        border: solid 1px white !important;
+    }
+    .nooutline{
+        border: none !important;
+    }
     /*___________________________________________LINKS/ICONS__________________________________________*/
     @keyframes exit {
         0% {
@@ -100,36 +124,72 @@
     }
     .links{
         z-index: 3;
-        position: fixed;
+        position: absolute;
         top: 1%;
-        right: 1%;
+        right: 0%;
         transition: all 0.3s;
         animation: enter 0.4s forwards;
     }
     .links img:hover{
         background-color: rgb(0,0,0);
-        border-radius: 50%;
     }
     .links img:focus {
         background-color: rgb(0,0,0);
-        border-radius: 50%;
     }
     .links img{
         filter: invert(1);
         margin: 0.5rem;
         width: 3rem;
-        transition: width 0.17s ease-in;
+        border-radius: 50%;
+        transition: width 0.17s ease-in, background-color 0.11s linear;
     }
     
     /*___________________________________________MENU__________________________________________*/
     .indented{
         left: 85% !important;
     }
-    .menu {
-        left: calc(50% + 6.5rem);
-        top: calc(50% - 4rem + var(--indent_ui)); 
-        position: fixed !important;
+    .menu2 {
+        bottom: calc(10% ); 
+        top: auto;
+        position: absolute !important;
+        width: 100%;
+        text-align: center;
+        opacity : 1;
+        transition: all 0.36s ease-in-out;
+        list-style-type: none;
+        z-index: 2 !important;
+    }
+    .menu2-item{
+        height: auto;
+        all: unset;
+        cursor: pointer;
+        display: inline;
         width: 8rem;
+        position: relative ;
+        /* position: static; */
+        opacity: 1;
+        color: var(--white);;
+        text-shadow: 1px 1px #ffffff28;
+        transition: transform  0.13s ease-in-out, background-color 0.11s;
+        margin-bottom: 0.5rem;
+        text-decoration: none;
+        font-size: 1.1rem;
+        border: solid 1px var(--white);;
+        margin-right: 1.5rem;
+    }
+    .menu2-item:hover{
+        text-shadow: none;
+        transform: scale(1.09);
+        border: solid 1px var(--white);;
+        background-color: var(--white);;
+        color: var(--white);
+    }
+    .menu {
+        left: calc(50% + 6.2rem);
+        top: calc(50% - 4rem); 
+        position: absolute !important;
+        width: 8rem;
+        width: auto;
         text-align: center;
         opacity : 1;
         transition: all 0.36s ease-in-out;
@@ -149,7 +209,7 @@
         color: #f2f2f2;
         text-shadow: 1px 1px #ffffff28;
         transition: transform  0.13s ease-in-out;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem; /* was 0.5 rem */
         text-decoration: none;
         font-size: 1.1rem;
     }
@@ -168,14 +228,17 @@
     @media(max-width: 576px){
         .menu{
             left: calc(50% + 3rem); 
-            top: calc(50% + var(--indent_ui) - 4rem);
-            width: 7rem;
+            top: calc(50% - 4rem);
+            width: auto;
+            overflow: visible;
         }
         .links img{
             width: 3rem;
+            margin: 0.3rem;
         }
         .links{
-            width: 4rem;
+            width: 15rem;
+            right: -2%;
         }
         .indented{
             left: 105% !important;
@@ -183,9 +246,9 @@
     }
     @media (max-width: 400px){
         .menu{
-            bottom: 0;
+            bottom: 0%;
             top: auto;
-            left: 0;
+            left: 0%;
         }
         .indented{
             left:0 !important;
@@ -201,20 +264,26 @@
         }
         .links{
             width: auto;
+            right: 1%;
         }
     }
     @media (max-width: 341px) {
         .menu{
-            top: calc(80%);
-            bottom: 100% !important;;
-            left: 0%;
+            bottom: 0% !important;
+            right: 0% !important;
+            left: auto !important;
         }
         .menu-item{
-            font-size: 1rem;
+            font-size: 0.8rem;
             width: 7rem;
         }
         .links img{
             width: 2rem;
+        }
+        .links{
+            width: 3rem;
+            top: 0%;
+            right: -3%;
         }
     }   
 </style>

@@ -15,29 +15,35 @@ export function rescale (nbr:number, inMin:number, inMax:number, outMin:number, 
   return (nbr - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 //__________________________________UPDATE TAG FUNCTION___________________________________________
-export function updateTag(index:number, cur:number, rt:HTMLElement) {
-  set_css_var("--isindent", "0", rt);
-  let insert: number;
-  if (index === 3){
-      insert = -1 * parseInt(get_css_var('--ang_img')) * (cur); //indent circle each time we move up
-      set_css_var("--ang_start", `${insert}deg`, rt);
-  }
-  else {
-      if(index == 2 || index == 4)
-      {
-          set_css_var("--isindent", "1", rt);
-          insert = -1 * parseInt(get_css_var('--ang')) * (cur + Math.floor(cur/4));
-      }
-      else
-      {
-          insert = -1 * parseInt(get_css_var('--ang')) * (cur); //indent circle each time we move up
-      }
-      set_css_var("--ang_start", `${insert}deg`, rt);
-  }
+export function updateTag(index:number, incr:number, dir:number, rt:HTMLElement, past: number) {
+    let insert: number;
+    let ang = parseInt(get_css_var('--ang'));
+    insert = (past + incr); //new angle start value, incremented curr val by scroll val
+    let lock = Math.round(insert / ang); //im actually flooring here, but since lock is negative i gotta ceil it
+    lock = (lock === -4 || lock === -9) ? lock + dir : lock;
+    let max = -13 * ang; //max scrollable, last category to show
+    insert = clamp(insert, 0, max);
+    set_css_var("--ang_start", `${insert}deg`, rt);
+    let idx = -lock;
+    idx = (idx > 8) ? idx - 2 : (idx > 3) ? idx - 1 : idx;
+    idx = clamp(idx, 0, 11);
+    return([insert, idx]);
+}
+//__________________________________LOCK TAG FUNCTION___________________________________________
+export function lockTag(past:number, dir:number, rt:HTMLElement){
+  let ang = parseInt(get_css_var('--ang'));
+  let lock = Math.round(past / ang); //im actually flooring here, but since lock is negative i gotta ceil it
+  lock = (lock === -4 || lock === -9) ? lock + dir : lock;
+  let insert = lock * ang;
+  set_css_var("--ang_start", `${insert}deg`, rt);
+  let idx = -lock;
+  idx = (idx > 8) ? idx - 2 : (idx > 3) ? idx - 1 : idx;
+  return([insert, idx]);
 }
 //_____________________________MEDIA QUERY FUNCTION MEDIUM_____________________________________
 export function updateMedia(){isMedium = window.matchMedia("(min-width: 400px) and (max-width: 576px)").matches;}
 
+//_____________________________TEXT CONTENT_____________________________________
 export const contents = [
   {
     "title": "Comic",
@@ -65,7 +71,7 @@ export const contents = [
     "alt": "ML Rock Paper Scissors video",
     "category": "Web Project",
     "tech": "ml5.js, p5.js, Teachable Machine",
-    "description": "This is a small project I started to have a little fun with Google's Teachable Machine. ML Rock Paper Scissors is a game that uses image recognition input from the camera in a turn-by-turn rps-like battle against the computer.I'm using the ml5 module of p5.js here, which allows lightweight machine learning for creative purposes. I started with creating a large dataset by uploading thousands of photos I took of hand signs under different angles and positions with different light exposition. Then I trained the machine learning model based on Google's 'Teachable Machine' by tweaking some of the preset parameters until I was satisfied with its success rate. The model ended up being a very useful prototype, and I'm likely going to use it in the future to piece up something bigger.",
+    "description": "This is a small project I started to have a little fun with Google's Teachable Machine. ML Rock Paper Scissors is a game that uses image recognition input from the camera in a turn-by-turn rps-like battle against the computer.I'm using the ml5 module of p5.js here, which allows lightweight machine learning for creative purposes. I started with creating a large dataset by uploading thousands of photos I took of hand signs under different angles and positions with different light exposition. Then I trained the machine learning model based on Google's 'Teachable Machine' by tweaking some of the preset parameters until I was satisfied with its detection rate. The model ended up being a very useful prototype, and I'm likely going to use it in the future to piece up something bigger.",
     "media": [
       {
         "src": "",
@@ -169,8 +175,8 @@ export const contents = [
   {
     "title": "Reccie",
     "thumbnail": {
-      "src": "/media/animated/art_docu2.mp4",
-      "type": "video"
+      "src": "/media/thumbnails/reccie.webp",
+      "type": "image"
     },
     "alt": "Reccie video",
     "category": "Recommendation system",

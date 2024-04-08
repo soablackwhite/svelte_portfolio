@@ -4,7 +4,7 @@
 
 <div class="slidecontainer">
     <input type="range" min="10" max="200" bind:value={scrollThreshold} class="slider" id="sensitivity">
-    <label for="#sensitivity"> scroll sensitivity</label><br>
+    <label for="sensitivity"> scroll sensitivity</label><br>
 </div>
 
 
