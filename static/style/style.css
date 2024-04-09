@@ -2,6 +2,7 @@
   /*colors*/
   --black: #121212;
   --white: #faf5f5;
+  /* --white: #F7F7F7; */
   --yellow: rgb(249, 223, 77);
   /*tags*/
   --dist: -16rem;
@@ -125,7 +126,7 @@ body{
   scroll-behavior: smooth;
   overflow: hidden;
   z-index: 3;
-  color: white;
+  color: var(--white);
 }
 h1 {
   font-family: 'Proxima Nova', sans-serif;

@@ -2,19 +2,18 @@
     export let index = 0;
     export let type = "menu2";
     export let outline = "nooutline";
-    let type2 = `${type}-item`
+    let type2 = `${type}-item`;
     $: indented = (index === 3) ? true : false;
     import { currentCircle, transitioned } from "../stores";
     import { updateTag } from "../scripts/functions";
-    import { slide} from "svelte/transition";
-    let items = ["home", "about", "skills", "projects"]
-    // let items = ["home", "about", "skills", "projects"]
+    import { slide, fade, scale} from "svelte/transition";
+    let items = ["home", "about", "skills", "projects"];
     let links = [
         {src: `/media/icons/github.svg`, alt: `github icon`, link: `https://github.com/soablackwhite`},
         {src: `/media/icons/linkedin.svg`, alt: `linkedin icon`, link: `https://www.linkedin.com/in/omarouldali/`}, 
         {src: `/media/icons/twitter.svg`, alt: `twitter icon`, link: `https://twitter.com/noiseOmie`},
         {src: `/media/icons/mail.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}
-    ]
+    ];
     let rt = document.querySelector(":root") as HTMLElement;
     let t:boolean;
     transitioned.subscribe((value) => {
@@ -55,12 +54,6 @@
             {/each}
         </div>
     {/if}
-    <!-- MENU REACTIVE -->
-    <!-- <div class="{type} ui">
-        {#each items as item, i}
-            <button class="{type2}" class:selected={index === i} on:click={ ()=> changeIndex(i)}> {item} </button>
-        {/each}
-    </div> -->
     <!-- LINKS & SOCIALS -->
     <div class="links {(index===3) ? "" : "" }">
         {#each links as link, i}
@@ -73,7 +66,7 @@
 <style>
     /* gui modifiable */
     .outline{
-        border: solid 1px white !important;
+        border: solid 1px var(--white) !important;
     }
     .nooutline{
         border: none !important;
@@ -149,7 +142,7 @@
         left: 85% !important;
     }
     .menu2 {
-        bottom: calc(10% ); 
+        bottom: calc(10%); 
         top: auto;
         position: absolute !important;
         width: 100%;
@@ -186,11 +179,11 @@
     }
     .menu {
         left: calc(50% + 6.2rem);
-        top: calc(50% - 4rem); 
+        top: calc(50% - 4rem);
         position: absolute !important;
         width: 8rem;
         width: auto;
-        text-align: center;
+        text-align: right;
         opacity : 1;
         transition: all 0.36s ease-in-out;
         list-style-type: none;
@@ -203,8 +196,8 @@
         cursor: pointer;
         display: block;
         width: 8rem;
+        padding-right: 1rem;
         position: relative ;
-        position: static;
         opacity: 1;
         color: #f2f2f2;
         text-shadow: 1px 1px #ffffff28;

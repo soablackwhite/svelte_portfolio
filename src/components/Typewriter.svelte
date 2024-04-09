@@ -8,7 +8,6 @@
     let delay = 1000; //delay before next text, unit: ms
     let contentDiv: HTMLElement; //for adaptive height of border
     let borderHeight = '0px';
-
     //stretch border
     function updateBorderHeight() {
         borderHeight = `${contentDiv.offsetHeight}px`;

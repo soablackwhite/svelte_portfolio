@@ -123,8 +123,8 @@
 <style>
     :root {
         /* was -1.5 */
-        --translate-x: 0.5rem; 
-        --translate-y: -.5rem;
+        --translate-x: 1rem; 
+        --translate-y: 0rem;
         /* was 1 */
         --scale: 1.25;
         --rotate: 0deg;

@@ -53,7 +53,6 @@
     $: ribbon = (motion === "ribbon") ? true : false;
     let resetThreshold: number;
     let lock = false;
-    let lockposition = 0;
     let past = 0;
     let position = 5; // start w the first item
     function clickScroll(idx:number, event: MouseEvent){
@@ -61,25 +60,25 @@
         past = lockCarousel(idx);
     }
     function lockCarousel(newPosition: number, incr = 0){
-            currentCircle.set(newPosition);
-            position = newPosition;
-            const transform = transforms[motion];
-            const dir = (direction === "horizontal") ? [0, 1] : [1, 0];
-            const pastlock = (direction === "horizontal") ? -transform.xOff * (position) : -transform.yOff * (position);
-            items.forEach(item => {
-                const index = parseInt(item.getAttribute('data-offset'));
-                const r = index - position;
-                const abs = Math.abs(r);
-                let alpha = (r === 0) ? 1 : rescale(1 - abs, -10, 0, 0, 0.1);
-                let blur = (r === 0) ? 0 : rescale(abs, 0, 10, 2, 5);
-                item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${r * transform.angle}deg) translate3d(${transform.xOff * r * dir[1] + incr*dir[1]}px, ${transform.yOff * r * dir[0] + incr*dir[0]}px, 0)`;
-                item.style.filter = `blur(${blur}px)`;
-                alpha = (alpha < 0.08) ? 0 : alpha;
-                item.style.opacity = alpha;
-                item.style.zIndex = `${1 - abs}`;
-            });
-            return(pastlock);
-        };
+        position = newPosition;
+        currentCircle.set(position);
+        const transform = transforms[motion];
+        const dir = (direction === "horizontal") ? [0, 1] : [1, 0];
+        const pastlock = (direction === "horizontal") ? -transform.xOff * (position) : -transform.yOff * (position);
+        items.forEach(item => {
+            const index = parseInt(item.getAttribute('data-offset'));
+            const r = index - position;
+            const abs = Math.abs(r);
+            let alpha = (r === 0) ? 1 : rescale(1 - abs, -10, 0, 0, 0.1);
+            let blur = (r === 0) ? 0 : rescale(abs, 0, 10, 2, 5);
+            item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${r * transform.angle}deg) translate3d(${transform.xOff * r * dir[1] + incr*dir[1]}px, ${transform.yOff * r * dir[0] + incr*dir[0]}px, 0)`;
+            item.style.filter = `blur(${blur}px)`;
+            alpha = (alpha < 0.08) ? 0 : alpha;
+            item.style.opacity = alpha;
+            // item.style.zIndex = `${1 - abs}`;
+        });
+        return(pastlock);
+    };
     onMount(() => {
         items = document.querySelectorAll('.item');
         //update my carousel based on current position, which is found thru current scroll
@@ -89,7 +88,7 @@
             let dir = (direction === "horizontal") ? [0, 1] : [1, 0];
             let lock = (delta > 0) ? Math.round(past/offset) : Math.round(past/offset);
             past += delta; //increment past dX/dY
-            past = (offset < 0) ? clamp(past, max*offset, 0) : clamp(past, 0, max*offset); //limit dx/dy
+            past = (offset < 0) ? clamp(past, max*offset, 0) : (offset === 0) ? past : clamp(past, 0, max*offset); //limit dx/dy
             lock = clamp(lock, 0, max); //limit locking thumbnail to max
             items.forEach(item => {
                 let index = parseInt(item.getAttribute('data-offset'));
@@ -102,8 +101,9 @@
                 item.style.filter = `blur(${blur}px)`;
                 alpha = (alpha < 0.08) ? 0 : alpha;
                 item.style.opacity = alpha;
-                item.style.zIndex = `${1 - abs}`;
+                // item.style.zIndex = `${1 - abs}`;
             });
+            currentCircle.set(lock);
             return(lock);
         };
         lockCarousel(0);
@@ -111,11 +111,11 @@
         function wheelScroll(e: WheelEvent){
             lock = false;
             let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? e.deltaY : -e.deltaX;
-            if(Math.abs(scroll) < 10){
+            if(Math.abs(scroll) < 3){
                 lock = true;
-                past = lockCarousel(lockposition);
+                past = lockCarousel(position);
             } else {
-                lockposition = updateCarousel(scroll);
+                position = updateCarousel(scroll);
             }
             clearTimeout(resetThreshold);
             resetThreshold = setTimeout(function () {
@@ -137,7 +137,6 @@
                     dir = (direction === "horizontal") ? 1 : -1;
                     break;
                 case 'ArrowUp':
-                    
                     dir = (direction === "horizontal") ? -1 : 1;
                     break;
                 default:
@@ -153,21 +152,19 @@
         };
     })
 </script>
-
 <!-- images -->
 <main id="carousel" class:ribbon>
-    {#each contents as {title, thumbnail:{src, type}, alt, category, tech, description, media}, i}
-    <!-- const { title, tech, category, alt, thumbnail }  = contents; -->   
-        <div class="item" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
+    {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
+        <button class="item" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
             {#if type === "video"}
                 <video alt ={alt} transition autoplay="autoplay" muted loop
                     onmouseover="this.pause()" 
                     onmouseout="this.play()" 
-                    class="thumbnail" style="float:right; right:0rem">
+                    class="thumbnail {(i===$currentCircle)?"current":""}" style="float:right; right:0rem">
                     <source src={src} type="video/mp4"> your browser does not support the video tag.
                 </video>
             {:else }
-                <img alt={alt} src={src}>
+                <img class="{(i===$currentCircle)?"current":""}" alt={alt} src={src}>
             {/if}
             {#if cardtype === "label"}<div id="category">{category}:</div>{/if}
             <div class="overlay">
@@ -177,11 +174,15 @@
                     {tech}
                 </p>
             </div>
-        </div>
+        </button>
     {/each}
 </main>
 
 <style>
+    .current{
+        box-shadow: 0px 0px 5px 0 rgb(255, 255, 255, 0.6);
+        z-index: 100 !important;
+    }
     .ribbon{
         transform: rotate3d(1, 0, 0, 51deg) rotate3d(0, 0, 1, 43deg) !important;
         border-radius: 32px !important;
@@ -189,23 +190,20 @@
     .item img {
         width: var(--size);
         height: var(--size);
-        border: solid 2px white;
+        border: solid 2px var(--white);
         border-radius: 2%;
-        box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.11), 0 6px 20px 0 rgba(204, 255, 20, 0);
     }
     .item video {
         width: var(--size) ;
         height: var(--size) ;
         object-fit: cover;
-        border: solid 2px white;
+        border: solid 2px var(--white);
         border-radius: 2%;
-        box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.11), 0 6px 20px 0 rgba(204, 255, 20, 0);
     }
     #category{
         /* styling */
-        /* box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.11), 0 6px 20px 3px rgba(0, 0, 0, 0.575); */
-        background-color: white;
-        color: black;
+        background-color: var(--white);
+        color: var(--black);
         border-radius: 2%;
         /* positioning */
         padding: 3px;
@@ -217,8 +215,8 @@
         line-height: 150%;
     }
     p span{
-        background-color: white;
-        color: black;
+        background-color: var(--white);
+        color: var(--black);
         padding: 3px;
     }
     .overlay{
@@ -238,24 +236,25 @@
         overflow: hidden ;
         transform-style: preserve-3d;
         perspective: 600px;
-        z-index: 1 ;
+        z-index: 1;
     }
-    div.item {   
+    button.item {   
         /* positioning */
+        all: unset;
         display: flex;
         justify-content: center;
         text-align: center;
         position: absolute;
-        z-index: 20 !important;
+        /* z-index: 20 !important; */
         transition: opacity 0.22s;
         cursor: pointer;
     }
-    div.item:hover {   
+    button.item:hover {   
         /* positioning */
-        opacity: .8 !important;
+        opacity: 1 !important;
         filter: none !important;
     }
     .lock{
-        transition: all .22s !important;
+        transition: all 0.22s !important;
     }
 </style>

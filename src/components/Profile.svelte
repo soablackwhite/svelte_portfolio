@@ -21,9 +21,9 @@
     $: cur = $currentCircle;
     let t1 = false;
     let t2 = false;
-    $: square = (index === 2) ? true : false;
-    $: square2 = (index === 2) ? true : false;
-    $: if (index != 2){
+    $: square = (index === 3) ? true : false;
+    $: square2 = (index === 3) ? true : false;
+    $: if (index != 3){
         t1 = false;
         t2 = false;
     }
@@ -42,9 +42,9 @@
 </script>
 
 <!-- this condition doesnt do anything for some reason lol, works with $transitioned tho -->
-    <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===2){t2 = true;}}}>
-        <div id="zoomer" class:square2 class:disappear role="img" on:mousemove={magnifyingGlass} on:transitionend={()=>{if(index===2){t1 = true;}}}>
-            {#if ( (index < 1) && $transitioned==false)}
+    <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
+        <div id="zoomer" class:square2 class:disappear role="img" on:mousemove={magnifyingGlass} on:transitionend={()=>{if(index===3){t1 = true;}}}>
+            {#if ( (index < 2) && $transitioned==false)}
                 <video preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
                     <source src="/media/animated/legible.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -66,7 +66,7 @@
     }
     .square{
         border-radius: 2% !important;
-        border: solid white 2px !important;
+        border: solid var(--white) 2px !important;
         transition: all var(--dur);
     }
     .square2{

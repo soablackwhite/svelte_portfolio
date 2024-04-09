@@ -30,6 +30,7 @@
     import CarouselCube from '../components/CarouselCube.svelte';
     import CarouselStack from '../components/CarouselStack.svelte';
     import GUI from '../components/GUI.svelte';
+    import Sketch2 from '../components/Sketch2.svelte';
     import { transitioned } from '../stores';
     import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline } from "../stores";
     let t: boolean;
@@ -41,7 +42,8 @@
     let scrollThreshold:number = 70;
 </script>
  <!----------------------------------CANVAS----------------------------------------------------->
- <Sketch />
+ <!-- <Sketch /> -->
+ <Sketch2></Sketch2>
 <Manager>
     <!--------------------------------------LOADER----------------------------------------------------->
     <Loader slot="loader" />
