@@ -20,7 +20,7 @@
         </span>
         <ul class="dropdown-content">
             {#each texts as txt, i}
-                <li> {title[i]} {txt} </li>
+                <li> {title[i]}{(title[i] === "") ? "" : ":" } {txt} </li>
             {/each}
         </ul>
     </div>
@@ -44,11 +44,11 @@
         color: var(--white);
         background-color: var(--black);
         position: absolute;
-        z-index: 10;
         /* display: flex; */
         border: white solid 1px;
         padding: 5px;
         border-radius: 0px;
+        z-index: -50 !important;
         /* background-color: rgba(255, 255, 255, 0) !important; */
         transform: translate(-50%, -50%);
         /* transition: top 0.5s, left 0.5s; */
@@ -57,7 +57,6 @@
         background-color: var(--white);
         color: var(--black);
         display: inline-block;
-        z-index: 10;
     }
     .dropdown {
         position: relative;

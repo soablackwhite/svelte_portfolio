@@ -43,7 +43,7 @@
         },
         {//hobbies
             "label" : "hobbies",
-            "title": ["hobby1", "hobby2", "hobby3", "hobby4"],
+            "title": ["", "", "", ""],
             "contents": ["reading", "running", "cooking", "volleyball"]
         }
 
@@ -166,12 +166,12 @@
     })
 </script>
 
-<div id="wheel">
+<div>
     <!-- TYPEWRITER -->
     {#if index === 0}
         <Typewriter texts={home_txt}/>
     {:else if index === 1}
-        <!-- <Typewriter texts={about_txt}/> -->
+        <Typewriter texts={about_txt}/>
         {#each cards_text as txt, i}
             <Card label={txt.label} title={txt.title} texts={txt.contents} offset={i}/>
         {/each}
