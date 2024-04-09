@@ -1,7 +1,7 @@
 <script lang='ts'>
     import { onMount } from 'svelte';
     import { updateTag, lockTag, get_css_var, clamp} from "../scripts/functions";
-    import { currentCircle } from "../stores";
+    import { currentItem } from "../stores";
     import { delta } from "../stores";
     import Typewriter from './Typewriter.svelte';
     import Circle from './Circle.svelte';
@@ -21,9 +21,9 @@
         content: ContentItem[];
     }
     let cur: number;
-    $:console.log(cur);
+    // $:console.log(cur);
     let d: number;
-    currentCircle.subscribe((value) => {
+    currentItem.subscribe((value) => {
         cur = value;
     });
     delta.subscribe((value) => {
@@ -79,22 +79,22 @@
                     //go next, reset start on 0
                     if(index < max) {
                         // index ++;
-                        currentCircle.set(0);
+                        currentItem.set(0);
                     }
                     //if last, stick to last
                     else {
-                        currentCircle.set(tags[index].content.length - 1);
+                        currentItem.set(tags[index].content.length - 1);
                     }
                 }
                 else if (increment < 0 && (index != 2 || cur === 0)) {
                     //go prv, reset start on last
                     if(index > 0) {
                         // index --;
-                        currentCircle.set(tags[index].content.length - 1);
+                        currentItem.set(tags[index].content.length - 1);
                     }
                     //if first, stick to first
                     else {
-                        currentCircle.set(0);
+                        currentItem.set(0);
                     }
                 }
                 //add second about part
@@ -105,7 +105,7 @@
                 let dir = (accumulatedDelta > 0) ? 1 : -1;
                 let arr = updateTag(index, increment, dir, rt, past);
                 past = arr[0]
-                currentCircle.set(arr[1]);
+                currentItem.set(arr[1]);
                 delta.set(past);
             }
         }
@@ -120,7 +120,7 @@
             locking = true;
             let arr = lockTag(past, -1, rt); // 0 is for current value and 1 is for current scroll value
             past = arr[0];
-            currentCircle.set(arr[1]);
+            currentItem.set(arr[1]);
         }, 100); // adjusting the time before the threshold resets
     }
     //___________________________________UP/DOWN KEYBOARD______________________________________________
@@ -132,7 +132,7 @@
             changeContent(sign*thresh, true);
             let arr = lockTag(past, sign, rt); // 0 is for current value and 1 is for current scroll value
             past = arr[0];
-            currentCircle.set(arr[1]);
+            currentItem.set(arr[1]);
             delta.set(past);
         }
     }

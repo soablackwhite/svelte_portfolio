@@ -1,7 +1,7 @@
 <script lang='ts'>
     //VARIABLES
     import { rescale } from "../scripts/functions";
-    import { currentCircle } from "../stores";
+    import { currentItem } from "../stores";
     export let idx: number;
     export let sz: number; //size of content
     export let custom: string;
@@ -9,7 +9,7 @@
     let isLabel: string;
     let alpha:number;
     let disappear:boolean = false;
-    $: test = generateAlpha($currentCircle, idx, sz); //this is so that it updates with any change to cur, idx, and sz variables
+    $: test = generateAlpha($currentItem, idx, sz); //this is so that it updates with any change to cur, idx, and sz variables
     
     // circle form 
     function generateTransform() { 

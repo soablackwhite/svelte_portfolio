@@ -1,7 +1,9 @@
 import { writable } from 'svelte/store';
-export const currentCircle = writable(0);
-export const transitioned = writable(false);
-export const delta = writable(0);
+export const currentItem = writable(0); //the current selected element
+export const transitioned = writable(false); //whether the border transitioned from round to sqr
+export const delta = writable(0); //the scroll level
+export const thumbnail = writable(0); //thumbnail index for typewriter
+
 export const variables = writable({
     black: "#121212",
     white: "#faf5f5",

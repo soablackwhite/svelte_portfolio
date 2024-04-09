@@ -1,6 +1,6 @@
 <script lang="ts">
     export let index:number;
-    import { currentCircle, transitioned} from "../stores";
+    import { currentItem, transitioned} from "../stores";
     import {rescale, set_css_var } from "../scripts/functions"
     import { onMount } from "svelte";
     const icons = [
@@ -21,14 +21,18 @@
         '/media/animated/graduate.mp4',
         '/media/animated/runner.mp4',
         '/media/animated/cook.mp4',
+        '/media/animated/cook.mp4',
+        '/media/animated/cook.mp4',
+        '/media/animated/cook.mp4',
     ]
-    $: cur = $currentCircle;
+    $: cur = $currentItem;
     let t1 = false;
     let t2 = false;
     let typer = 0;
-    $: runner = (typer === 1 || typer === 1) ? true: false;
+    $: thumbnail_class = (typer === 1) ? "runner": ( typer === 2) ? "cook" : "graduate";
     $: square = (index === 3) ? true : false;
     $: square2 = (index === 3) ? true : false;
+    $: console.log(cur);
     $: if (index != 3){
         t1 = false;
         t2 = false;
@@ -68,8 +72,8 @@
                     Your browser does not support the video tag.
                 </video>
             {:else if ( (index == 1) && $transitioned==false)}
-                {#key profiles[typer]}
-                    <video class:runner preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
+                {#key profiles[$currentItem]}
+                    <video class="{thumbnail_class}" preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
                         <source src={profiles[typer]} type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
@@ -85,8 +89,21 @@
     :root{
         --dur: 0.1s;
     }
+    .cook{
+        width: 300px !important;
+        height: 300px !important;
+        margin-top: -40px !important;
+        margin-left: -10px !important;
+    }
+    .graduate{
+        /* width: 270px !important; */
+        /* height: 270px !important;  */
+        margin-top: -10px !important;
+        margin-left: -10px !important;
+    }
     .runner{
-        margin-top: 50px !important;
+        margin-top: 10px !important;
+        margin-left: 0px !important;
     }
     .disappear{
         opacity: 0 !important;

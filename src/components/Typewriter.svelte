@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount, afterUpdate } from "svelte";
+    import { currentItem } from "../stores";
     export let texts: string[];
     let justOpened = true;
     let currentText = '';
@@ -50,6 +51,7 @@
             }
             await new Promise(r => setTimeout(r, delay)); // delay before next text
             index = (index + 1) % texts.length; // loop back to beginning
+            currentItem.set(index);
             justOpened = false;
             typeNext(); // recursive call to type the next text
         }

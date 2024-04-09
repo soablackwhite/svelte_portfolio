@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { rescale, clamp, contents } from "../scripts/functions";
-    import { currentCircle } from "../stores";
+    import { currentItem } from "../stores";
     // parameters
     let max = 11; //nbr of tbnails
     export let motion : string;
@@ -61,7 +61,7 @@
     }
     function lockCarousel(newPosition: number, incr = 0){
         position = newPosition;
-        currentCircle.set(position);
+        currentItem.set(position);
         const transform = transforms[motion];
         const dir = (direction === "horizontal") ? [0, 1] : [1, 0];
         const pastlock = (direction === "horizontal") ? -transform.xOff * (position) : -transform.yOff * (position);
@@ -103,7 +103,7 @@
                 item.style.opacity = alpha;
                 // item.style.zIndex = `${1 - abs}`;
             });
-            currentCircle.set(lock);
+            currentItem.set(lock);
             return(lock);
         };
         lockCarousel(0);
@@ -160,11 +160,11 @@
                 <video alt ={alt} transition autoplay="autoplay" muted loop
                     onmouseover="this.pause()" 
                     onmouseout="this.play()" 
-                    class="thumbnail {(i===$currentCircle)?"current":""}" style="float:right; right:0rem">
+                    class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">
                     <source src={src} type="video/mp4"> your browser does not support the video tag.
                 </video>
             {:else }
-                <img class="{(i===$currentCircle)?"current":""}" alt={alt} src={src}>
+                <img class="{(i===$currentItem)?"current":""}" alt={alt} src={src}>
             {/if}
             {#if cardtype === "label"}<div id="category">{category}:</div>{/if}
             <div class="overlay">

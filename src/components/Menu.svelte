@@ -4,7 +4,7 @@
     export let outline = "nooutline";
     let type2 = `${type}-item`;
     $: indented = (index === 3) ? true : false;
-    import { currentCircle, transitioned } from "../stores";
+    import { currentItem, transitioned } from "../stores";
     import { updateTag } from "../scripts/functions";
     import { slide, fade, scale} from "svelte/transition";
     let items = ["home", "about", "skills", "projects"];
@@ -20,7 +20,7 @@
         t = value;
     });
     let cur: number;
-    currentCircle.subscribe((value) => {
+    currentItem.subscribe((value) => {
         cur = value;
     });
     //change index and update any angles/tags based on scroll position
@@ -29,7 +29,7 @@
             transitioned.set(false);
         }
         index = n;
-        currentCircle.set(0);
+        currentItem.set(0);
         updateTag(index, cur, 0, rt, 0);
         const active = document.activeElement as HTMLElement;
         if (active)
