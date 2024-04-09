@@ -88,7 +88,7 @@
             let dir = (direction === "horizontal") ? [0, 1] : [1, 0];
             let lock = (delta > 0) ? Math.round(past/offset) : Math.round(past/offset);
             past += delta; //increment past dX/dY
-            past = (offset < 0) ? clamp(past, max*offset, 0) : (offset === 0) ? past : clamp(past, 0, max*offset); //limit dx/dy
+            past = (offset < 0) ? clamp(past, max*offset, 0) : clamp(past, 0, max*offset); //limit dx/dy
             lock = clamp(lock, 0, max); //limit locking thumbnail to max
             items.forEach(item => {
                 let index = parseInt(item.getAttribute('data-offset'));
@@ -111,7 +111,7 @@
         function wheelScroll(e: WheelEvent){
             lock = false;
             let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? e.deltaY : -e.deltaX;
-            if(Math.abs(scroll) < 3){
+            if(Math.abs(scroll) < 5){
                 lock = true;
                 past = lockCarousel(position);
             } else {

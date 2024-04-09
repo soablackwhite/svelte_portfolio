@@ -31,15 +31,15 @@
         d = value
     });
     let cards_text = [
-        {//demographics
-            "label" : "demographics",
+        {//personal
+            "label" : "personal",
             "title": ["year", "birthplace", "location", "gender"],
             "contents": ["1999","rabat","london","male"]
         },
-        {//alma matter
+        {//education
             "label" : "education",
             "title": ["2014-2017", "2017-2018", "2019-2023"],
-            "contents": ["Al Manbaa", "Bocconi University", "New York University"]
+            "contents": ["al manbaa", "bocconi university", "new york university"]
         },
         {//hobbies
             "label" : "hobbies",
@@ -55,13 +55,12 @@
         "...feel free to adjust scrolling sensitivity to your liking in the bottom right corner!"
     ]
     let about_txt = [
-        "hi i'm omar!",
-        "i'm an NYU graduate.",
-        "i'm a developer.",
-        "i'm a UX designer.",
-        "i like solving problems with code.",
-        "i like visualizing code.",
-        "my hobbies are reading, cooking, and running!",
+        "Hi i'm omar!",
+        "I'm an NYU graduate.",
+        "I'm a developer.",
+        "I'm a UX designer.",
+        "I like visualizing code.",
+        "I like logic puzzles.",
     ]
     let tags: Tag[] = [
 		{ id: 0, content: [``]},
@@ -171,7 +170,7 @@
     {#if index === 0}
         <Typewriter texts={home_txt}/>
     {:else if index === 1}
-        <Typewriter texts={about_txt}/>
+        <Typewriter texts={about_txt} custom = "about"/>
         {#each cards_text as txt, i}
             <Card label={txt.label} title={txt.title} texts={txt.contents} offset={i}/>
         {/each}

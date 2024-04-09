@@ -2,11 +2,12 @@
     import { onMount, afterUpdate } from "svelte";
     import { currentItem } from "../stores";
     export let texts: string[];
+    export let custom = "";
     let justOpened = true;
     let currentText = '';
     let index = 0; // current txtarray index
-    let speed = 20; // typing/erasing speed, unit: ms
-    let delay = 1000; //delay before next text, unit: ms
+    let speed = 10; // typing/erasing speed, unit: ms, good: 20
+    let delay = 800; //delay before next text, unit: ms, good: 1000
     let contentDiv: HTMLElement; //for adaptive height of border
     let borderHeight = '0px';
     //stretch border
@@ -50,7 +51,7 @@
             }
             await new Promise(r => setTimeout(r, delay)); // delay before next text
             index = (index + 1) % texts.length; // loop back to beginning
-            currentItem.set(index);
+            // currentItem.set(index);
             justOpened = false;
             typeNext(); // recursive call to type the next text
         }
@@ -59,7 +60,7 @@
 </script>
 
 
-<div class="container">
+<div class="container {custom}">
     <div bind:this={contentDiv}>
         <div class="typewriter">{currentText}</div>
     </div>
@@ -67,9 +68,27 @@
 </div>
 
 <style>
+    .about{
+        transform: translate(-50%, -50%) !important;
+        left: auto !important;
+        right: 0% !important;
+        top: calc(82%) !important;
+        font-size: xx-large !important;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.374);
+        border-bottom: solid 4px var(--white);
+        border-left: solid 0px var(--white);
+        transition: border 0.3s, min-height 0.2s !important;
+    }
+    .about:hover{
+        border-bottom: solid 12px var(--white) !important;
+        border-left: solid 2px var(--white);
+        transition: border 0.2s, min-height 0.3s !important;
+        min-height: 60px !important;
+    }
     .container{
         position: absolute;
         width: var(--txt_pad);
+        min-height: 52px;
         left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
         top: calc(47%);
         font-size: x-large;

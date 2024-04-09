@@ -69,7 +69,6 @@
         text-align: right;
         font-size: 1.2rem;
         color: var(--white);
-        text-shadow: 1px 1px 1px #000000;
         border-top: solid 1.5px var(--white);
         padding-bottom: 1.5rem;
     }
@@ -88,7 +87,6 @@
         text-align: center;
         font-size: x-large;
         color: var(--white);
-        text-shadow: 2px 2px 6px #000000;
         padding-bottom: 1.5rem;
         transition: padding-left 0.23s, opacity 0.13s, border-top 0.5s, top 0.33s;
     }

@@ -41,7 +41,8 @@
         t2 = false;
     }
     $: transitioned.set(t1 && t2);
-    $: disappear = $transitioned;
+    // $: disappear = $transitioned;
+    $: disappear = (index===1);
     function magnifyingGlass(this:HTMLElement, e:MouseEvent){
         let mouseX = e.clientX;
         let mouseY = e.clientY;
@@ -157,10 +158,12 @@
         top: calc(50%);
         left: 50%;
         transform: translate(-50%, -50%);
-        border: solid 2px var(--white);
+        border: solid 3px var(--white);
+        border-left: solid 1px var(--white);
+        border-bottom: solid 1px var(--white);
         border-radius: 50%;
         overflow: hidden;
-        box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(204, 255, 20, 0);
+        /* box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(204, 255, 20, 0); */
         /* transition: top 0.23s ease-in-out, border-radius 0.42s ease-in-out; */
         transition: transform var(--dur), width var(--dur) ease-in-out, height var(--dur) ease-in-out, border-radius var(--dur) ease-in-out, opacity var(--dur) ease-in-out;
         /* transition: all 0.33s; */

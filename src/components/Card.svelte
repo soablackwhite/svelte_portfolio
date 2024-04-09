@@ -3,7 +3,9 @@
     export let texts: string[];
     export let offset: number;
     export let label: string;
+    import { slide } from "svelte/transition";
     import { coordinates } from "../stores";
+    import { quintOut, quintInOut } from 'svelte/easing';
 
     let quadrants = ["q1", "q2", "q3"];
     // let quadrants = []
@@ -12,7 +14,9 @@
 
 </script>
 
-<div class="card {quadrant}" style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round($coordinates[offset].x)}px !important">
+<div transition:slide|global={{duration:200, axis: "y", easing: quintInOut}}
+class="card {quadrant}" 
+style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round($coordinates[offset].x)}px !important">
     <div class="dropdown">
         <span class="labelclass">
             {label}
@@ -42,16 +46,17 @@
     }
     .card{
         color: var(--white);
-        background-color: var(--black);
+        /* background-color: var(--black); */
         position: absolute;
         /* display: flex; */
         border: white solid 1px;
         padding: 5px;
         border-radius: 0px;
         z-index: -50 !important;
-        /* background-color: rgba(255, 255, 255, 0) !important; */
+        background-color: rgba(255, 255, 255, 0) !important;
         transform: translate(-50%, -50%);
-        /* transition: top 0.5s, left 0.5s; */
+        transition: top .6s, left .6s;
+        font-size: large;
     }
     .labelclass{
         background-color: var(--white);
