@@ -1,43 +1,67 @@
 <script lang="ts">
-    import { text } from '@sveltejs/kit';
+    // import { text } from '@sveltejs/kit';
     import P5, { type p5 } from 'p5-svelte';
+    import { coordinates } from '../stores';
+    import { throttle, debounce} from 'lodash-es';
+    import { onMount } from 'svelte';
     export let index: number;
     let innerWidth: number;
     let innerHeight: number;
-    // prox 60 walk 220
-    // prox 80 walk 120
-    const proximity = 60; 
+    // prox 60 walk 220; prox 80 walk 120
+    const proximity = 50; 
     const walkers = [];
     const numWalkers = 100;
     const point = 1.5;
     const weight = 1;
-    const offset = 0.0005;
+    const offset = 0.001;
     const repulsionStrength = 7; //strength of mouse push
     // wobbling
     const wobblers = [];
-    let arm1;
     const range = 100;
+    //arms
+    let arm0, arm1, arm2;
+    const thrupdate2 = throttle((p5: p5) => {
+      wobblers.forEach((wobbler, i) => {
+        coordinates.update(items => {
+          const updatedItems = [...items];
+          updatedItems[i] = { ...updatedItems[i], x: wobbler.x, y: wobbler.y };
+          return updatedItems;
+        });
+      });
+    }, 0);
+    
+    
+
 
     class Arm {
       p1; p2; //points of arm
-      x; y; radius; angle; incr; //3rd point properties, it rotates
+      ox; oy; radius; angle; incr; //3rd point properties, it rotates
       constructor(p5:p5, p1:Wobbler) {
         this.p1 = p1; //end point
-        this.p2 = [0, 2]; //middle joint
-        this.x = 150; //center coord
-        this.y = 150; //center coord
-        this.radius = 20;
+        this.ox = p5.width/2; //center coord
+        this.oy = p5.height/2; //center coord
+        this.p2 = new Wobbler(p5, (p1.x + this.ox)/2, (p1.y + this.oy)/2); //middle joint
+        wobblers.push(this.p2); //add to wobblers
+        this.radius = 50;
         this.angle = 0;
-        this.incr = 0.01;
+        this.incr = 0.03 ;
       }
       move(p5:p5){
+        this.ox = p5.width/2; //center coord
+        this.oy = p5.height/2; //center coord
+        this.p2.move(p5);
+        this.p2.display(p5);
         this.angle += this.incr;
       }
       display(p5:p5){
-        let x = this.x + p5.cos(this.angle)*this.radius;
-        let y = this.y + p5.sin(this.angle)*this.radius;
-        p5.fill(50,0,0);
-        p5.ellipse(x, y, 10);
+        let x = this.ox + p5.cos(this.angle)*this.radius;
+        let y = this.oy + p5.sin(this.angle)*this.radius;
+        p5.stroke(255);
+        p5.strokeWeight(1); //can customize this 
+        p5.line(this.p2.x, this.p2.y, x, y); //line to joint
+        p5.strokeWeight(.8); //can customize this 
+        p5.stroke(255, 200);
+        p5.line(this.p2.x, this.p2.y, this.p1.x, this.p1.y); //line to endpoint
       }
     }
 
@@ -45,26 +69,30 @@
       ox; oy; //origin
       xoff; yoff; //offset
       xnoise; ynoise; //noise value
+      x; y; //position
 
       constructor(p5:p5, ox:number, oy: number) {
         this.xoff = p5.random(1000);
         this.yoff = p5.random(1000);
         this.ox = ox;
         this.oy = oy;
+        this.x = ox;
+        this.y = oy;
         this.xnoise = p5.map(p5.noise(this.xoff), 0, 1, -range, range);
         this.ynoise = p5.map(p5.noise(this.yoff), 0, 1, -range, range);
       }
       move(p5: p5) {
-        this.xoff += offset;
-        this.yoff += offset;
+        //this used to be offset
+        this.xoff += 0.002;
+        this.yoff += 0.002;
         this.xnoise = p5.map(p5.noise(this.xoff), 0, 1, -range, range);
         this.ynoise = p5.map(p5.noise(this.yoff), 0, 1, -range, range);
       }
       display(p5:p5) {
         p5.fill(255);
-        let x = this.ox + this.xnoise;
-        let y = this.oy + this.ynoise;
-        p5.ellipse(x, y, 20);
+        this.x = this.ox + this.xnoise;
+        this.y = this.oy + this.ynoise;
+        // p5.ellipse(this.x, this.y, 5);
       }
     }
   
@@ -108,15 +136,23 @@
         for (let i = 0; i < numWalkers; i++) {
           walkers.push(new Walker(p5));
         }
-        wobblers.push(new Wobbler(p5, innerWidth/8, innerHeight/4));
-        wobblers.push(new Wobbler(p5, innerWidth/9, 3*innerHeight/4));
-        wobblers.push(new Wobbler(p5, 3*innerWidth/4, 3*innerHeight/4));
+        wobblers.push(new Wobbler(p5, p5.width/4, p5.height/3));
+        wobblers.push(new Wobbler(p5, p5.width/5, 4*p5.height/5));
+        wobblers.push(new Wobbler(p5, 3*p5.width/4, 1*p5.height/3));
 
-        arm1 = new Arm(wobblers[0], wobblers[1], )
+        arm0 = new Arm(p5, wobblers[0]);
+        arm1 = new Arm(p5, wobblers[1]);
+        arm2 = new Arm(p5, wobblers[2]);
       };
   
       p5.draw = () => {
         p5.clear();
+        arm0.move(p5);
+        arm0.display(p5);
+        arm1.move(p5);
+        arm1.display(p5);
+        arm2.move(p5);
+        arm2.display(p5);
         // p5.background(0, 0, 0, 60);
         // p5.background(18, 18, 18, 255);  
         walkers.forEach(walker => {
@@ -133,22 +169,33 @@
               p5.line(walker.x, walker.y, walker2.x, walker2.y);
             }
           });
+          wobblers.forEach( wobbler=> {
+            let d = p5.dist(walker.x, walker.y, wobbler.x, wobbler.y);
+            if (d < proximity) {
+              p5.stroke(255, 255-p5.map(d, 0, proximity, 0, 255));
+              p5.strokeWeight((d===0)?point:weight-p5.map(d, 0, proximity, 0, weight));
+              p5.line(walker.x, walker.y, wobbler.x, wobbler.y);
+            }
+          });
         });
-        wobblers.forEach(wobbler => {
+        wobblers.forEach((wobbler, i) => {
           wobbler.move(p5);
           wobbler.display(p5);
-        })
-        if(index === 1){
-          p5.stroke(250, 245, 245);
-          p5.strokeWeight(1);
-          // p5.line(0, p5.mouseY, p5.width, p5.mouseY);
-          // p5.line(p5.mouseX, 0, p5.mouseX, p5.height);
-          p5.line(0, .5*p5.height + 126, p5.width, .5*p5.height + 126);
-          p5.line(.5*p5.width - 266, 0, .5*p5.width, p5.height);
-          // p5.text(`${100*p5.round(p5.mouseX/p5.width, 4)} and ${100*p5.round(p5.mouseY/p5.height, 4)}`, p5.mouseX, p5.mouseY);
-        }
+          // thrupdate(wobbler.x, wobbler.y, i);
+          // coordinates.update(items => {
+          //   const updatedItems = [...items];
+          //   updatedItems[i] = { ...updatedItems[i], x: wobbler.x, y: wobbler.y };
+          //   return updatedItems;
+          // });
+        });
+        thrupdate2(p5);
+        // if(index === 1){
+        //   p5.stroke(250, 245, 245);
+        //   p5.strokeWeight(2);
+        //   p5.line(0, .5*p5.height + 126, p5.width, .5*p5.height + 126);
+        //   p5.line(.5*p5.width - 266, 0, .5*p5.width, p5.height);
+        // }
       };
-  
       p5.windowResized = () => {
         p5.resizeCanvas(innerWidth, innerHeight);
       };
@@ -171,4 +218,3 @@
       z-index: 0;
     }
   </style>
-  

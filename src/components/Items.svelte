@@ -171,7 +171,7 @@
     {#if index === 0}
         <Typewriter texts={home_txt}/>
     {:else if index === 1}
-        <Typewriter texts={about_txt}/>
+        <!-- <Typewriter texts={about_txt}/> -->
         {#each cards_text as txt, i}
             <Card label={txt.label} title={txt.title} texts={txt.contents} offset={i}/>
         {/each}

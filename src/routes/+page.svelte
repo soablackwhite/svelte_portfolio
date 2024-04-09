@@ -34,7 +34,6 @@
     import { transitioned } from '../stores';
     import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline } from "../stores";
     let t: boolean;
-    $:console.log($gui_motion);
     const unsubscribe = transitioned.subscribe(($transitioned) => {
         t = $transitioned;
     });

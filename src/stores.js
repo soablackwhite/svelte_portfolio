@@ -24,3 +24,15 @@ export const gui_menu = writable("menu");
 export const gui_outline = writable("nooutline");
 export const gui_angle = writable("horizontal");
 export const gui_motion = writable("flat");
+
+export const coordinates = writable([
+  { x: 0, y: 0},
+  { x: 0, y: 0},
+  { x: 0, y: 0},
+]);
+
+// export const myStore = writable([
+//   { x: writable(0), y: writable(0)},
+//   { x: writable(0), y: writable(0)},
+//   { x: writable(0), y: writable(0)},
+// ]);

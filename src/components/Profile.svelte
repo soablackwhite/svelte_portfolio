@@ -70,7 +70,7 @@
     <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
         <div id="zoomer" class:square2 class:disappear role="img" on:transitionend={()=>{if(index===3){t1 = true;}}}>
             {#if ( (index == 0) && $transitioned==false)}
-                <video preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
+                <video preload="auto" autoplay playsinline muted loop>
                     <source src="/media/animated/legible.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
@@ -82,6 +82,10 @@
                     </video>
                 {/key} -->
                 <img alt="profile" src={hilink}/>
+                <!-- <video preload="auto" autoplay playsinline muted loop>
+                    <source src="/media/animated/legible.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video> -->
             {:else if $transitioned === false}
                 <img alt="profile" id="profile" src={icons[cur]}/>
             {/if}

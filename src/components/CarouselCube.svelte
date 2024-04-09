@@ -191,7 +191,7 @@
         width: var(--size);
         height: var(--size);
         border: solid 2px var(--white);
-        border-radius: 2%;
+        border-radius: 2%; 
     }
     .item video {
         width: var(--size) ;
