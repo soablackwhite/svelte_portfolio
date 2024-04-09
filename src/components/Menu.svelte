@@ -183,7 +183,7 @@
         position: absolute !important;
         width: 8rem;
         width: auto;
-        text-align: right;
+        text-align: center;
         opacity : 1;
         transition: all 0.36s ease-in-out;
         list-style-type: none;
@@ -196,7 +196,8 @@
         cursor: pointer;
         display: block;
         width: 8rem;
-        padding-right: 1rem;
+        /* use this for "playground" */
+        /* padding-right: 1rem;  */
         position: relative ;
         opacity: 1;
         color: #f2f2f2;

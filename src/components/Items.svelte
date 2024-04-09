@@ -5,6 +5,7 @@
     import { delta } from "../stores";
     import Typewriter from './Typewriter.svelte';
     import Circle from './Circle.svelte';
+    import Card from './Card.svelte';
     export let index:number = 0;
     export let scrollThreshold: number;
     let locking = true; 
@@ -29,6 +30,24 @@
     delta.subscribe((value) => {
         d = value
     });
+    let cards_text = [
+        {//demographics
+            "label" : "demographics",
+            "title": ["year", "birthplace", "location", "gender"],
+            "contents": ["1999","rabat","london","male"]
+        },
+        {//alma matter
+            "label" : "education",
+            "title": ["2014-2017", "2017-2018", "2019-2023"],
+            "contents": ["Al Manbaa", "Bocconi University", "New York University"]
+        },
+        {//hobbies
+            "label" : "hobbies",
+            "title": ["hobby1", "hobby2", "hobby3", "hobby4"],
+            "contents": ["reading", "running", "cooking", "volleyball"]
+        }
+
+    ]
     let home_txt = [
         "welcome :)",
         "to navigate, use arrows ↑↓",
@@ -153,6 +172,9 @@
         <Typewriter texts={home_txt}/>
     {:else if index === 1}
         <Typewriter texts={about_txt}/>
+        {#each cards_text as txt, i}
+            <Card label={txt.label} title={txt.title} texts={txt.contents} offset={i}/>
+        {/each}
     {:else if index === 2}
         <!-- LABELS -->
         <div>

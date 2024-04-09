@@ -39,7 +39,6 @@
             await new Promise(r => setTimeout(r, speed));
         }
     }
-
     onMount(() => {
         async function typeNext() {
             // if just clicked

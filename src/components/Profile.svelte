@@ -17,6 +17,7 @@
         '/media/icons/r.svg',
         '/media/icons/stata.svg',
     ];
+    const hilink = '/media/icons/hi.webp'
     const profiles = [
         '/media/animated/graduate.mp4',
         '/media/animated/runner.mp4',
@@ -24,15 +25,17 @@
         '/media/animated/cook.mp4',
         '/media/animated/cook.mp4',
         '/media/animated/cook.mp4',
+        '/media/animated/cook.mp4',
+        '/media/animated/cook.mp4',
+        '/media/animated/cook.mp4',
     ]
-    $: cur = $currentItem;
+    $: cur = $currentItem%3;
+    let typer = 0;
     let t1 = false;
     let t2 = false;
-    let typer = 0;
     $: thumbnail_class = (typer === 1) ? "runner": ( typer === 2) ? "cook" : "graduate";
     $: square = (index === 3) ? true : false;
     $: square2 = (index === 3) ? true : false;
-    $: console.log(cur);
     $: if (index != 3){
         t1 = false;
         t2 = false;
@@ -65,19 +68,20 @@
 
 <!-- this condition doesnt do anything for some reason lol, works with $transitioned tho -->
     <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
-        <div id="zoomer" class:square2 class:disappear role="img" on:mousemove={magnifyingGlass} on:transitionend={()=>{if(index===3){t1 = true;}}}>
+        <div id="zoomer" class:square2 class:disappear role="img" on:transitionend={()=>{if(index===3){t1 = true;}}}>
             {#if ( (index == 0) && $transitioned==false)}
                 <video preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
                     <source src="/media/animated/legible.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
             {:else if ( (index == 1) && $transitioned==false)}
-                {#key profiles[$currentItem]}
+                <!-- {#key profiles[typer]}
                     <video class="{thumbnail_class}" preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
                         <source src={profiles[typer]} type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-                {/key}
+                {/key} -->
+                <img alt="profile" src={hilink}/>
             {:else if $transitioned === false}
                 <img alt="profile" id="profile" src={icons[cur]}/>
             {/if}
@@ -90,19 +94,21 @@
         --dur: 0.1s;
     }
     .cook{
-        width: 300px !important;
-        height: 300px !important;
+        width: 280px !important;
+        height: auto !important;
         margin-top: -40px !important;
         margin-left: -10px !important;
     }
     .graduate{
-        /* width: 270px !important; */
-        /* height: 270px !important;  */
+        width: 250px !important;
+        height: auto !important; 
         margin-top: -10px !important;
         margin-left: -10px !important;
     }
     .runner{
         margin-top: 10px !important;
+        width: 250px !important;
+        height: auto !important;
         margin-left: 0px !important;
     }
     .disappear{
@@ -132,7 +138,7 @@
         /* transition: all var(--dur) ; */
     }
     #zoomer:hover{
-        transform: scale(5.25);
+        /* transform: scale(5.25); */
     }
     #profile{
         width: 100px;
@@ -163,11 +169,10 @@
         width: 250px;
         height: 250px;
         object-fit: cover;
-        /* transition: transform 0.23s, width 0.23s ease-in-out, height 0.23s ease-in-out; */
         transition: all 0.33s;
     }
     .image-container video:hover {
-        transform: translate(var(--vidx), var(--vidy));
+        /* transform: translate(var(--vidx), var(--vidy)); */
     }
     .ui {
         position: absolute !important;
