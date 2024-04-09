@@ -1,9 +1,8 @@
 <script lang="ts">
     export let index:number;
-    import { fade } from "svelte/transition";
     import { currentCircle, transitioned} from "../stores";
-    import { get_css_var, rescale, set_css_var } from "../scripts/functions"
-    import { onDestroy, onMount } from "svelte";
+    import {rescale, set_css_var } from "../scripts/functions"
+    import { onMount } from "svelte";
     const icons = [
         '/media/icons/react.svg',
         '/media/icons/svelte.svg',
@@ -18,9 +17,16 @@
         '/media/icons/r.svg',
         '/media/icons/stata.svg',
     ];
+    const profiles = [
+        '/media/animated/graduate.mp4',
+        '/media/animated/runner.mp4',
+        '/media/animated/cook.mp4',
+    ]
     $: cur = $currentCircle;
     let t1 = false;
     let t2 = false;
+    let typer = 0;
+    $: runner = (typer === 1 || typer === 1) ? true: false;
     $: square = (index === 3) ? true : false;
     $: square2 = (index === 3) ? true : false;
     $: if (index != 3){
@@ -29,9 +35,9 @@
     }
     $: transitioned.set(t1 && t2);
     $: disappear = $transitioned;
-    function magnifyingGlass(this:HTMLElement, event:MouseEvent){
-        let mouseX = event.clientX;
-        let mouseY = event.clientY;
+    function magnifyingGlass(this:HTMLElement, e:MouseEvent){
+        let mouseX = e.clientX;
+        let mouseY = e.clientY;
         //convert to rem scale
         let incx = rescale(mouseX, window.innerWidth/2 - this.offsetWidth/2, window.innerWidth/2 + this.offsetWidth/2, -4, 4);
         let incy = rescale(mouseY, window.innerHeight/2 - this.offsetHeight/2, window.innerHeight/2 + this.offsetHeight/2, -4, 4);
@@ -39,16 +45,35 @@
         set_css_var("--vidy", `${(incy + 1)}rem`, rt);
         set_css_var("--vidx", `${incx}rem`, rt);
     }
+    function profileSwap(e:KeyboardEvent){
+        if (e.key === "Enter"){
+            typer = (typer+1)%3;
+        }
+        console.log(typer);
+    }
+    onMount (() => {
+        window.addEventListener("keydown", profileSwap);
+        return () => {
+            window.removeEventListener('keydown', profileSwap);
+        };
+    })
 </script>
 
 <!-- this condition doesnt do anything for some reason lol, works with $transitioned tho -->
     <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
         <div id="zoomer" class:square2 class:disappear role="img" on:mousemove={magnifyingGlass} on:transitionend={()=>{if(index===3){t1 = true;}}}>
-            {#if ( (index < 2) && $transitioned==false)}
+            {#if ( (index == 0) && $transitioned==false)}
                 <video preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
                     <source src="/media/animated/legible.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+            {:else if ( (index == 1) && $transitioned==false)}
+                {#key profiles[typer]}
+                    <video class:runner preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
+                        <source src={profiles[typer]} type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                {/key}
             {:else if $transitioned === false}
                 <img alt="profile" id="profile" src={icons[cur]}/>
             {/if}
@@ -59,6 +84,9 @@
 <style>
     :root{
         --dur: 0.1s;
+    }
+    .runner{
+        margin-top: 50px !important;
     }
     .disappear{
         opacity: 0 !important;
@@ -81,6 +109,7 @@
         height: 250px;
         display: flex;
         justify-content: center;
+        background-color: black;
         /* transition: transform 0.33s, width 0.33s ease-in-out, height 0.33s ease-in-out, border-radius 0.72s ease-in-out, opacity 0.4s ease-in-out; */
         transition: transform var(--dur), width var(--dur) ease-in-out, height var(--dur) ease-in-out, border-radius var(--dur) ease-in-out, opacity var(--dur) ease-in-out;
         /* transition: all var(--dur) ; */
@@ -116,6 +145,7 @@
         margin: auto;
         width: 250px;
         height: 250px;
+        object-fit: cover;
         /* transition: transform 0.23s, width 0.23s ease-in-out, height 0.23s ease-in-out; */
         transition: all 0.33s;
     }

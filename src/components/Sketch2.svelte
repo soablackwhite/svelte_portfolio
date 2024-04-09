@@ -1,17 +1,19 @@
 <script lang="ts">
-    import P5 from 'p5-svelte';
+    import P5, { type p5 } from 'p5-svelte';
     import { onMount } from 'svelte';
   
     let innerWidth: number;
     let innerHeight: number;
   
-    const proximity = 60;
-    const repulsionStrength = 10; // Increased strength for a noticeable effect
-    const points = [];
-    const numPoints = 300;
+    // good settings:
+    // prox 60 walk 100
+    const proximity = 60; 
     const walkers = [];
-    const numWalkers = 200;
+    const numWalkers = 100;
+    const point = 1;
+    const weight = 0.8;
     const offset = 0.001;
+    const repulsionStrength = 7; //strength of mouse push
   
     class Walker {
       x;
@@ -19,21 +21,21 @@
       xoff;
       yoff;
   
-      constructor(p5) {
+      constructor(p5:p5) {
         this.xoff = p5.random(5000);
         this.yoff = p5.random(5000);
         this.x = p5.map(p5.noise(this.xoff), 0, 1, 0, p5.width);
         this.y = p5.map(p5.noise(this.yoff), 0, 1, 0, p5.height);
       }
   
-      move(p5) {
+      move(p5: p5) {
         this.x = p5.map(p5.noise(this.xoff), 0, 1, 0, p5.width);
         this.y = p5.map(p5.noise(this.yoff), 0, 1, 0, p5.height);
         this.xoff += offset;
         this.yoff += offset;
       }
   
-      repel(p5, mouseX, mouseY) {
+      repel(p5: p5, mouseX:number, mouseY:number) {
       let d = p5.dist(mouseX, mouseY, this.x, this.y);
       if (d < proximity) {
         let dx = this.x - mouseX;
@@ -49,17 +51,11 @@
     }
     }
   
-    const sketch = (p5) => {
+    const sketch = (p5:p5) => {
       p5.setup = () => {
         p5.createCanvas(innerWidth, innerHeight);
         p5.pixelDensity(p5.displayDensity());
         p5.noStroke();
-        for (let i = 0; i < numPoints; i++) {
-          points.push({
-            x: p5.random(p5.width),
-            y: p5.random(p5.height),
-          });
-        }
         for (let i = 0; i < numWalkers; i++) {
           walkers.push(new Walker(p5));
         }
@@ -75,19 +71,11 @@
             walker.repel(p5, p5.mouseX, p5.mouseY);
           }
           else {walker.move(p5);}
-  
-          // points.forEach(point => {
-          //   let d = p5.dist(walker.x, walker.y, point.x, point.y);
-          //   if (d < proximity) {
-          //     p5.stroke(255, 255-p5.map(d, 0, proximity, 0, 255));
-          //     p5.line(walker.x, walker.y, point.x, point.y);
-          //   }
-          // });
           walkers.forEach(walker2 => {
             let d = p5.dist(walker.x, walker.y, walker2.x, walker2.y);
             if (d < proximity) {
               p5.stroke(255, 255-p5.map(d, 0, proximity, 0, 255));
-              p5.strokeWeight(0.8-p5.map(d, 0, proximity, 0, 0.8));
+              p5.strokeWeight((d===0)?point:weight-p5.map(d, 0, proximity, 0, weight));
               p5.line(walker.x, walker.y, walker2.x, walker2.y);
             }
           });
