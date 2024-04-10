@@ -41,8 +41,8 @@
         t2 = false;
     }
     $: transitioned.set(t1 && t2);
-    // $: disappear = $transitioned;
-    $: disappear = (index===1);
+    $: disappear = $transitioned;
+    // $: disappear = (index===1);
     function magnifyingGlass(this:HTMLElement, e:MouseEvent){
         let mouseX = e.clientX;
         let mouseY = e.clientY;
@@ -82,7 +82,7 @@
                         Your browser does not support the video tag.
                     </video>
                 {/key} -->
-                <img alt="profile" src={hilink}/>
+                <div> <h1>Hi!</h1></div>
                 <!-- <video preload="auto" autoplay playsinline muted loop>
                     <source src="/media/animated/legible.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -97,6 +97,14 @@
 <style>
     :root{
         --dur: 0.1s;
+    }
+    h1{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        width: 100%;
+        height: 100%;
     }
     .cook{
         width: 280px !important;
@@ -137,7 +145,6 @@
         height: 250px;
         display: flex;
         justify-content: center;
-        background-color: black;
         /* transition: transform 0.33s, width 0.33s ease-in-out, height 0.33s ease-in-out, border-radius 0.72s ease-in-out, opacity 0.4s ease-in-out; */
         transition: transform var(--dur), width var(--dur) ease-in-out, height var(--dur) ease-in-out, border-radius var(--dur) ease-in-out, opacity var(--dur) ease-in-out;
         /* transition: all var(--dur) ; */

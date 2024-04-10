@@ -8,12 +8,13 @@
     //animations
     import { slide } from "svelte/transition";
     import { quintOut, quintInOut } from 'svelte/easing';
+    import { cubicInOut } from "svelte/easing";
     import { onMount } from "svelte";
     const svgs = [
+        "/media/icons/male.svg",
         "/media/icons/leo.svg",
         "/media/icons/mor.svg",
         "/media/icons/uk.svg",
-        "/media/icons/male.svg"
     ]
     let quadrants = ["q1", "q2", "q3"];
     // let quadrants = []
@@ -23,14 +24,15 @@
 </script>
 <div 
 class="card {quadrant}" 
-transition:slide|global={{duration:200, axis: "y", easing: quintInOut}}     
 style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round($coordinates[offset].x)}px !important">
-    <div class="dropdown">
+    <div class="dropdown"  
+transition:slide|global={{duration:200, axis: "y", easing: cubicInOut}}     
+>
         <span class="labelclass">
             {label}
             <!-- ({Math.round($coordinates[offset].x)}, {Math.round($coordinates[offset].y)}) -->
         </span>
-        <ul class="dropdown-content">
+        <ul class="dropdown-content" >
             {#each texts as txt, i}
                 <li> {title[i]}{(title[i] === "") ? "" : ":" } {txt} 
                     {#if (offset === 0)}
@@ -48,7 +50,7 @@ style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round(
         width: 25px;
         height: auto;
         filter: none;
-        margin-left: 7px;
+        margin-left: 3px;
     }
     .q1{
         left: 10% !important;
@@ -67,9 +69,13 @@ style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round(
         /* background-color: var(--black); */
         position: absolute;
         /* display: flex; */
-        border: var(--white) solid 1px;
-        padding: 5px;
+        border: var(--white) dashed 4px;
+        border-bottom: var(--white) solid 1px;
+        border-left: var(--white) solid 1px;
+        /* border-left-radius: 200px ; */
+        /* border-top-left-radius: 99px; */
         border-radius: 0px;
+        padding: 7px;
         z-index: -50 !important;
         background-color: rgba(255, 255, 255, 0) !important;
         transform: translate(-50%, -50%);

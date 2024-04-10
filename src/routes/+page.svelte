@@ -24,6 +24,7 @@
     import Manager from '../components/Manager.svelte';
     import Sketch from '../components/Sketch.svelte';
     import Logo from '../components/Logo.svelte';
+    import LogoNoShadow from '../components/LogoNoShadow.svelte';
     import Menu from '../components/Menu.svelte';
 	import Slider from '../components/Slider.svelte';
     import Profile from '../components/Profile.svelte';
@@ -52,7 +53,9 @@
     <div slot="bs" id="blackscreen"> </div>
     <!----------------------------------CONTENT WRAPPER------------------------------------------------>
     <div slot="main" id="wrapper" style="z-index: 0;">
-        <Logo bind:index={index}/>
+        <!-- <Logo bind:index={index}/> -->
+        <LogoNoShadow bind:index={index}/>
+
         <Menu bind:index={index} bind:type={$gui_menu} bind:outline={$gui_outline}/>
         <!------------------------------------UI------------------------------------------------------->
         <Profile bind:index={index}/>

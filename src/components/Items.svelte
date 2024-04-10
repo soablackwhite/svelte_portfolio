@@ -33,8 +33,8 @@
     let cards_text = [
         {//personal
             "label" : "personal",
-            "title": ["year", "birthplace", "location", "gender"],
-            "contents": ["1999","rabat","london","male"]
+            "title": ["gender","birthday", "birthplace", "location"],
+            "contents": ["male", "28/07","rabat","london"]
         },
         {//education
             "label" : "education",
@@ -45,8 +45,12 @@
             "label" : "hobbies",
             "title": ["", "", "", ""],
             "contents": ["reading", "running", "cooking", "volleyball"]
-        }
-
+        },
+        // {//interests
+        //     "label" : "interests",
+        //     "title": ["", "", "", ""],
+        //     "contents": ["education", "running", "cooking", "volleyball"]
+        // }
     ]
     let home_txt = [
         "welcome :)",
@@ -55,7 +59,7 @@
         "...feel free to adjust scrolling sensitivity to your liking in the bottom right corner!"
     ]
     let about_txt = [
-        "Hi i'm omar!",
+        "My name is Omar.",
         "I'm an NYU graduate.",
         "I'm a developer.",
         "I'm a UX designer.",

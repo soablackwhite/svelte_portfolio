@@ -1,14 +1,9 @@
 :root {
   /*colors*/
-  /* --black: #121212; */
-  /* --black: /#181818; */
-  /* --white: #faf5f5; */
-  --white: #f0f5f9;
-  --black: rgb(137, 103, 142);
-
+  --black: #121212;
+  --white: #faf5f5;
   /* --white: #F7F7F7; */
-  --yellow: #ffe05f;
-  --specials: #7ddde7
+  --yellow: rgb(249, 223, 77);
   /*tags*/
   --dist: -16rem;
   --ang: -18deg;

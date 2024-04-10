@@ -80,10 +80,9 @@
         transition: border 0.3s, min-height 0.2s !important;
     }
     .about:hover{
-        border-bottom: solid 12px var(--white) !important;
-        border-left: solid 2px var(--white);
+        border-bottom: solid 11px var(--white) !important;
         transition: border 0.2s, min-height 0.3s !important;
-        min-height: 60px !important;
+        min-height: 59px !important;
     }
     .container{
         position: absolute;
@@ -92,6 +91,7 @@
         left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
         top: calc(47%);
         font-size: x-large;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.374);
         transition: left 0.23s ease-in-out;
     }
     .typewriter{

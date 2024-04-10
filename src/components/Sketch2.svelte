@@ -7,16 +7,16 @@
     export let index: number;
     let innerWidth: number;
     let innerHeight: number;
-    // prox 60 walk 220; prox 80 walk 120
-    const proximity = 40; 
+    // prox 60 walk 220; prox 60 walk 120
+    const proximity = 60; 
     const forceradius = 80; 
-    const spread = 0.2;
+    const spread = -0.1;
     const walkers = [];
-    const numWalkers = 100;
-    const point = .6;
-    const weight = .5;
-    const offset = 0.001;
-    const repulsionStrength = 10; //strength of mouse push
+    const numWalkers = 120;
+    const point = 1;
+    const weight = 0.6;
+    const offset = 0.0005;
+    const repulsionStrength = 7; //strength of mouse push
     // wobbling
     const wobblers = [];
     const range = 100;
@@ -194,11 +194,11 @@
           p5.stroke(250, 245, 245);
           p5.strokeWeight(2);
           //this is with the center pic
-          // p5.line(0, .5*p5.height + 126, p5.width, .5*p5.height + 126);
-          // p5.line(.5*p5.width - 266, 0, .5*p5.width, p5.height);
+          p5.line(0, .5*p5.height + 126, p5.width, .5*p5.height + 126);
+          p5.line(.5*p5.width - 266, 0, .5*p5.width, p5.height);
           // this is whout the center pic
-          p5.line(.5*p5.width + 98, 0, .5*p5.width + 98, p5.height);
-          p5.line(0, .5*p5.height + 56, p5.width, .5*p5.height + 56);
+          // p5.line(.5*p5.width + 98, 0, .5*p5.width + 98, p5.height);
+          // p5.line(0, .5*p5.height + 56, p5.width, .5*p5.height + 56);
 
         }
       };
