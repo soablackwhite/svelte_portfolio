@@ -8,13 +8,15 @@
     let innerWidth: number;
     let innerHeight: number;
     // prox 60 walk 220; prox 80 walk 120
-    const proximity = 80; 
+    const proximity = 40; 
+    const forceradius = 80; 
+    const spread = 0.2;
     const walkers = [];
-    const numWalkers = 20;
-    const point = 0;
-    const weight = 1;
+    const numWalkers = 100;
+    const point = .6;
+    const weight = .5;
     const offset = 0.001;
-    const repulsionStrength = 7; //strength of mouse push
+    const repulsionStrength = 10; //strength of mouse push
     // wobbling
     const wobblers = [];
     const range = 100;
@@ -101,23 +103,23 @@
       constructor(p5:p5) {
         this.xoff = p5.random(5000);
         this.yoff = p5.random(5000);
-        this.x = p5.map(p5.noise(this.xoff), 0, 1, 0, p5.width);
-        this.y = p5.map(p5.noise(this.yoff), 0, 1, 0, p5.height);
+        this.x = p5.map(p5.noise(this.xoff), 0, 1, -p5.width*spread, p5.width*(1 + spread));
+        this.y = p5.map(p5.noise(this.yoff), 0, 1, -p5.height*spread, p5.height*(1 + spread));
       }
   
       move(p5: p5) {
-        this.x = p5.map(p5.noise(this.xoff), 0, 1, 0, p5.width);
-        this.y = p5.map(p5.noise(this.yoff), 0, 1, 0, p5.height);
+        this.x = p5.map(p5.noise(this.xoff), 0, 1, -p5.width*spread, p5.width*(1 + spread));
+        this.y = p5.map(p5.noise(this.yoff), 0, 1, -p5.height*spread, p5.height*(1 + spread));
         this.xoff += offset;
         this.yoff += offset;
       }
       repel(p5: p5, mouseX:number, mouseY:number) {
         let d = p5.dist(mouseX, mouseY, this.x, this.y);
-        if (d < proximity) {
+        if (d < forceradius) {
           let dx = this.x - mouseX;
           let dy = this.y - mouseY;
           let forceDirection = p5.createVector(dx, dy);
-          let forceMagnitude = repulsionStrength * (1 - (d / proximity));
+          let forceMagnitude = repulsionStrength * (1 - (d / forceradius));
           forceDirection.setMag(forceMagnitude);
           // apply force
           this.x += forceDirection.x;
@@ -156,7 +158,7 @@
         // p5.background(18, 18, 18, 255);  
         walkers.forEach(walker => {
           const dmouse = p5.dist(walker.x, walker.y, p5.mouseX, p5.mouseY);
-          if (dmouse < proximity) {
+          if (dmouse < forceradius) {
             walker.repel(p5, p5.mouseX, p5.mouseY);
           }
           else {walker.move(p5);}

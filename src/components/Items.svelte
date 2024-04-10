@@ -59,7 +59,7 @@
         "I'm an NYU graduate.",
         "I'm a developer.",
         "I'm a UX designer.",
-        "I like visualizing code.",
+        "I like to visualize code.",
         "I like logic puzzles.",
     ]
     let tags: Tag[] = [

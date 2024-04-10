@@ -1,21 +1,29 @@
 <script lang="ts">
+    //functionality
     export let title: string[];
     export let texts: string[];
     export let offset: number;
     export let label: string;
-    import { slide } from "svelte/transition";
     import { coordinates } from "../stores";
+    //animations
+    import { slide } from "svelte/transition";
     import { quintOut, quintInOut } from 'svelte/easing';
-
+    import { onMount } from "svelte";
+    const svgs = [
+        "/media/icons/leo.svg",
+        "/media/icons/mor.svg",
+        "/media/icons/uk.svg",
+        "/media/icons/male.svg"
+    ]
     let quadrants = ["q1", "q2", "q3"];
     // let quadrants = []
     let quadrant = quadrants[offset];
     console.log(offset, quadrant);
 
 </script>
-
-<div transition:slide|global={{duration:200, axis: "y", easing: quintInOut}}
+<div 
 class="card {quadrant}" 
+transition:slide|global={{duration:200, axis: "y", easing: quintInOut}}     
 style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round($coordinates[offset].x)}px !important">
     <div class="dropdown">
         <span class="labelclass">
@@ -24,7 +32,11 @@ style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round(
         </span>
         <ul class="dropdown-content">
             {#each texts as txt, i}
-                <li> {title[i]}{(title[i] === "") ? "" : ":" } {txt} </li>
+                <li> {title[i]}{(title[i] === "") ? "" : ":" } {txt} 
+                    {#if (offset === 0)}
+                        <span> <img class="icon" alt="personal-icon" src="{svgs[i]}"> </span>
+                    {/if}
+                </li>
             {/each}
         </ul>
     </div>
@@ -32,6 +44,12 @@ style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round(
 
 
 <style>
+    .icon{
+        width: 25px;
+        height: auto;
+        filter: none;
+        margin-left: 7px;
+    }
     .q1{
         left: 10% !important;
         top: 25% !important;
@@ -49,7 +67,7 @@ style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round(
         /* background-color: var(--black); */
         position: absolute;
         /* display: flex; */
-        border: white solid 1px;
+        border: var(--white) solid 1px;
         padding: 5px;
         border-radius: 0px;
         z-index: -50 !important;
@@ -68,17 +86,24 @@ style="top:{Math.round($coordinates[offset].y)}px !important; left: {Math.round(
         display: inline-block;
     }
     .dropdown-content {
-        /* display: none; */
         display: block;
-        /* position: absolute; */
-        /* min-width: 240px; */
-        padding: 12px 16px;
+        padding: 10px 20px;
         z-index: 1;
     }
+    
     .dropdown:hover .dropdown-content {
         display: block;
     }
     li{
         list-style-position: outside;
+        /* line-height: 2rem !important; */
+        list-style-type: none;
+    }
+    li:hover{
+        background-color: var(--white);
+        color: var(--black)
+    }
+    li:hover .icon{
+        filter:invert();
     }
 </style>
