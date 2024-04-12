@@ -2,8 +2,9 @@
     // import { text } from '@sveltejs/kit';
     import P5, { type p5 } from 'p5-svelte';
     import { coordinates } from '../stores';
-    import { throttle, debounce} from 'lodash-es';
-    import { onMount } from 'svelte';
+    import { throttle} from 'lodash-es';
+    import { get_css_var } from '../scripts/functions';
+    // 7mar
     export let index: number;
     let innerWidth: number;
     let innerHeight: number;
@@ -17,6 +18,11 @@
     const weight = 0.6;
     const offset = 0.0005;
     const repulsionStrength = 7; //strength of mouse push
+    const positions = [
+      { x: 1/4, y: 1/3},
+      { x: 1/5, y: 6/7},
+      { x: 3/4, y: 1/3},
+    ]
     // wobbling
     const wobblers = [];
     const range = 100;
@@ -136,9 +142,9 @@
         for (let i = 0; i < numWalkers; i++) {
           walkers.push(new Walker(p5));
         }
-        wobblers.push(new Wobbler(p5, p5.width/4, p5.height/3));
-        wobblers.push(new Wobbler(p5, p5.width/5, 6*p5.height/7));
-        wobblers.push(new Wobbler(p5, 3*p5.width/4, 1*p5.height/3));
+        for (let i = 0; i < 3; i++) {
+          wobblers.push(new Wobbler(p5, p5.width*positions[i].x, p5.height*positions[i].y));
+        }
 
         arm0 = new Arm(p5, wobblers[0]);
         arm1 = new Arm(p5, wobblers[1]);
@@ -205,12 +211,10 @@
       p5.windowResized = () => {
         p5.resizeCanvas(innerWidth, innerHeight);
         //responsively reposition wobblers
-        wobblers[0].ox= 1*p5.width/4
-        wobblers[0].oy= 1*p5.height/3;
-        wobblers[1].ox = 1*p5.width/5, 
-        wobblers[1].oy = 5*p5.height/6;
-        wobblers[2].ox = 3*p5.width/4;
-        wobblers[2].oy = 1*p5.height/3;
+        wobblers.forEach((wobbler, i)=>{
+          wobbler.ox = p5.width * positions[i].x;
+          wobbler.oy = p5.height * positions[i].y;
+        })
       };
     };
   </script>
@@ -220,7 +224,7 @@
   <div id="p5">
     <P5 {sketch} />
   </div>
-  
+
   <style>
     #p5 {
       width: 100vw;
@@ -229,5 +233,6 @@
       left: 0;
       top: 0;
       z-index: 0;
+      /* filter: invert(); */
     }
   </style>

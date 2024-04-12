@@ -124,10 +124,10 @@
         animation: enter 0.4s forwards;
     }
     .links img:hover{
-        background-color: rgb(0,0,0);
+        background-color: var(--black);
     }
     .links img:focus {
-        background-color: rgb(0,0,0);
+        background-color: var(--black);
     }
     .links img{
         filter: invert(1);
@@ -200,7 +200,7 @@
         /* padding-right: 1rem;  */
         position: relative ;
         opacity: 1;
-        color: #f2f2f2;
+        color: var(--white);
         text-shadow: 1px 1px #ffffff28;
         transition: transform  0.13s ease-in-out;
         margin-bottom: 0.25rem; /* was 0.5 rem */
@@ -211,13 +211,13 @@
         transform: scale(1.15);
         background-color: var(--white);
         text-shadow: 1px 1px #18181839;
-        color: #121212;
+        color: var(--black);
     }
     .selected{
         transform: scale(1.15);
         background-color: var(--white);
         text-shadow: 1px 1px #18181839;
-        color: #121212;
+        color: var(--black);
     }
     @media(max-width: 576px){
         .menu{

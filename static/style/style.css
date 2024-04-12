@@ -1,14 +1,11 @@
 :root {
   /*colors*/
   /* --black: #121212; */
-  /* --black: /#181818; */
   /* --white: #faf5f5; */
-  --white: #f0f5f9;
-  --black: rgb(137, 103, 142);
-
-  /* --white: #F7F7F7; */
-  --yellow: #ffe05f;
-  --specials: #7ddde7
+  --white: #FFFBFC;
+  --black: #010400;
+  --accent1: #30332E;
+  --accent2: #886988;
   /*tags*/
   --dist: -16rem;
   --ang: -18deg;
@@ -117,11 +114,13 @@ html{
   overflow: hidden;
 }
 mark{
-  background-color: var(--white);
+  background-color: var(--accent2);
 }
 mark::selection{
-  background-color: var(--black);
-  color: var(--white);
+  /* used to be white */
+  background-color: var(--accent1);
+  /* used to be black */
+  color: var(--accent2);
 }
 body{
   font-family: "Proxima Nova", sans-serif;
@@ -134,13 +133,9 @@ body{
   color: var(--white);
 }
 h1 {
-  font-family: 'Proxima Nova', sans-serif;
-  font-size: 3rem;
-  text-align: justify;
-  font-weight: 900;
-  margin: 0;
-  margin-bottom: 2rem;
-  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 5rem;
+  font-weight: 300;
 }
 h2{
   font-weight: 700;
@@ -148,17 +143,15 @@ h2{
   font-size: 3rem;
 }
 section {
-  padding: 50px;
+  /* padding: 50px; */
   font-family: 'Proxima Nova', sans-serif;
-  color: var(--white);
+  color: var(--black);
 }
 p{
-  /* background-color: #ffffff07; */
-  color: #ffffffbf;
-  /* line-height: 2rem; */
+  color: var(--black);
 }
 ::selection {
-  color: rgb(18, 18, 18);
+  color: var(--black);
   background: var(--white);
 }
 /*___________________________________________FADE ANIMATION__________________________________________*/
@@ -168,7 +161,7 @@ p{
   left: 0%;
   width: 100%;
   height:100%;
-  background-color: #121212;
+  background-color: var(--black);
   z-index: 5;
 }
 @keyframes fadeMeOut{
