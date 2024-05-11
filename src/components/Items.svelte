@@ -1,11 +1,13 @@
 <script lang='ts'>
     import { onMount } from 'svelte';
     import { updateTag, lockTag, get_css_var, clamp} from "../scripts/functions";
+    import { fade } from 'svelte/transition';
     import { currentItem } from "../stores";
     import { delta } from "../stores";
     import Typewriter from './Typewriter.svelte';
     import Circle from './Circle.svelte';
     import Card from './Card.svelte';
+    import Hobby from './Hobby.svelte';
     export let index:number = 0;
     export let scrollThreshold: number;
     let locking = true; 
@@ -32,26 +34,18 @@
     });
     let cards_text = [
         {//personal
-            "label" : "personal",
-            "title": ["gender","birthday", "birthplace", "location"],
-            "contents": ["male", "28/07","rabat","london"]
+            "label" : "history",
+            "title": ["2014-2017", "2017-2018", "2018-2023","2020-2021", "2024"],
+            "contents": ["rabat","milan","abu dhabi", "new york", "london"]
         },
         {//education
             "label" : "education",
             "title": ["2014-2017", "2017-2018", "2019-2023"],
             "contents": ["al manbaa", "bocconi university", "new york university"]
         },
-        {//hobbies
-            "label" : "hobbies",
-            "title": ["", "", "", ""],
-            "contents": ["reading", "running", "cooking", "volleyball"]
-        },
-        // {//interests
-        //     "label" : "interests",
-        //     "title": ["", "", "", ""],
-        //     "contents": ["education", "running", "cooking", "volleyball"]
-        // }
+        
     ]
+
     let home_txt = [
         "welcome :)",
         "to navigate, use arrows ↑↓",
@@ -59,7 +53,7 @@
         "...feel free to adjust scrolling sensitivity to your liking in the bottom right corner!"
     ]
     let about_txt = [
-        "My name is Omar.",
+        "Hi I'm Omar!",
         "I'm an NYU graduate.",
         "I'm a developer.",
         "I'm a UX designer.",
@@ -172,12 +166,13 @@
 <div>
     <!-- TYPEWRITER -->
     {#if index === 0}
-        <Typewriter texts={home_txt}/>
-    {:else if index === 1}
         <Typewriter texts={about_txt} custom = "about"/>
+    {:else if index === 1}
+        <!-- <Typewriter texts={about_txt} custom = "about"/> -->
         {#each cards_text as txt, i}
             <Card label={txt.label} title={txt.title} texts={txt.contents} offset={i}/>
         {/each}
+        <Hobby/>
     {:else if index === 2}
         <!-- LABELS -->
         <div>
@@ -192,10 +187,16 @@
             {#each tags[2].content as tag, i}
                 <div>
                     <Circle locking={locking} idx={i} sz={tags[index].content.length - 1} custom="circle centered">
-                        {tag}
+                        <span slot="letter">{tag[0]}</span>
+                        <span slot="tag">{tag.slice(1)}</span>
+                        
                     </Circle>
                 </div>
             {/each}
         </div>
     {/if}
 </div>
+
+<style>
+    
+</style>

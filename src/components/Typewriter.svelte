@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount, afterUpdate } from "svelte";
     import { currentItem } from "../stores";
+    import { slide, fade, scale } from "svelte/transition";
+    
     export let texts: string[];
     export let custom = "";
     let justOpened = true;
@@ -60,27 +62,27 @@
 </script>
 
 
-<div class="container {custom}">
+<div class="container {custom}" transition:fade|global={{duration:120}}>
     <div bind:this={contentDiv}>
-        <div class="typewriter">{currentText}</div>
+        <div class="typewriter" >{currentText}</div>
     </div>
     <div class="border" style="height: {borderHeight};"></div>
 </div>
 
 <style>
     .about{
+        position: absolute;
         transform: translate(-50%, -50%) !important;
-        left: auto !important;
-        right: 0% !important;
-        top: calc(82%) !important;
+        top: 52% !important;
+        left: 30% !important;
         font-size: xx-large !important;
         text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.374);
-        border-bottom: solid 4px var(--white);
-        border-left: solid 0px var(--white);
+        border-bottom: solid 4px var(--accent2) !important;
+        /* border-left: solid 0px var(--accent2) !important; */
         transition: border 0.3s, min-height 0.2s !important;
     }
     .about:hover{
-        border-bottom: solid 11px var(--white) !important;
+        border-bottom: solid 11px var(--accent2) !important;
         transition: border 0.2s, min-height 0.3s !important;
         min-height: 59px !important;
     }
@@ -99,7 +101,8 @@
         z-index: 10;
         height: auto;
         transition: max-height 0.5s ease-out;   
-        background-color: #00000000;
+        /* background-color: var(--white); */
+        color: var(--white);
         hyphens: auto;
         -webkit-hyphens: auto;
         -ms-hyphens: auto;
@@ -108,20 +111,25 @@
     }
     .border {
         position: absolute;
+        border-color: var(--gray--) !important;
+        border-width: 2px !important;
         left: 0;
         top: 0;
         bottom: 0;
         transition: height 0.3s ease-in-out;
+    }
+    .about .border {
+        border-width: 1px !important;
     }
     .typewriter::-webkit-scrollbar {
         width: 0.5em;
         height: 0.5em;
     }
     .typewriter::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0);
+        /* background-color: rgba(255, 255, 255, 0); */
     }
     .typewriter::-webkit-scrollbar-track {
-        background-color: rgba(0, 0, 0, 0);
+        /* background-color: color(--black); */
     }
     @media (max-width: 950px) {
         .container {

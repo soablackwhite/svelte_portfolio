@@ -1,11 +1,65 @@
 :root {
   /*colors*/
-  /* --black: #121212; */
-  /* --white: #faf5f5; */
+  /* white bg dark pink */
+  /* --black: #363636;
   --white: #FFFBFC;
-  --black: #010400;
-  --accent1: #30332E;
-  --accent2: #886988;
+  --accent1: #886988; 
+  --accent2: #40F99B; 
+  --accent3: #60AFFF;
+  --gray: #30332E;
+  --dark: 0; */
+
+  /* old paper */
+  /* --accent2: #FFFBFC;
+  --white: rgb(234, 222, 203);
+  --accent1: rgb(23, 22, 19);
+  --accent3: #60AFFF;
+  --gray: #30332E;
+  --dark: 0; */
+
+  /* Apple */
+  /* --black: rgb(245, 245, 247);
+  --white: rgb(29, 29, 31);
+  --accent1: rgb(110, 110, 115);
+  --accent2: rgb(245, 245, 247);
+  --accent3: rgb(76, 149, 247);
+  --gray: rgb(245, 245, 247);
+  --dark: 1; */
+
+  /* BLACKBOARD */
+  --black: rgb(16, 16, 16);
+  --white: rgb(245, 245, 247);
+  --accent1: rgb(110, 110, 115);
+  --accent2: rgb(245, 245, 247);
+  --accent3: rgb(76, 149, 247);
+  --gray: rgb(203, 203, 207);
+  --dark: 1;
+
+  /* nier automata, ordered from lightest to darkest */
+  /* --accent3: #DCD4BB;
+  --white: #CDC8B0;
+  --accent2: #B4AF9A;
+  --black: #4E4B42;
+  --accent1: #CD664D;
+  --dark: 0; */
+
+  /* --black: #363636;
+  --accent2: #FFFBFC;
+  --white: rgb(234, 222, 203);
+  --accent1: rgb(23, 22, 19);
+  --accent3: #60AFFF;
+  --gray: #30332E;
+  --dark: 0; */
+  
+  /* dark pink bg */
+  /* --black: #FFFBFC;
+  --accent2: #60AFFF;
+  --accent1: #40F99B;
+  --accent3: #886988;
+  --gray: #30332E;
+  --white: #886988;
+  --dark: 1; */
+
   /*tags*/
   --dist: -16rem;
   --ang: -18deg;
@@ -113,20 +167,11 @@
 html{
   overflow: hidden;
 }
-mark{
-  background-color: var(--accent2);
-}
-mark::selection{
-  /* used to be white */
-  background-color: var(--accent1);
-  /* used to be black */
-  color: var(--accent2);
-}
 body{
   font-family: "Proxima Nova", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: var(--black);
+  /* background-color: var(--black); */
   scroll-behavior: smooth;
   overflow: hidden;
   z-index: 3;
@@ -142,13 +187,9 @@ h2{
   font-family: 'Montserrat', sans-serif;
   font-size: 3rem;
 }
-section {
-  /* padding: 50px; */
-  font-family: 'Proxima Nova', sans-serif;
-  color: var(--black);
-}
 p{
-  color: var(--black);
+  font-family: 'Proxima Nova', sans-serif;
+  color: var(--white) !important;
 }
 ::selection {
   color: var(--black);

@@ -138,7 +138,7 @@
         left: 1rem;
         transition: all 0.3s ease;
         opacity:1;
-        fill: #00000031;
+        /* fill: #00000031; */
         animation: enter 0.2s forwards;
     }
     .left {

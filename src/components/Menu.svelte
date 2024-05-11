@@ -57,7 +57,9 @@
     <!-- LINKS & SOCIALS -->
     <div class="links {(index===3) ? "" : "" }">
         {#each links as link, i}
-                <a href={link.link} tabindex={i} target="_blank" rel="noreferrer nofollow"><img alt={link.alt} src={link.src}></a>
+                <button>
+                    <a href={link.link} tabindex={i} target="_blank" rel="noreferrer nofollow"><img alt={link.alt} src={link.src}></a>
+                </button>
         {/each}
     </div>
 </div>
@@ -66,7 +68,7 @@
 <style>
     /* gui modifiable */
     .outline{
-        border: solid 1px var(--white) !important;
+        border: solid 1px var(--accent2) !important;
     }
     .nooutline{
         border: none !important;
@@ -122,21 +124,46 @@
         right: 0%;
         transition: all 0.3s;
         animation: enter 0.4s forwards;
+        width: 15rem !important;
     }
-    .links img:hover{
-        background-color: var(--black);
+    .links button {
+        all: unset;
+        position: relative;
+        display: inline-block;
+        width: fit-content;
+        margin: 0.3rem;
+        cursor: pointer;
+        /* transition: margin-left 0.1s, left 0.3s, right 0.3s !important; */
+        /* width: 15rem; */
     }
-    .links img:focus {
-        background-color: var(--black);
-    }
-    .links img{
-        filter: invert(1);
-        margin: 0.5rem;
+    .links img {
+        display: inline;
+        /* margin-bottom: 0.5rem; */
+        /* display: block; */
         width: 3rem;
-        border-radius: 50%;
-        transition: width 0.17s ease-in, background-color 0.11s linear;
+        transition: width 0.17s ease-in, background-color 0.11s;
+        filter: invert(var(--dark));
     }
-    
+    .links button::after { /* overlay */
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0);
+        border-radius: 100%;
+        transition: width 0.17s ease-in, background-color 0.11s;
+    }
+    .links button:hover::after {
+        background-color: var(--white); /* overlay color */
+    }
+    .links button:hover {
+        /* margin-left: -10px; */
+    }
+    .links button:focus::after {
+        background-color: var(--white);
+    }
     /*___________________________________________MENU__________________________________________*/
     .indented{
         left: 85% !important;
@@ -151,6 +178,7 @@
         transition: all 0.36s ease-in-out;
         list-style-type: none;
         z-index: 2 !important;
+        
     }
     .menu2-item{
         height: auto;
@@ -161,21 +189,21 @@
         position: relative ;
         /* position: static; */
         opacity: 1;
-        color: var(--white);;
+        color: var(--accent2);;
         text-shadow: 1px 1px #ffffff28;
         transition: transform  0.13s ease-in-out, background-color 0.11s;
         margin-bottom: 0.5rem;
         text-decoration: none;
         font-size: 1.1rem;
-        border: solid 1px var(--white);;
+        border: solid 1px var(--accent2);;
         margin-right: 1.5rem;
     }
     .menu2-item:hover{
         text-shadow: none;
         transform: scale(1.09);
-        border: solid 1px var(--white);;
-        background-color: var(--white);;
-        color: var(--white);
+        border: solid 1px var(--accent2);;
+        background-color: var(--accent2);;
+        color: var(--accent2);
     }
     .menu {
         left: calc(50% + 6.2rem);
@@ -189,6 +217,11 @@
         list-style-type: none;
         z-index: 2;
         overflow: hidden;
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
     }
     .menu-item{
         height: auto;
@@ -201,7 +234,7 @@
         position: relative ;
         opacity: 1;
         color: var(--white);
-        text-shadow: 1px 1px #ffffff28;
+        text-shadow: 2px 2px 2px #00000028;
         transition: transform  0.13s ease-in-out;
         margin-bottom: 0.25rem; /* was 0.5 rem */
         text-decoration: none;
@@ -209,14 +242,14 @@
     }
     .menu-item:hover{
         transform: scale(1.15);
-        background-color: var(--white);
-        text-shadow: 1px 1px #18181839;
+        background-color: var(--accent2);
+        text-shadow: 1px 1px #ffffff39;
         color: var(--black);
     }
     .selected{
         transform: scale(1.15);
         background-color: var(--white);
-        text-shadow: 1px 1px #18181839;
+        text-shadow: 1px 1px #ffffff39;
         color: var(--black);
     }
     @media(max-width: 576px){

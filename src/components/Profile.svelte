@@ -1,6 +1,6 @@
 <script lang="ts">
     export let index:number;
-    import { currentItem, transitioned} from "../stores";
+    import { currentItem, transitioned, profile_index} from "../stores";
     import {rescale, set_css_var } from "../scripts/functions"
     import { onMount } from "svelte";
     const icons = [
@@ -19,17 +19,11 @@
     ];
     const hilink = '/media/icons/hi.webp'
     const profiles = [
-        '/media/animated/graduate.mp4',
-        '/media/animated/runner.mp4',
-        '/media/animated/cook.mp4',
-        '/media/animated/cook.mp4',
-        '/media/animated/cook.mp4',
-        '/media/animated/cook.mp4',
-        '/media/animated/cook.mp4',
-        '/media/animated/cook.mp4',
-        '/media/animated/cook.mp4',
+        '/media/icons/manbaa.svg',
+        '/media/icons/bocconi.svg',
+        '/media/icons/nyu.svg'
     ]
-    $: cur = $currentItem%3;
+    $: cur = $currentItem;
     let typer = 0;
     let t1 = false;
     let t2 = false;
@@ -43,6 +37,14 @@
     $: transitioned.set(t1 && t2);
     $: disappear = $transitioned;
     // $: disappear = (index===1);
+    function handleMouseOver(event) {
+        event.target.play();
+    }
+
+    // Function to pause video on mouse out
+    function handleMouseOut(event) {
+        event.target.pause();
+    }
     function magnifyingGlass(this:HTMLElement, e:MouseEvent){
         let mouseX = e.clientX;
         let mouseY = e.clientY;
@@ -53,42 +55,26 @@
         set_css_var("--vidy", `${(incy + 1)}rem`, rt);
         set_css_var("--vidx", `${incx}rem`, rt);
     }
-    function profileSwap(e:KeyboardEvent){
-        if (e.key === "Enter"){
-            typer = (typer+1)%3;
-        }
-        console.log(typer);
-    }
-    onMount (() => {
-        window.addEventListener("keydown", profileSwap);
-        return () => {
-            window.removeEventListener('keydown', profileSwap);
-        };
-    })
+
 </script>
 
 <!-- this condition doesnt do anything for some reason lol, works with $transitioned tho -->
     <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
         <div id="zoomer" class:square2 class:disappear role="img" on:transitionend={()=>{if(index===3){t1 = true;}}}>
             {#if ( (index == 0) && $transitioned==false)}
-                <video preload="auto" autoplay playsinline muted loop>
-                    <source src="/media/animated/legible.mp4" type="video/mp4">
+                <!-- <img alt="profile" id="profile" src="/media/animated/bio.svg"/> -->
+                <video preload="auto" id="profile" playsinline muted loop
+                    on:mouseover|preventDefault={handleMouseOver}
+                    on:mouseout|preventDefault={handleMouseOut}>
+                    <source src="/media/animated/loop.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+            {:else if ( (index == 1) && $transitioned==false) && ($profile_index === -1)}
+                <div> <h1> Hi! </h1></div>
             {:else if ( (index == 1) && $transitioned==false)}
-                <!-- {#key profiles[typer]}
-                    <video class="{thumbnail_class}" preload="auto" autoplay playsinline muted loop onmouseover="this.pause()" onmouseout="this.play()">
-                        <source src={profiles[typer]} type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                {/key} -->
-                <div> <h1>Hi!</h1></div>
-                <!-- <video preload="auto" autoplay playsinline muted loop>
-                    <source src="/media/animated/legible.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video> -->
+                <img alt="profile" class="school {($profile_index===1)?"bocconi":""}" src={profiles[$profile_index]}/>
             {:else if $transitioned === false}
-                <img alt="profile" id="profile" src={icons[cur]}/>
+                <img alt="profile" id="icon" src={icons[cur]}/>
             {/if}
         </div>
     </div>
@@ -105,24 +91,6 @@
         align-content: center;
         width: 100%;
         height: 100%;
-    }
-    .cook{
-        width: 280px !important;
-        height: auto !important;
-        margin-top: -40px !important;
-        margin-left: -10px !important;
-    }
-    .graduate{
-        width: 250px !important;
-        height: auto !important; 
-        margin-top: -10px !important;
-        margin-left: -10px !important;
-    }
-    .runner{
-        margin-top: 10px !important;
-        width: 250px !important;
-        height: auto !important;
-        margin-left: 0px !important;
     }
     .disappear{
         opacity: 0 !important;
@@ -145,43 +113,60 @@
         height: 250px;
         display: flex;
         justify-content: center;
-        /* transition: transform 0.33s, width 0.33s ease-in-out, height 0.33s ease-in-out, border-radius 0.72s ease-in-out, opacity 0.4s ease-in-out; */
         transition: transform var(--dur), width var(--dur) ease-in-out, height var(--dur) ease-in-out, border-radius var(--dur) ease-in-out, opacity var(--dur) ease-in-out;
-        /* transition: all var(--dur) ; */
     }
-    #zoomer:hover{
-        /* transform: scale(5.25); */
+    .bocconi{
+        height: 240px !important;
+    }
+    .school{
+        position:absolute;
+        top: 50%;
+        left: 50%;
+        height: 170px;
+        transform: translate(-50%, -50%);
+        transition: all var(--dur);
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
     }
     #profile{
+        position: absolute;
+        width: 350px !important;
+        bottom: 0%;
+        z-index: 10;
+        transition: all var(--dur);
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+    }
+    #icon{
         width: 100px;
         height: auto;
         z-index: 10;
-        /* transition: transform 0.13s, width 0.33s ease-in-out, height 0.33s ease-in-out; */
-        /* transition: transform 0.23s, width 0.33s ease-in-out, height 0.33s ease-in-out; */
         transition: all var(--dur);
-        fill: var(--white);
     }
     .image-container {
         top: calc(50%);
         left: 50%;
         transform: translate(-50%, -50%);
-        border: solid 3px var(--white);
-        border-left: solid 1px var(--white);
-        border-bottom: solid 1px var(--white);
+        border: solid 2px var(--white);
         border-radius: 50%;
         overflow: hidden;
-        /* box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(204, 255, 20, 0); */
-        /* transition: top 0.23s ease-in-out, border-radius 0.42s ease-in-out; */
+        /* box-shadow: 0 4px 8px 0 var(--accent2), 0 6px 20px 0 var(--accent2); */
         transition: transform var(--dur), width var(--dur) ease-in-out, height var(--dur) ease-in-out, border-radius var(--dur) ease-in-out, opacity var(--dur) ease-in-out;
-        /* transition: all 0.33s; */
         z-index: 3;
         background-color: var(--black);
     }
     .image-container video {
         position: absolute;
         margin: auto;
-        width: 250px;
-        height: 250px;
+        top: -20%;
+        width: 300px;
+        height: 300px;
         object-fit: cover;
         transition: all 0.33s;
     }

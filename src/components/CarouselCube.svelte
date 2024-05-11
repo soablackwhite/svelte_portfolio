@@ -36,8 +36,8 @@
         },
         "flat": {
             angle: 0,
-            xOff: -200,
-            yOff: -200,
+            xOff: 200,
+            yOff: 200,
         },
         "flip": {
             angle: 180,
@@ -74,8 +74,7 @@
             item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${r * transform.angle}deg) translate3d(${transform.xOff * r * dir[1] + incr*dir[1]}px, ${transform.yOff * r * dir[0] + incr*dir[0]}px, 0)`;
             item.style.filter = `blur(${blur}px)`;
             alpha = (alpha < 0.08) ? 0 : alpha;
-            item.style.opacity = alpha;
-            // item.style.zIndex = `${1 - abs}`;
+            item.style.opacity = `${alpha}`;
         });
         return(pastlock);
     };
@@ -100,8 +99,7 @@
                 item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${ang}deg) translate3d(${transform.xOff*r*dir[1] + past*dir[1]}px, ${transform.yOff*r*dir[0] + past*dir[0]}px, 0)`;
                 item.style.filter = `blur(${blur}px)`;
                 alpha = (alpha < 0.08) ? 0 : alpha;
-                item.style.opacity = alpha;
-                // item.style.zIndex = `${1 - abs}`;
+                item.style.opacity = `${alpha}`;
             });
             currentItem.set(lock);
             return(lock);
@@ -110,8 +108,11 @@
         //___________________________________SCROLL KEYBOARD______________________________________________
         function wheelScroll(e: WheelEvent){
             lock = false;
-            let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? e.deltaY : -e.deltaX;
-            if(Math.abs(scroll) < 5){
+            if (Math.abs(e.deltaX) > 0) {
+                e.preventDefault();
+            }
+            let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? -e.deltaY : -e.deltaX;
+            if(Math.abs(scroll) < 4){
                 lock = true;
                 past = lockCarousel(position);
             } else {
@@ -119,7 +120,11 @@
             }
             clearTimeout(resetThreshold);
             resetThreshold = setTimeout(function () {
-            }, 200);
+                if(Math.abs(scroll) > 0 && Math.abs(scroll)){
+                    lock = true;
+                    past = lockCarousel(position);
+                }
+            }, 75);
         }
         
         //___________________________________SCROLL KEYBOARD______________________________________________
@@ -128,16 +133,16 @@
             let dir = 0;
             switch(e.key) {
                 case 'ArrowLeft':
-                    dir = 1;
-                    break;
-                case 'ArrowRight':
                     dir = -1;
                     break;
+                case 'ArrowRight':
+                    dir = 1;
+                    break;
                 case 'ArrowDown':
-                    dir = (direction === "horizontal") ? 1 : -1;
+                    dir = (direction === "horizontal") ? -1 : 1;
                     break;
                 case 'ArrowUp':
-                    dir = (direction === "horizontal") ? -1 : 1;
+                    dir = (direction === "horizontal") ? 1 : -1;
                     break;
                 default:
                     break;
@@ -145,7 +150,7 @@
             past = ((dir === 1 && position < max)||(dir === -1 && position > 0)) ? lockCarousel(position + dir) : past;
         }
         window.addEventListener("keydown", arrowScroll);
-        window.addEventListener('wheel', wheelScroll);
+        window.addEventListener('wheel', wheelScroll, { passive: false });
         return () => {
             window.removeEventListener('keydown', arrowScroll);
             window.removeEventListener('wheel', wheelScroll);
@@ -176,12 +181,61 @@
             </div>
         </button>
     {/each}
+    <!-- current item -->
+    <div class="counter">
+        <h3>
+            <span class="left {($currentItem == 0)?"invisible":""}">&lt;</span> 
+            <!-- <span id="currentItem">{$currentItem}</span>/<span id="max">{max}</span> -->
+            <span id="currentItem">{$currentItem} / {max}</span>
+
+            <span class="right {($currentItem == max)?"invisible":""}">&gt;</span>  
+        </h3>
+    </div>
+    <!-- read more button -->
 </main>
 
 <style>
+    .invisible{
+        opacity: 0 !important;
+    }
+    .right{
+        flex: 0;
+    }
+    .left{
+        flex: 0;
+    }
+    .counter{
+        position: relative;
+        top: 40%;
+        left: 40%;
+        color: var(--white);
+        background-color: var(--black);
+        border-top: solid 2px var(--white);
+        border-bottom: solid 2px var(--white);
+        padding: 10px;
+        font-family: "Montserrat", sans-serif;
+        width: 160px;
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+    }
+    .counter h3 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* Centers the items vertically */
+        width: 100%; /* Ensures the h3 element takes full width of its container */
+    }
+    #currentItem, #max {
+        flex: 1; /* Allows the text in the middle to take up any remaining space */
+        text-align: center; /* Centers the text */
+    }
     .current{
-        box-shadow: 0px 0px 5px 0 rgb(255, 255, 255, 0.6);
+        box-shadow: 0px 0px 3px rgb(255, 255, 255);
         z-index: 100 !important;
+        border: solid 2px var(--white);
+        opacity: 1 !important;
     }
     .ribbon{
         transform: rotate3d(1, 0, 0, 51deg) rotate3d(0, 0, 1, 43deg) !important;
@@ -190,29 +244,37 @@
     .item img {
         width: var(--size);
         height: var(--size);
-        border: solid 2px var(--white);
         border-radius: 2%; 
+        transition: opacity 0.1s ease-in-out;
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+
     }
     .item video {
         width: var(--size) ;
         height: var(--size) ;
         object-fit: cover;
-        border: solid 2px var(--white);
         border-radius: 2%;
+        transition: opacity 0.1s ease-in-out;
+        user-select: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
     }
     #category{
         /* styling */
-        background-color: var(--white);
-        color: var(--black);
+        background-color: var(--accent1);
+        color: var(--white);
         border-radius: 2%;
         /* positioning */
         padding: 3px;
         position: absolute;
         top: 0%;
         left: 0%;
-    }
-    p{
-        line-height: 150%;
     }
     p span{
         background-color: var(--white);
@@ -223,6 +285,7 @@
         position: absolute;
         top: calc(55% + var(--size)/2);
         width: 100%;
+        color: var(--white);
     }
     main#carousel {
         width: 100%;
@@ -245,16 +308,24 @@
         justify-content: center;
         text-align: center;
         position: absolute;
-        /* z-index: 20 !important; */
-        transition: opacity 0.22s;
         cursor: pointer;
+        transition: opacity 0.09s ease-in-out;
     }
     button.item:hover {   
         /* positioning */
         opacity: 1 !important;
         filter: none !important;
+        border-radius: 3%;
+        border: solid 2px var(--white);
+    }
+    button.item:hover img{
+        opacity: 0.4;
+    }
+    button.item:hover video{
+        border: solid 2px var(--white);
+        opacity: 0.4;
     }
     .lock{
-        transition: all 0.22s !important;
+        transition: all 0.32s !important;
     }
 </style>

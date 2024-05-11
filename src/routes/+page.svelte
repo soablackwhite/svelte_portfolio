@@ -14,16 +14,13 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/style/style.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/CodingTrain/QuadTree/quadtree.js"></script>
     <!---------------------------------LIBRARIES--------------------------------------------------->
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script> -->
 </header>
 
 <script lang="ts">
     import Manager from '../components/Manager.svelte';
-    import Sketch from '../components/Sketch.svelte';
-    import Logo from '../components/Logo.svelte';
     import LogoNoShadow from '../components/LogoNoShadow.svelte';
     import Menu from '../components/Menu.svelte';
 	import Slider from '../components/Slider.svelte';
@@ -37,6 +34,7 @@
     import { transitioned } from '../stores';
     import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline } from "../stores";
     let t: boolean;
+    let darkmode: false;
     const unsubscribe = transitioned.subscribe(($transitioned) => {
         t = $transitioned;
     });
@@ -60,7 +58,7 @@
         <!------------------------------------UI------------------------------------------------------->
         <Profile bind:index={index}/>
         <!--------------------------------SLIDER------------------------------------------------------->
-        <Slider bind:scrollThreshold={scrollThreshold}/>
+        <!-- <Slider bind:scrollThreshold={scrollThreshold}/> -->
         <!-----------------------------------MENU------------------------------------------------------>
         <!------------------------------CONTENT WHEEL-------------------------------------------------->
         {#if index != 3}
@@ -71,11 +69,13 @@
         {:else if t}
             <CarouselCube bind:direction={$gui_angle} bind:motion={$gui_motion} bind:cardtype={$gui_carousel}/>
         {/if}
+
+
     </div> 
 </Manager>
-<!-- <GUI /> -->
 
 <style>
+
     #wrapper{
         /* display: flex; */
         position: absolute !important;

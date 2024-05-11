@@ -42,8 +42,8 @@
         <slot> </slot>
     </div>
 {:else}
-    <div class="tags {custom}" class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
-        <slot> </slot>
+    <div class="tags {custom} {(idx === $currentItem)?"selected":""}" class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
+        <span><slot name="letter"/></span><slot name="tag"></slot>
     </div>
 {/if}
 <!-- <div class="tags {custom} {isLabel}" class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
@@ -51,6 +51,16 @@
 </div> -->
 
 <style>
+    .selected{
+        font-size: x-large !important;
+        border-color: var(--white) !important;
+    }
+    .selected span{
+        color: var(--black);
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+        background-color: var(--white);
+    }
     .locking-label{
         transition: transform 0.3s, padding-left 0.23s, opacity 0.13s, border-top 0.5s, top 0.33s !important;
     }
@@ -58,8 +68,9 @@
         transition: transform 0.3s !important;
     }
     .disappear{
-        padding-left: 10rem;
+        padding-left: 15rem !important;
         opacity: 0 !important;
+        transition: padding-left 0.33s, opacity 3s, border-top 0.5s, top 0.33s;
     }
     .circle {
         left: calc(50% - 4rem);
@@ -69,8 +80,9 @@
         text-align: right;
         font-size: 1.2rem;
         color: var(--white);
-        border-top: solid 1.5px var(--white);
+        border-top: solid 3px var(--white);
         padding-bottom: 1.5rem;
+        transition: font-size 0.2s;
     }
     .tags{
         position: absolute;
@@ -86,9 +98,10 @@
         width: 12rem;
         text-align: center;
         font-size: x-large;
-        color: var(--white);
+        color: var(--black);
+        background-color: var(--white);
         padding-bottom: 1.5rem;
-        transition: padding-left 0.23s, opacity 0.13s, border-top 0.5s, top 0.33s;
+        transition: padding-left 0.33s, opacity 0.23s, border-top 0.5s, top 0.33s;
     }
     @media (max-width: 576px) {
         .circle{

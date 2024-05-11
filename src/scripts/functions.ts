@@ -44,6 +44,7 @@ export function lockTag(past:number, dir:number, rt:HTMLElement){
 export function updateMedia(){isMedium = window.matchMedia("(min-width: 400px) and (max-width: 576px)").matches;}
 
 //_____________________________TEXT CONTENT_____________________________________
+
 export const contents = [
   {
     "title": "Comic",

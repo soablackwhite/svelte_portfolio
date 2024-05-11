@@ -25,14 +25,14 @@ export const gui_outline = writable("nooutline");
 export const gui_angle = writable("horizontal");
 export const gui_motion = writable("flat");
 
+//for floating boxes
 export const coordinates = writable([
   { x: 0, y: 0},
   { x: 0, y: 0},
   { x: 0, y: 0},
 ]);
 
-// export const myStore = writable([
-//   { x: writable(0), y: writable(0)},
-//   { x: writable(0), y: writable(0)},
-//   { x: writable(0), y: writable(0)},
-// ]);
+//for which element hovered
+export const constellated = writable(false);
+export const constellation_index = writable(0);
+export const profile_index = writable(-1);
