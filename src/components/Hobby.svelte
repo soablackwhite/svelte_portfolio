@@ -95,7 +95,7 @@
         </ul>
     </div>
 </div>
-<div class="image-container" transition:fade>
+<!-- <div class="image-container" transition:fade>
     {#if current === 0}
         <img alt="teaching media" id = "teach" transition:slideLeft src={hobby_img[0]}>
     {:else if current === 1}
@@ -105,7 +105,7 @@
     {:else if current === 3}
         <img alt="cooking media" id = "cook" transition:slideLeft src={hobby_img[3]}>
     {/if}
-</div>
+</div> -->
 
 
 

@@ -4,7 +4,7 @@
    height="480"
    version="1.1"
    id="svg17835"
-   sodipodi:docname="Flag_of_England.svg"
+   sodipodi:docname="ukflag.svg"
    inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,8 +23,8 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="0.23110315"
-     inkscape:cx="-729.11165"
-     inkscape:cy="320.20333"
+     inkscape:cx="-967.10062"
+     inkscape:cy="320.20334"
      inkscape:window-width="1440"
      inkscape:window-height="872"
      inkscape:window-x="0"
@@ -32,7 +32,7 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg17835" />
   <rect
-     style="fill:#101010;fill-opacity:1;stroke:#ffffff;stroke-width:40;stroke-dasharray:none;stroke-opacity:1"
+     style="fill:#f5f5f7;fill-opacity:1;stroke:#101010;stroke-width:40;stroke-dasharray:none;stroke-opacity:1"
      id="rect19226"
      width="800"
      height="480"
@@ -43,5 +43,5 @@
      stroke-width="96"
      d="M 0,240 H 800 M 400,0 v 480"
      id="path17833"
-     style="display:inline;fill:none;fill-opacity:1;stroke:#f5f5f7;stroke-opacity:1" />
+     style="display:inline;fill:none;fill-opacity:1;stroke:#101010;stroke-opacity:1" />
 </svg>

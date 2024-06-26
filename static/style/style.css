@@ -42,6 +42,11 @@
   --black: #4E4B42;
   --accent1: #CD664D;
   --dark: 0; */
+  /* --black: #CDC8B0; */
+  /* --white: #4E4B42; */
+
+
+
 
   /* --black: #363636;
   --accent2: #FFFBFC;
@@ -165,17 +170,26 @@
   }
 }
 html{
-  overflow: hidden;
+  overflow-x: hidden;
 }
 body{
   font-family: "Proxima Nova", sans-serif;
   margin: 0;
   padding: 0;
-  /* background-color: var(--black); */
+  background-color: var(--black);
   scroll-behavior: smooth;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 3;
   color: var(--white);
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+html {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 h1 {
   font-family: 'Montserrat', sans-serif;

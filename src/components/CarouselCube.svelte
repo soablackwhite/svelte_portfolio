@@ -73,11 +73,15 @@
             let blur = (r === 0) ? 0 : rescale(abs, 0, 10, 2, 5);
             item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${r * transform.angle}deg) translate3d(${transform.xOff * r * dir[1] + incr*dir[1]}px, ${transform.yOff * r * dir[0] + incr*dir[0]}px, 0)`;
             item.style.filter = `blur(${blur}px)`;
-            alpha = (alpha < 0.08) ? 0 : alpha;
+            alpha = (alpha < 0.09) ? 0 : alpha;
             item.style.opacity = `${alpha}`;
         });
         return(pastlock);
     };
+    function clickArrow(dir: number){
+        lock = true;
+        past = ((dir === 1 && position < max)||(dir === -1 && position > 0)) ? lockCarousel(position + dir) : past;
+    }
     onMount(() => {
         items = document.querySelectorAll('.item');
         //update my carousel based on current position, which is found thru current scroll
@@ -159,6 +163,8 @@
 </script>
 <!-- images -->
 <main id="carousel" class:ribbon>
+    <!-- left arrow -->
+    <button on:click={() => clickArrow(-1)}> <img class="arrow" style="left: 10%;"alt="left arrow" src="/media/icons/bluetipdesign_left.svg"> </button>
     {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
         <button class="item" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
             {#if type === "video"}
@@ -181,6 +187,8 @@
             </div>
         </button>
     {/each}
+    <!-- right arrow -->
+    <button on:click={() => clickArrow(1)}> <img style="left:90%;" class="arrow" alt="right arrow" src="/media/icons/bluetipdesign_right.svg"> </button>
     <!-- current item -->
     <div class="counter">
         <h3>
@@ -194,7 +202,41 @@
     <!-- read more button -->
 </main>
 
+<button class="scrollmore" on:click>
+    Hi there buddy
+</button>
+
 <style>
+    .scrollmore {
+        all:unset;
+        position: absolute !important;
+        top: 80% !important;
+        background-color: white;
+        color: black;
+        font-size: xx-large;
+        align-items: center !important;
+        align-content: center !important;
+        justify-content: center !important;
+        cursor: pointer;
+        width: 100%;
+        height:100%;
+    }
+    button {
+        all: unset;
+    }
+    .arrow{
+        position: absolute;
+        z-index: 10;
+        width: 100px;
+        transform: translate(-50%, -50%);   
+        user-select: none;
+        filter: invert();
+        cursor: pointer;
+        opacity: .7;
+    }
+    .arrow:hover{
+        opacity: 1;
+    }
     .invisible{
         opacity: 0 !important;
     }

@@ -1,5 +1,9 @@
 <header>
     <title>Omar Ouldali</title>
+    <!------------------------------------CREDITS----------------------------------------------------->
+    <!-- Direction panel icon: Artdabana / Nounproject -->
+    <!-- SVG to point coordinates: coördinator by Aliza Aufrichtig (she's fantastic!) -->
+
     <!------------------------------------META----------------------------------------------------->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +12,7 @@
     <!-----------------------------------FONTS----------------------------------------------------->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100;200;300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="/fonts/proximanova.otf" rel="stylesheet">
     <!--------------------------------STYLESHEETS-------------------------------------------------->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
@@ -53,7 +57,6 @@
     <div slot="main" id="wrapper" style="z-index: 0;">
         <!-- <Logo bind:index={index}/> -->
         <LogoNoShadow bind:index={index}/>
-
         <Menu bind:index={index} bind:type={$gui_menu} bind:outline={$gui_outline}/>
         <!------------------------------------UI------------------------------------------------------->
         <Profile bind:index={index}/>

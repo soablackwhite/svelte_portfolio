@@ -119,7 +119,7 @@
     }
     .links{
         z-index: 3;
-        position: absolute;
+        position: fixed;
         top: 1%;
         right: 0%;
         transition: all 0.3s;
@@ -171,7 +171,7 @@
     .menu2 {
         bottom: calc(10%); 
         top: auto;
-        position: absolute !important;
+        position: fixed !important;
         width: 100%;
         text-align: center;
         opacity : 1;
@@ -208,7 +208,7 @@
     .menu {
         left: calc(50% + 6.2rem);
         top: calc(50% - 4rem);
-        position: absolute !important;
+        position: fixed !important;
         width: 8rem;
         width: auto;
         text-align: center;

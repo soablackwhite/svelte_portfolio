@@ -21,12 +21,15 @@
     const profiles = [
         '/media/icons/manbaa.svg',
         '/media/icons/bocconi.svg',
-        '/media/icons/nyu.svg'
+        '/media/icons/nyuad.svg',
+        '/media/icons/nyu.svg',
+        '/media/icons/directions.svg'
     ]
     $: cur = $currentItem;
     let typer = 0;
     let t1 = false;
     let t2 = false;
+    let classes = ["manbaa", "bocconi", "nyuad", "nyu", "next"]
     $: thumbnail_class = (typer === 1) ? "runner": ( typer === 2) ? "cook" : "graduate";
     $: square = (index === 3) ? true : false;
     $: square2 = (index === 3) ? true : false;
@@ -72,7 +75,7 @@
             {:else if ( (index == 1) && $transitioned==false) && ($profile_index === -1)}
                 <div> <h1> Hi! </h1></div>
             {:else if ( (index == 1) && $transitioned==false)}
-                <img alt="profile" class="school {($profile_index===1)?"bocconi":""}" src={profiles[$profile_index]}/>
+                <img alt="profile" class="school {classes[$profile_index]}" src={profiles[$profile_index]}/>
             {:else if $transitioned === false}
                 <img alt="profile" id="icon" src={icons[cur]}/>
             {/if}
@@ -117,6 +120,18 @@
     }
     .bocconi{
         height: 240px !important;
+    }
+    .manbaa{
+        height: 140px !important;
+    }
+    .nyu{
+        height: 170px !important;
+    }
+    .nyuad{
+        height: 170px !important;
+    }
+    .next{
+        height: 150px !important;
     }
     .school{
         position:absolute;
@@ -174,7 +189,7 @@
         /* transform: translate(var(--vidx), var(--vidy)); */
     }
     .ui {
-        position: absolute !important;
+        position: fixed !important;
     }
 
     @media (max-width: 576px) {

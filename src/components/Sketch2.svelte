@@ -1,6 +1,6 @@
 <script lang="ts">
     import P5, { type p5 } from 'p5-svelte';
-    import { coordinates, constellated, constellation_index} from '../stores';
+    import { coordinates, constellated, constellation_index, delta, spinDelta} from '../stores';
     import { throttle} from 'lodash-es';
     import { get_css_var } from '../scripts/functions';
     import { moroccoData, lionData, runnerData, bioData, englandData, italyData, uaeData, usaData} from "../scripts/coordinateData";
@@ -16,23 +16,40 @@
     const pointData = [moroccoData, italyData, uaeData, usaData, englandData];
     let morocco;
     //styling
-    const spread = .5;
+    const spread = 1;
     const point = 2;
     const weight = 1;
     //forces
-    const offset = 0.0005; //speed of particles moving
+    const offset = 0.0001; //speed of particles moving
     const forceradius = 70; 
-    let proximity = 10;
+    let proximity = 15;
     let repulsionStrength = 7; //strength of mouse push
     const prox = [10, 10];
     const repuls = [0, 7];
     const snapStrength = 80;
+    //loading bar
+    let cx:number, cy:number, s:number;
+    //spinning canvas
+    let angle = 0;
+    let spinSpeed = 0; // initial spin speed
+    const maxSpinSpeed = 0.1; // max spin speed
+    const spinDecay = .9; // deceleration rate
+    spinDelta.subscribe(value => {
+      handleScroll(value);
+      console.log("triggered");
+    });
+
     //data
     $: coordinate_index = constellation_index;
     $: if(index === 1){
       constellated.set(true);
+      changeMode();
+      angle = 0;
     } else{
+      if (index!=2) { angle = 0}
       constellated.set(false);
+      changeMode();
+      constellation_index.set(0);
     }
     $: if($constellated){
       changeMode();
@@ -60,9 +77,18 @@
       accent2 = get_css_var("--accent2").trim();
       accent3 = get_css_var("--accent1").trim();
     })
+    function handleScroll(deltaY: number) {
+      spinSpeed =  Math.sign(deltaY) * maxSpinSpeed * Math.min(Math.abs(deltaY) / 100, 1);
+      // spinSpeed = Math.min(Math.abs(deltaY)/200, 1);
+      //sign of delta Y * min between abs of delta Y and 1
+      // spinSpeed = Math.sign(deltaY) * Math.min(Math.abs(deltaY/100), 1);
+      // spinSpeed = maxSpinSpeed;
+    }
+    //stretching line
+    $: linesize = $delta * 3;
 
     class Wobbler { //this is the endpoint that controls the floating boxes
-      ox; oy; //origin
+      ox; oy; //originf
       xoff; yoff; //offset
       xnoise; ynoise; //noise value
       x; y; //position
@@ -171,6 +197,9 @@
     const sketch = (p5:p5) => {
       p5.setup = () => {
         p5.createCanvas(innerWidth, innerHeight);
+        cy = innerHeight/2;
+        cx = innerWidth/2;
+        s = 300;
         englandData.forEach((point)=>{ //recenter
             point.x += 700;
             point.y -= 300;
@@ -214,9 +243,38 @@
   
       p5.draw = () => {
         //reset
+        // p5.translate(p5.width / 2, p5.height / 2);
         p5.clear();
         quadtree.clear();
         p5.background(accent1);
+        
+        //loading bar
+        if(index === 2){
+          // let progress = ($delta == 0 ) ? p5.PI / 2 : p5.map($delta, 0, 234, 3 * p5.PI / 2, p5.PI / 2);
+          // let progress = p5.constrain(p5.map($delta, 0, 234, 3 * p5.PI / 2, p5.PI / 2), 0, 1.9);
+          let progress = p5.map($delta, 0, 235, 3 * p5.PI / 2, p5.PI / 2);
+          s = 280;
+          p5.noFill();
+          p5.stroke(255);
+          p5.strokeWeight(1);
+          p5.arc(cx, cy, s, s, 0, 2*p5.PI);
+          //white arc outline
+          s = 260;
+          // smol white arc
+          p5.stroke(255);
+          p5.strokeWeight(6);
+          p5.fill(255);
+          p5.arc(cx, cy, s, s, progress, p5.PI / 2, p5.PIE);
+
+          // Mask
+          p5.fill(accent1);
+          p5.noStroke();
+          p5.rect(p5.width / 2 - 10, 0, s, p5.height);
+        }
+        p5.push();
+        p5.translate(p5.width/2, p5.height/2);
+        p5.rotate(angle);
+        p5.translate(-p5.width/2, -p5.height/2);
         //update positions and quadtree data
         walkers.forEach((walker, i) => {
           walker.repel(p5, p5.mouseX, p5.mouseY);
@@ -268,22 +326,40 @@
         });
         //send positions to divs
         thrupdate2(p5);
-        //diagonal line decoration
-        if(index === 1){
-          accent2.setAlpha(255);
-          p5.stroke(accent3);
-          p5.strokeWeight(3);
-          p5.stroke(accent2);
-          p5.line(.5*p5.width - 261, 0, .5*p5.width, p5.height);
-        }
+        //stretching line decoration
+        accent2.setAlpha(255);
+        p5.stroke(accent3);
+        p5.strokeWeight(3);
+        p5.stroke(accent2);
+        // og line
+        let startX = .5 * p5.width - 261;
+        let startY = 0;
+        // og end of line
+        let originalEndX = .5 * p5.width;
+        let originalEndY = p5.height;
+        //direction + normalize + rescale
+        let dir = p5.createVector(originalEndX - startX, originalEndY - startY);
+        dir.normalize(); // Normalize the direction vector
+        let totalLength = p5.sqrt(p5.sq(p5.width) + p5.sq(p5.height)); // Calculate the maximum length of the line diagonally across the canvas
+        //linesize scale
+        let endX = startX + dir.x * (linesize  / 2);
+        let endY = startY + dir.y * (linesize  / 2);
+        // end
+        // p5.line(startX, startY, endX, endY);
         // visualizations for debugging, end of draw
         // drawMap(p5, morocco); 
-        // p5.strokeWeight(1);
-        // p5.stroke(255, 255, 0, 30); // Ensure this function call is valid
-        // p5.noFill();
-        // p5.rectMode(p5.CENTER);
-        // drawQuadtree(p5, quadtree);
+        p5.strokeWeight(.4);
+        p5.stroke(255, 255, 255, 10); // Ensure this function call is valid
+        p5.noFill();
+        p5.rectMode(p5.CENTER);
+        drawQuadtree(p5, quadtree);
         // console.log(p5.frameRate());
+        p5.pop()
+        angle += spinSpeed;
+        if (Math.abs(spinSpeed) > 0) {
+          // spinSpeed = Math.max(spinSpeed - 10*spinDecay, 0);
+          spinSpeed*=spinDecay;
+        }
       };
 
       p5.windowResized = () => {
@@ -307,10 +383,31 @@
         drawQuadtree(p5, quadtree.southwest);
       }
     }
+    function drawMap(p5, map){
+      p5.noFill();
+      p5.stroke(255)
+      p5.strokeWeight(0.2);
+      p5.beginShape();
+      map.forEach(coord => {
+        // let x = map(coord.lon, -20, 50, 0, width);
+        let x = coord.x;
+        // let y = map(coord.lat, minLat, maxLat, height, 0);
+        let y = coord.y;
+        p5.vertex(x, y);
+      });
+      p5.endShape(p5.CLOSE);
+    }
     function changeMode(){
       morocco = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y])); 
       walkers.forEach( (walker, i) => {
-        if(i < pointData[$constellation_index].length){ //if map make pos map
+        if(!$constellated){
+          walker.mapmode = false;
+          proximity = prox[1];
+          repulsionStrength = repuls[1];
+          walker.ox = walker.xnoise;
+          walker.oy = walker.ynoise;
+        }
+        else if(i < pointData[$constellation_index].length){ //if map make pos map
           walker.mapmode = true;
           proximity = prox[0];
           repulsionStrength = repuls[0];
@@ -325,22 +422,6 @@
         }
         walker.traveling = true;
       })
-    }
-
-
-    function drawMap(p5, map){
-      p5.noFill();
-      p5.stroke(255)
-      p5.strokeWeight(0.2);
-      p5.beginShape();
-      map.forEach(coord => {
-        // let x = map(coord.lon, -20, 50, 0, width);
-        let x = coord.x;
-        // let y = map(coord.lat, minLat, maxLat, height, 0);
-        let y = coord.y;
-        p5.vertex(x, y);
-      });
-      p5.endShape(p5.CLOSE);
     }
   </script>
   

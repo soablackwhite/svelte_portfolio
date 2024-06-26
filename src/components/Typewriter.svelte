@@ -76,9 +76,9 @@
         top: 52% !important;
         left: 30% !important;
         font-size: xx-large !important;
-        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.374);
         border-bottom: solid 4px var(--accent2) !important;
-        /* border-left: solid 0px var(--accent2) !important; */
+        background-color: var(--black);
+        border-left: solid 0px var(--accent2) !important;
         transition: border 0.3s, min-height 0.2s !important;
     }
     .about:hover{
@@ -93,11 +93,11 @@
         left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
         top: calc(47%);
         font-size: x-large;
-        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.374);
         transition: left 0.23s ease-in-out;
     }
     .typewriter{
-        overflow: hidden;
+        font-family: "Proxima Nova", sans-serif;
+        /* overflow: hidden; */
         z-index: 10;
         height: auto;
         transition: max-height 0.5s ease-out;   

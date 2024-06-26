@@ -68,7 +68,7 @@
         z-index: 2;
         width : 12rem !important;
         height : auto !important;
-        position: absolute;
+        position: fixed;
         top: -2rem;
         left: .5rem;
         transition: all 0.3s ease;
