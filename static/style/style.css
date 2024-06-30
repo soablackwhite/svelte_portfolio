@@ -171,6 +171,7 @@
 }
 html{
   overflow-x: hidden;
+  overflow: hidden;
 }
 body{
   font-family: "Proxima Nova", sans-serif;
@@ -178,7 +179,7 @@ body{
   padding: 0;
   background-color: var(--black);
   scroll-behavior: smooth;
-  /* overflow: hidden; */
+  overflow: hidden;
   z-index: 3;
   color: var(--white);
 }

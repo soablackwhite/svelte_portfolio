@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210.93236mm"
+   height="118.25113mm"
+   viewBox="0 0 210.93236 118.25113"
+   version="1.1"
+   id="svg5"
+   inkscape:export-filename="scrollmore.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.34332243"
+     inkscape:cx="294.1841"
+     inkscape:cy="821.38531"
+     inkscape:window-width="1440"
+     inkscape:window-height="900"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0.36801667,-179.16375)">
+    <path
+       sodipodi:type="star"
+       style="fill:#f5f5f2;fill-opacity:1;stroke:#f5f5f2;stroke-width:0.264583;stroke-opacity:1"
+       id="path4636"
+       inkscape:flatsided="false"
+       sodipodi:sides="3"
+       sodipodi:cx="109.48719"
+       sodipodi:cy="112.58005"
+       sodipodi:r1="78.634064"
+       sodipodi:r2="39.317024"
+       sodipodi:arg1="0.52359878"
+       sodipodi:arg2="1.5707963"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 177.58629,151.89708 -68.0991,-10e-6 -68.099097,10e-6 34.049555,-58.975544 34.049542,-58.975552 34.04954,58.975551 z"
+       inkscape:transform-center-x="-2.7749404e-06"
+       inkscape:transform-center-y="-19.64243"
+       transform="matrix(1.5435226,0,0,0.99918177,-63.897798,145.50992)" />
+  </g>
+</svg>

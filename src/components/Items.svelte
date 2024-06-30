@@ -1,13 +1,12 @@
 <script lang='ts'>
     import { onMount } from 'svelte';
     import { updateTag, lockTag, get_css_var, clamp} from "../scripts/functions";
-    import { fade } from 'svelte/transition';
+    import { fade, slide } from 'svelte/transition';
     import { currentItem } from "../stores";
     import { delta, spinDelta } from "../stores";
     import Typewriter from './Typewriter.svelte';
     import Circle from './Circle.svelte';
     import Card from './Card.svelte';
-    import Hobby from './Hobby.svelte';
     export let index:number = 0;
     export let scrollThreshold: number;
     let locking = true; 
@@ -192,7 +191,6 @@
                     <Circle locking={locking} idx={i} sz={tags[index].content.length - 1} custom="circle centered">
                         <span slot="letter">{tag[0]}</span>
                         <span slot="tag">{tag.slice(1)}</span>
-                        
                     </Circle>
                 </div>
             {/each}

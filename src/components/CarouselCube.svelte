@@ -55,6 +55,7 @@
     let lock = false;
     let past = 0;
     let position = 5; // start w the first item
+    function showDoc(){}
     function clickScroll(idx:number, event: MouseEvent){
         lock = true;
         past = lockCarousel(idx);
@@ -202,24 +203,37 @@
     <!-- read more button -->
 </main>
 
-<button class="scrollmore" on:click>
-    Hi there buddy
+<button class="scrollmore" on:click={showDoc}>
+    learn more
 </button>
+<img class="triangle" src="/media/icons/scrollmore.svg" alt="scroll more button"> 
+
+
 
 <style>
+    .triangle{
+        position: absolute !important;
+        bottom: -90%;
+        left: 50%;
+        transform: translate(-50%, 0%);
+        width: 100%;
+    }
     .scrollmore {
         all:unset;
-        position: absolute !important;
-        top: 80% !important;
-        background-color: white;
+        position: absolute;
+        /* top: 80% !important; */
+        bottom: 3%;
+        left: 50%;
+        transform: translate(-50%, 0%);
         color: black;
-        font-size: xx-large;
+        font-size: large;
         align-items: center !important;
         align-content: center !important;
         justify-content: center !important;
         cursor: pointer;
-        width: 100%;
-        height:100%;
+        z-index: 10;
+        /* width: 100%; */
+        /* height:100%; */
     }
     button {
         all: unset;

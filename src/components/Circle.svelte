@@ -2,6 +2,7 @@
     //VARIABLES
     import { rescale } from "../scripts/functions";
     import { currentItem } from "../stores";
+    import { fade, slide } from "svelte/transition";
     export let idx: number;
     export let sz: number; //size of content
     export let custom: string;
@@ -38,11 +39,11 @@
 </script>
 
 {#if custom === "label"}
-    <div class="tags {custom}" class:locking-label={locking} class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
+    <div transition:slide|global class="tags {custom}" class:locking-label={locking} class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
         <slot> </slot>
     </div>
 {:else}
-    <div class="tags {custom} {(idx === $currentItem)?"selected":""}" class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
+    <div transition:slide|global={{axis:"x"}} class="tags {custom} {(idx === $currentItem)?"selected":""}" class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
         <span><slot name="letter"/></span><slot name="tag"></slot>
     </div>
 {/if}

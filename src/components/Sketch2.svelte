@@ -16,7 +16,7 @@
     const pointData = [moroccoData, italyData, uaeData, usaData, englandData];
     let morocco;
     //styling
-    const spread = 1;
+    const spread = 2;
     const point = 2;
     const weight = 1;
     //forces
@@ -277,11 +277,24 @@
         p5.translate(-p5.width/2, -p5.height/2);
         //update positions and quadtree data
         walkers.forEach((walker, i) => {
-          walker.repel(p5, p5.mouseX, p5.mouseY);
-          if (walker.traveling && p5.dist(p5.mouseX, p5.mouseY, walker.x, walker.y) > proximity){ //it not within range, and if it's still not back in place, snap back
-            walker.goBack(p5);
+          if (index === 2){
+            let mouseX = p5.mouseX - p5.width / 2;
+            let mouseY = p5.mouseY - p5.height / 2;
+            let rotatedMouse = p5.createVector(mouseX, mouseY).rotate(-angle); // Rotate mouse coordinates back
+            walker.repel(p5, rotatedMouse.x + p5.width / 2, rotatedMouse.y + p5.height / 2);
+            if (walker.traveling && p5.dist(rotatedMouse.x + p5.width / 2, rotatedMouse.y + p5.height / 2, walker.x, walker.y) > proximity) {
+              walker.goBack(p5);
+            } else if (!walker.mapmode && !walker.traveling) {
+              walker.move(p5);
+            }
+          } else{
+            walker.repel(p5, p5.mouseX, p5.mouseY);
+            if (walker.traveling && p5.dist(p5.mouseX, p5.mouseY, walker.x, walker.y) > proximity){ //it not within range, and if it's still not back in place, snap back
+              walker.goBack(p5);
+            }
+            else if (!walker.mapmode && !walker.traveling) {walker.move(p5);}
           }
-          else if (!walker.mapmode && !walker.traveling) {walker.move(p5);}
+          
           quadtree.insert(new Point(walker.x, walker.y, walker));
           p5.stroke(255);
           p5.strokeWeight(point);

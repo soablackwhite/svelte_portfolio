@@ -76,8 +76,9 @@
                 <div> <h1> Hi! </h1></div>
             {:else if ( (index == 1) && $transitioned==false)}
                 <img alt="profile" class="school {classes[$profile_index]}" src={profiles[$profile_index]}/>
-            {:else if $transitioned === false}
+            {:else if (index == 2) && $transitioned === false}
                 <img alt="profile" id="icon" src={icons[cur]}/>
+            {:else}
             {/if}
         </div>
     </div>
