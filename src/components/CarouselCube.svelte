@@ -1,6 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { rescale, clamp, contents } from "../scripts/functions";
+    import { fade} from "svelte/transition";
+    import { quintOut } from "svelte/easing";
     import { currentItem } from "../stores";
     // parameters
     let max = 11; //nbr of tbnails
@@ -52,10 +54,52 @@
     }
     $: ribbon = (motion === "ribbon") ? true : false;
     let resetThreshold: number;
+    let opacityThreshold = 0.09;
     let lock = false;
     let past = 0;
     let position = 5; // start w the first item
-    function showDoc(){}
+
+    //documentation stuff
+    let data = contents[$currentItem] || {};
+    $: data = contents[$currentItem] || {};
+    $:console.log($currentItem);
+    $: ({ alt, title, category, tech, description, media } = data || {});
+    let docmode = false;
+    let doc;
+    let documentation: HTMLElement;
+    function showDoc() {
+        docmode = true;
+        documentation.style.bottom = '0';
+    }
+    function hideDoc() {
+        docmode = false;
+        documentation.style.bottom = '-100%';
+    }
+    // svelte animation customized for pop in pop out
+    function expandOut(node, { duration, sign }) {
+        const height = node.offsetHeight;
+        return {
+            duration,
+            css: t => `
+                transform: translate(-50%, ${ sign * (50 - (1 - t) * 100)}%);
+                opacity: ${2*t/3};
+                height: 50%;
+            `,
+            easing: quintOut
+        };
+    }
+    function test(node, { duration}) {
+        const height = node.offsetHeight;
+        return {
+            duration,
+            css: t => `
+                transform: rotate(-40deg) translate(0%, calc(70px - 50%)) !important;
+            `,
+            easing: quintOut
+        };
+    }
+
+
     function clickScroll(idx:number, event: MouseEvent){
         lock = true;
         past = lockCarousel(idx);
@@ -71,10 +115,13 @@
             const r = index - position;
             const abs = Math.abs(r);
             let alpha = (r === 0) ? 1 : rescale(1 - abs, -10, 0, 0, 0.1);
-            let blur = (r === 0) ? 0 : rescale(abs, 0, 10, 2, 5);
             item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${r * transform.angle}deg) translate3d(${transform.xOff * r * dir[1] + incr*dir[1]}px, ${transform.yOff * r * dir[0] + incr*dir[0]}px, 0)`;
-            item.style.filter = `blur(${blur}px)`;
-            alpha = (alpha < 0.09) ? 0 : alpha;
+            if (abs < 3 && abs != 0) {
+                item.style.filter = "blur(2px)";
+            } else{
+                item.style.filter = "none";
+            }
+            alpha = (alpha < opacityThreshold) ? 0 : alpha;
             item.style.opacity = `${alpha}`;
         });
         return(pastlock);
@@ -103,7 +150,7 @@
                 let ang = (r - (past/offset))*transform.angle; //get new index to find relative position of current position, and use it to get angle
                 item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${ang}deg) translate3d(${transform.xOff*r*dir[1] + past*dir[1]}px, ${transform.yOff*r*dir[0] + past*dir[0]}px, 0)`;
                 item.style.filter = `blur(${blur}px)`;
-                alpha = (alpha < 0.08) ? 0 : alpha;
+                alpha = (alpha < opacityThreshold) ? 0 : alpha;
                 item.style.opacity = `${alpha}`;
             });
             currentItem.set(lock);
@@ -112,24 +159,26 @@
         lockCarousel(0);
         //___________________________________SCROLL KEYBOARD______________________________________________
         function wheelScroll(e: WheelEvent){
-            lock = false;
-            if (Math.abs(e.deltaX) > 0) {
-                e.preventDefault();
-            }
-            let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? -e.deltaY : -e.deltaX;
-            if(Math.abs(scroll) < 4){
-                lock = true;
-                past = lockCarousel(position);
-            } else {
-                position = updateCarousel(scroll);
-            }
-            clearTimeout(resetThreshold);
-            resetThreshold = setTimeout(function () {
-                if(Math.abs(scroll) > 0 && Math.abs(scroll)){
+            if(!docmode){
+                lock = false;
+                if (Math.abs(e.deltaX) > 0) {
+                    e.preventDefault();
+                }
+                let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? -e.deltaY : -e.deltaX;
+                if(Math.abs(scroll) < 4){
                     lock = true;
                     past = lockCarousel(position);
+                } else {
+                    position = updateCarousel(scroll);
                 }
-            }, 75);
+                clearTimeout(resetThreshold);
+                resetThreshold = setTimeout(function () {
+                    if(Math.abs(scroll) > 0 && Math.abs(scroll)){
+                        lock = true;
+                        past = lockCarousel(position);
+                    }
+                }, 75);
+            }
         }
         
         //___________________________________SCROLL KEYBOARD______________________________________________
@@ -144,10 +193,10 @@
                     dir = 1;
                     break;
                 case 'ArrowDown':
-                    dir = (direction === "horizontal") ? -1 : 1;
+                    dir = (direction === "horizontal") ? 1 : -1;
                     break;
                 case 'ArrowUp':
-                    dir = (direction === "horizontal") ? 1 : -1;
+                    dir = (direction === "horizontal") ? -1 : 1;
                     break;
                 default:
                     break;
@@ -169,9 +218,9 @@
     {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
         <button class="item" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
             {#if type === "video"}
-                <video alt ={alt} transition autoplay="autoplay" muted loop
-                    onmouseover="this.pause()" 
-                    onmouseout="this.play()" 
+                <video alt ={alt} transition muted loop
+                    onmouseover="this.play()" 
+                    onmouseout="this.pause()" 
                     class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">
                     <source src={src} type="video/mp4"> your browser does not support the video tag.
                 </video>
@@ -190,63 +239,178 @@
     {/each}
     <!-- right arrow -->
     <button on:click={() => clickArrow(1)}> <img style="left:90%;" class="arrow" alt="right arrow" src="/media/icons/bluetipdesign_right.svg"> </button>
-    <!-- current item -->
-    <div class="counter">
-        <h3>
-            <span class="left {($currentItem == 0)?"invisible":""}">&lt;</span> 
-            <!-- <span id="currentItem">{$currentItem}</span>/<span id="max">{max}</span> -->
-            <span id="currentItem">{$currentItem} / {max}</span>
-
-            <span class="right {($currentItem == max)?"invisible":""}">&gt;</span>  
-        </h3>
-    </div>
-    <!-- read more button -->
 </main>
 
-<button class="scrollmore" on:click={showDoc}>
-    learn more
-</button>
-<img class="triangle" src="/media/icons/scrollmore.svg" alt="scroll more button"> 
+<!-- current item count -->
+<div class="counter">
+    <h3>
+        <span class="left {($currentItem == 0)?"invisible":""}">&lt;</span> 
+        <!-- <span id="currentItem">{$currentItem}</span>/<span id="max">{max}</span> -->
+        <span id="currentItem">{$currentItem} / {max}</span>
+        <span class="right {($currentItem == max)?"invisible":""}">&gt;</span>  
+    </h3>
+</div>
+<!-- documentation -->
+<div class="doc-container" bind:this={doc}>
+    {#if !docmode}
+        <button out:expandOut={{duration: 400, sign: 1}} 
+        in:fade={{duration:300}} class="learnmore navbutton" 
+        on:click={showDoc}>
+            <div class="textrotate"> <strong> LEARN MORE </strong> </div>
+        </button>
+    {/if}
+    <div class="documentation" bind:this={documentation}>
+        <div class = "techs">
+
+        </div>
+        <div class = "page">
+            {#if docmode}
+                <button out:expandOut={{duration: 400, sign: -1}} 
+                in:fade={{duration:300}} class="back navbutton" 
+                on:click={hideDoc}>
+                    <div class="textrotate2"> <strong> BACK </strong> </div>
+                </button>
+            {/if}
+            <h1> {title} </h1> <br>
+            <h3> <mark> {category}: </mark> {tech} </h3>
+            <p class="documentation-text"> {description}</p>
+            <!-- media display stuff based on type of media -->
+            {#each media as m, i}
+                {#if m.type === "image"}
+                    <img class="media_container" src={m.src} alt={alt} >
+                {:else if m.type === "video"}
+                <!-- there was a transition property in this video tag maybe i should put it back -->
+                    <video  class="media_container" autoplay muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
+                        <source src={m.src} type="video/mp4">
+                            Your browser does not support the video tag.
+                    </video>
+                {:else if m.type === "youtube"}
+                    <iframe
+                        src= {m.src} class="media_container" title="YT video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                    </iframe>
+                {:else}
+                    <div class="skel" transition:fade>
+                    </div>
+                {/if}
+            {/each}
+        </div>
+    </div>
+</div>
 
 
 
 <style>
-    .triangle{
-        position: absolute !important;
-        bottom: -90%;
-        left: 50%;
-        transform: translate(-50%, 0%);
-        width: 100%;
+    .textrotate{
+        text-align: center;
+        margin-left: 20px;
+        transform: rotate(0deg) translate(0%, calc(-70px + 100%));
     }
-    .scrollmore {
-        all:unset;
+    .textrotate2{
+        text-align: center;   
+        transform: rotate(0deg) translate(0%, calc(70px - 50%));
+    }
+    .navbutton{
         position: absolute;
-        /* top: 80% !important; */
-        bottom: 3%;
+        width: 140px;
+        height: 140px;
+        color: var(--black);
+        background-color: var(--white);
+        transition: all 0.17s;
+        border-radius: 2px;
+    }
+    .navbutton:hover{
+        color: var(--black);
+        background-color: var(--white);
+        padding: 10px;
+    }
+    .back{
+        top: 0px;
         left: 50%;
-        transform: translate(-50%, 0%);
-        color: black;
-        font-size: large;
-        align-items: center !important;
-        align-content: center !important;
-        justify-content: center !important;
-        cursor: pointer;
-        z-index: 10;
-        /* width: 100%; */
-        /* height:100%; */
+        transform: translate(-50%, -52%) rotate(-45deg) ;
+        z-index: 7;     
+    }
+    .learnmore {
+        bottom: 0%;
+        left: 50%;
+        text-align: center;
+        transform: translate(-50%, 51%) rotate(-45deg);
+        z-index: 5; 
+    }
+    .learnmore:hover{
+        transform: translate(-50%, 50%) rotate(0deg);
+    }
+    .back:hover{
+        transform: translate(-50%, -50%) rotate(0deg) ;
+    }
+    /* to stop the hovering effect from being canceled ont transitions */
+    .navbutton:hover::before{
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        z-index: -1; /* Make sure the pseudo-element is behind the actual element */
+    }
+    /* documentation formatting */
+    .documentation {
+        position: absolute;
+        z-index: 2;
+        bottom: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        color: white;
+        transition: bottom 0.37s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow-y: scroll;
+    }
+    .page{
+        padding-top: 300px;
+        width: 60vw;
+    }
+    .documentation h1 {
+        margin-top: 20px;
+    }
+    .documentation-text{
+        font-size: x-large;
+        font-family: 'Proxima Nova', sans-serif;
+    }
+    .media_container{
+        width: 100%;
+        height: auto;
+    }
+    h1{
+        display: block;
+        position:relative;
+        margin-top: 0rem !important;
+        text-align: center ;
+    }
+    h3 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: xx-large;
+        /* font-weight: 400; */
     }
     button {
         all: unset;
+        cursor: pointer;
     }
+
+    /* UI ELEMENTS */
     .arrow{
         position: absolute;
-        z-index: 10;
+        z-index: 20 !important;
         width: 100px;
         transform: translate(-50%, -50%);   
         user-select: none;
         filter: invert();
         cursor: pointer;
-        opacity: .7;
+        opacity: .5;
+        transition: opacity 0.16s;
     }
     .arrow:hover{
         opacity: 1;
@@ -261,11 +425,10 @@
         flex: 0;
     }
     .counter{
-        position: relative;
-        top: 40%;
-        left: 40%;
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
         color: var(--white);
-        background-color: var(--black);
         border-top: solid 2px var(--white);
         border-bottom: solid 2px var(--white);
         padding: 10px;
@@ -276,6 +439,7 @@
         -khtml-user-select: none;
         -webkit-user-select: none;
         -o-user-select: none;
+        z-index: 100;
     }
     .counter h3 {
         display: flex;
@@ -283,15 +447,11 @@
         align-items: center; /* Centers the items vertically */
         width: 100%; /* Ensures the h3 element takes full width of its container */
     }
+
+    /* THUMBNAILS */
     #currentItem, #max {
         flex: 1; /* Allows the text in the middle to take up any remaining space */
         text-align: center; /* Centers the text */
-    }
-    .current{
-        box-shadow: 0px 0px 3px rgb(255, 255, 255);
-        z-index: 100 !important;
-        border: solid 2px var(--white);
-        opacity: 1 !important;
     }
     .ribbon{
         transform: rotate3d(1, 0, 0, 51deg) rotate3d(0, 0, 1, 43deg) !important;
@@ -355,7 +515,13 @@
         overflow: hidden ;
         transform-style: preserve-3d;
         perspective: 600px;
-        z-index: 1;
+        /* z-index:  */
+    }
+    .current{
+        box-shadow: 0px 0px 3px rgb(255, 255, 255);
+        z-index: 10 !important;
+        border: solid 2px var(--white);
+        opacity: 1 !important;
     }
     button.item {   
         /* positioning */

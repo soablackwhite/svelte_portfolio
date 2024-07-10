@@ -1,7 +1,6 @@
 <script lang='ts'>
     import { onMount } from 'svelte';
     import { updateTag, lockTag, get_css_var, clamp} from "../scripts/functions";
-    import { fade, slide } from 'svelte/transition';
     import { currentItem } from "../stores";
     import { delta, spinDelta } from "../stores";
     import Typewriter from './Typewriter.svelte';
@@ -23,7 +22,6 @@
         content: ContentItem[];
     }
     let cur: number;
-    // $:console.log(cur);
     let d: number;
     currentItem.subscribe((value) => {
         cur = value;
@@ -77,7 +75,6 @@
         const isAtPageBottom = window.scrollY + window.innerHeight >= document.body.scrollHeight;
         //only if the page is !scrollable || if scrollable but user is at either extreme
         delta.update((n) => n + increment);
-
         if (!isBodyScrollable || isAtPageTop || isAtPageBottom){
             accumulatedDelta += increment;
             //____________________________________INCREMENT/DECREMENT INDEX KEYBOARD______________________________________________
@@ -94,7 +91,7 @@
             else if (Math.abs(accumulatedDelta) >= scrollThreshold) {
                 if (increment > 0 && (index != 2 || cur === maxcur)) {
                     //go next, reset start on 0
-                    if(index < max) {
+                    if (index < max) {
                         // index ++;
                         currentItem.set(0);
                     }
@@ -105,7 +102,7 @@
                 }
                 else if (increment < 0 && (index != 2 || cur === 0)) {
                     //go prv, reset start on last
-                    if(index > 0) {
+                    if (index > 0) {
                         // index --;
                         currentItem.set(tags[index].content.length - 1);
                     }
@@ -114,11 +111,9 @@
                         currentItem.set(0);
                     }
                 }
-                //add second about part
-                // accumulatedDelta = 0;
             }
             //____________________________________INCREMENT/DECREMENT CURRENT TAG______________________________________________
-            if(index === 2){
+            if (index === 2){
                 let dir = (accumulatedDelta > 0) ? 1 : -1;
                 let arr = updateTag(index, increment, dir, rt, past);
                 past = arr[0]
@@ -197,7 +192,3 @@
         </div>
     {/if}
 </div>
-
-<style>
-    
-</style>

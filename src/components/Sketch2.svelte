@@ -1,6 +1,6 @@
 <script lang="ts">
     import P5, { type p5 } from 'p5-svelte';
-    import { coordinates, constellated, constellation_index, delta, spinDelta} from '../stores';
+    import { coordinates, constellated, constellation_index, delta, spinDelta, currentItem} from '../stores';
     import { throttle} from 'lodash-es';
     import { get_css_var } from '../scripts/functions';
     import { moroccoData, lionData, runnerData, bioData, englandData, italyData, uaeData, usaData} from "../scripts/coordinateData";
@@ -14,21 +14,22 @@
     const capacity = 4;
     //float 32 for performance boost
     const pointData = [moroccoData, italyData, uaeData, usaData, englandData];
-    let morocco;
+    let map;
     //styling
-    const spread = 2;
-    const point = 2;
+    const spread = 0.5;
+    const point = 1; //values 0, 1
     const weight = 1;
     //forces
     const offset = 0.0001; //speed of particles moving
-    const forceradius = 70; 
+    const forceradius = 80; //values 70, 140, 210
     let proximity = 15;
-    let repulsionStrength = 7; //strength of mouse push
-    const prox = [10, 10];
-    const repuls = [0, 7];
-    const snapStrength = 80;
+    let repulsionStrength = 17; //values 7, 17, 50
+    const prox = [17, 11]; //1st is for regular stars 2nd is for constellation stars
+    const snapStrength = 100; //under 200 values cause jitter, 1200 for rubber effect (experimental)
     //loading bar
     let cx:number, cy:number, s:number;
+    let progress2 = 0;
+    let max: number;
     //spinning canvas
     let angle = 0;
     let spinSpeed = 0; // initial spin speed
@@ -36,7 +37,6 @@
     const spinDecay = .9; // deceleration rate
     spinDelta.subscribe(value => {
       handleScroll(value);
-      console.log("triggered");
     });
 
     //data
@@ -76,13 +76,12 @@
       accent1 = get_css_var("--black").trim();
       accent2 = get_css_var("--accent2").trim();
       accent3 = get_css_var("--accent1").trim();
+      let ang = parseFloat(get_css_var("--ang"));
+      max =  -ang*13 + 1;
+      // console.log(ang, max);
     })
     function handleScroll(deltaY: number) {
       spinSpeed =  Math.sign(deltaY) * maxSpinSpeed * Math.min(Math.abs(deltaY) / 100, 1);
-      // spinSpeed = Math.min(Math.abs(deltaY)/200, 1);
-      //sign of delta Y * min between abs of delta Y and 1
-      // spinSpeed = Math.sign(deltaY) * Math.min(Math.abs(deltaY/100), 1);
-      // spinSpeed = maxSpinSpeed;
     }
     //stretching line
     $: linesize = $delta * 3;
@@ -166,7 +165,6 @@
           this.y += forceDirection.y;
         }
       }
-
       goBack(p5: p5){
         let xtarget = this.ox;
         let ytarget = this.oy;
@@ -175,7 +173,7 @@
         let dy = ytarget - this.y;
         let forceDirection = p5.createVector(dx, dy);
         //threshold to stop
-        let stopThreshold = 0.1;
+        let stopThreshold = 1;
         if (d > stopThreshold) {
             //scale based on distance
             let forceMagnitude = p5.map(d, 0, p5.width / 2, 0, snapStrength); // Adjust the range and max force as needed
@@ -220,7 +218,7 @@
             point.x += 700;
             point.y += 50;
         })
-        morocco = new Float32Array(moroccoData.flatMap(coord => [coord.x, coord.y])); 
+        map = new Float32Array(moroccoData.flatMap(coord => [coord.x, coord.y])); 
         p5.pixelDensity(p5.displayDensity());
         quadtree = new QuadTree(new Rectangle(p5.width / 2, p5.height / 2, p5.width, p5.height), capacity);
         accent1 = p5.color(accent1);
@@ -234,25 +232,18 @@
           wobblers.push(new Wobbler(p5, p5.width*positions[i].x, p5.height*positions[i].y));
         }
       };
-
-      // p5.keyPressed = () => { //testing map transition
-      //   if (p5.keyCode === p5.ENTER) {
-      //     changeMode();
-      //   } 
-      // }
   
       p5.draw = () => {
         //reset
-        // p5.translate(p5.width / 2, p5.height / 2);
         p5.clear();
         quadtree.clear();
         p5.background(accent1);
-        
         //loading bar
         if(index === 2){
-          // let progress = ($delta == 0 ) ? p5.PI / 2 : p5.map($delta, 0, 234, 3 * p5.PI / 2, p5.PI / 2);
-          // let progress = p5.constrain(p5.map($delta, 0, 234, 3 * p5.PI / 2, p5.PI / 2), 0, 1.9);
-          let progress = p5.map($delta, 0, 235, 3 * p5.PI / 2, p5.PI / 2);
+          // previously 235 for --ang = 18deg
+          let progress = p5.map($delta, 0, max, 3 * p5.PI / 2, p5.PI / 2);
+          // progress2 = p5.lerp(progress2, $currentItem/12, 0.15);
+          // let progress = p5.map(progress2, 0, 1, 3 * p5.PI / 2, p5.PI / 2);
           s = 280;
           p5.noFill();
           p5.stroke(255);
@@ -265,8 +256,7 @@
           p5.strokeWeight(6);
           p5.fill(255);
           p5.arc(cx, cy, s, s, progress, p5.PI / 2, p5.PIE);
-
-          // Mask
+          // mask
           p5.fill(accent1);
           p5.noStroke();
           p5.rect(p5.width / 2 - 10, 0, s, p5.height);
@@ -402,34 +392,29 @@
       p5.strokeWeight(0.2);
       p5.beginShape();
       map.forEach(coord => {
-        // let x = map(coord.lon, -20, 50, 0, width);
         let x = coord.x;
-        // let y = map(coord.lat, minLat, maxLat, height, 0);
         let y = coord.y;
         p5.vertex(x, y);
       });
       p5.endShape(p5.CLOSE);
     }
     function changeMode(){
-      morocco = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y])); 
+      map = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y])); 
       walkers.forEach( (walker, i) => {
         if(!$constellated){
           walker.mapmode = false;
-          proximity = prox[1];
-          repulsionStrength = repuls[1];
+          proximity = prox[0];
           walker.ox = walker.xnoise;
           walker.oy = walker.ynoise;
         }
         else if(i < pointData[$constellation_index].length){ //if map make pos map
           walker.mapmode = true;
           proximity = prox[0];
-          repulsionStrength = repuls[0];
-          walker.ox = morocco[2*i];
-          walker.oy = morocco[2*i + 1];
+          walker.ox = map[2*i];
+          walker.oy = map[2*i + 1];
         } else {
           walker.mapmode = false;
           proximity = prox[1];
-          repulsionStrength = repuls[1];
           walker.ox = walker.xnoise;
           walker.oy = walker.ynoise;
         }

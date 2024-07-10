@@ -67,7 +67,7 @@
 
   /*tags*/
   --dist: -16rem;
-  --ang: -18deg;
+  --ang: -22deg;
   --ang_start: 0deg;
   --ang_img: -33deg;
   --dist_img: -13rem;
@@ -205,6 +205,9 @@ h2{
 p{
   font-family: 'Proxima Nova', sans-serif;
   color: var(--white) !important;
+}
+mark{
+  background-color: var(--white);
 }
 ::selection {
   color: var(--black);
