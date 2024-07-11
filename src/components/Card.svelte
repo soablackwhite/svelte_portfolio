@@ -27,9 +27,6 @@
         "Recently moved to London, and looking forward to the next chapter in my journey."
     ]
     
-    
-    
-    // let quadrants = []
     const quadrant = quadrants[offset];
     let x: number, y : number, x2: number, y2: number; //wobble variables
     $: x =  Math.round($coordinates[offset].x);
@@ -59,6 +56,7 @@
         if (textContent) {
             textContent.scrollTop += event.deltaY;
         }
+        AOS.refresh();
     }
     let observer: IntersectionObserver | null = null;
 
@@ -88,23 +86,6 @@
     });
 
 </script>
-<!-- <div class="card {quadrant}" transition:fade|global={{delay: offset*100, duration:200, easing: cubicInOut}} style="top:{y}px !important; left: {x}px !important">
-    <ul transition:slide|global={{delay: offset*100, duration:200, axis: "y", easing: cubicInOut}}>
-        <div class="labelclass substitle" transition:fade|global={{delay: offset*50, duration:200}} style="margin-top:{y2}px !important; margin-left:{x2}px !important">
-            <span> {label} </span>
-        </div>
-        {#each texts as txt, i}
-            <li> 
-                <button class="{(current===i)?"current":""}" on:click={() => toggleConstellate(i)}>
-                    {title[i]}{(title[i] === "") ? "" : ":" } {txt} 
-                    {#if (offset === 0)}
-                        <span> <img class="icon" alt="personal-icon" src="{svgs[i]}"> </span>
-                    {/if}
-                </button>
-            </li>
-        {/each}
-    </ul>
-</div> -->
 
 <div class="mapinfo" transition:fade>
     <div class="label" transition:slide|global={{delay: offset*100, duration:200, easing: cubicInOut}}> history </div>
@@ -112,12 +93,6 @@
         <div class="title"> {texts[current]} </div>
         <div class="subtitle"> {title[current]} </div>
     </div>
-    <!-- <div class="steps">
-        {#each texts as txt, i}
-            <button class="step {(i===current)?"stepselected":""}" on:click={() => toggleConstellate(i)}></button>
-        {/each}
-    </div> -->
-    
 </div>
 
 
@@ -129,13 +104,10 @@
     </div>
     <div class="text-container"   transition:slide|global>
         <div class="text-content" bind:this={textContent} transition:slide|global={{delay: offset * 100, duration: 200, easing: cubicInOut}}>
-                <!-- <span><img class="icon" alt="personal-icon" src="{svgs[current]}"> </span>
-                {personal_txts[current]} -->
                 {#each personal_txts as txt, i}
-                    <div id={"section-" + i} class = "section">
+                    <div id={"section-" + i} class = "section" data-aos="fade-up">
                         <span><img class="icon" alt="personal-icon" src="{svgs[i]}"> </span>
                         {txt} 
-                        <!-- <br> <br> <br> <br> -->
                     </div>
                 {/each}
         </div>
@@ -206,7 +178,7 @@
         padding: 40px;
         -webkit-mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent);
         mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent);
-        overflow-y: scroll; /* Ensure overflow is enabled */
+        overflow-y: scroll;
     }
     .text-container{
         /* positioning */
@@ -215,12 +187,8 @@
         top: calc(50% + 0px);
         height: calc(35vh + 0px);
         width: 30vw;
-        /* padding-top: 30px; */
-        /* padding-bottom: 30px; */
-        /* recenter */
         transform: translate(0, -50%);
         /* formatting */
-        /* border: var(--white) solid 1px; */
         border-right: var(--white) solid 1px;
         border-left: var(--white) solid 1px;
         background-color: var(--black) !important;

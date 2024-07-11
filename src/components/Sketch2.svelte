@@ -17,13 +17,14 @@
     let map;
     //styling
     const spread = 0.5;
-    const point = 1; //values 0, 1
+    const point = 0; //values 0, 1
     const weight = 1;
+    //onclick u can make black hole force radius high, repulsion strength negative
     //forces
-    const offset = 0.0001; //speed of particles moving
-    const forceradius = 80; //values 70, 140, 210
-    let proximity = 15;
-    let repulsionStrength = 17; //values 7, 17, 50
+    const offset = 0.00015; //speed of particles moving
+    const forceradius = 140; //values 70, 140, 210, 3000 for fabric
+    let proximity = 17;
+    let repulsionStrength = 11  ; //values 7, 17, 50, -20 for black hole
     const prox = [17, 11]; //1st is for regular stars 2nd is for constellation stars
     const snapStrength = 100; //under 200 values cause jitter, 1200 for rubber effect (experimental)
     //loading bar
@@ -329,34 +330,12 @@
         });
         //send positions to divs
         thrupdate2(p5);
-        //stretching line decoration
-        accent2.setAlpha(255);
-        p5.stroke(accent3);
-        p5.strokeWeight(3);
-        p5.stroke(accent2);
-        // og line
-        let startX = .5 * p5.width - 261;
-        let startY = 0;
-        // og end of line
-        let originalEndX = .5 * p5.width;
-        let originalEndY = p5.height;
-        //direction + normalize + rescale
-        let dir = p5.createVector(originalEndX - startX, originalEndY - startY);
-        dir.normalize(); // Normalize the direction vector
-        let totalLength = p5.sqrt(p5.sq(p5.width) + p5.sq(p5.height)); // Calculate the maximum length of the line diagonally across the canvas
-        //linesize scale
-        let endX = startX + dir.x * (linesize  / 2);
-        let endY = startY + dir.y * (linesize  / 2);
-        // end
-        // p5.line(startX, startY, endX, endY);
         // visualizations for debugging, end of draw
-        // drawMap(p5, morocco); 
         p5.strokeWeight(.4);
         p5.stroke(255, 255, 255, 10); // Ensure this function call is valid
         p5.noFill();
         p5.rectMode(p5.CENTER);
         drawQuadtree(p5, quadtree);
-        // console.log(p5.frameRate());
         p5.pop()
         angle += spinSpeed;
         if (Math.abs(spinSpeed) > 0) {

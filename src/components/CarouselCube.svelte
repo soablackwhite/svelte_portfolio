@@ -5,21 +5,25 @@
     import { quintOut } from "svelte/easing";
     import { currentItem } from "../stores";
     // parameters
-    let max = 11; //nbr of tbnails
-    export let motion : string;
+    const max = contents.length - 1; //nbr of tbnails minus 1
+    let items: NodeListOf<HTMLElement>;
+    type MotionType = 'cubic' | 'concave' | 'convex' | 'flat' | 'flip' | 'ribbon';
+    export let motion: MotionType;
     export let direction: string;
     export let cardtype: string;
-    let items: HTMLElement[];
-    // typescript interfaces
     interface TransformConfig {
         angle: number;
         xOff: number;
         yOff: number;
     }
-    interface Transforms {
-        [key: string]: TransformConfig;
+    interface TransitionConfig {
+        duration: number;
+        [key: string]: any; //optionals
     }
-    // scrol stuff
+    interface Transforms {
+        [key: string]: TransformConfig; //full flexibility
+    }
+    // scroll stuff
     const transforms = {
         "cubic": {
             angle: 90,
@@ -76,29 +80,18 @@
         documentation.style.bottom = '-100%';
     }
     // svelte animation customized for pop in pop out
-    function expandOut(node, { duration, sign }) {
+    function expandOut(node: HTMLElement, { duration, sign = 1 }: TransitionConfig) {
         const height = node.offsetHeight;
         return {
             duration,
-            css: t => `
+            css: (t:number) => `
                 transform: translate(-50%, ${ sign * (50 - (1 - t) * 100)}%);
                 opacity: ${2*t/3};
                 height: 50%;
             `,
-            easing: quintOut
+            easing: quintOut,
         };
     }
-    function test(node, { duration}) {
-        const height = node.offsetHeight;
-        return {
-            duration,
-            css: t => `
-                transform: rotate(-40deg) translate(0%, calc(70px - 50%)) !important;
-            `,
-            easing: quintOut
-        };
-    }
-
 
     function clickScroll(idx:number, event: MouseEvent){
         lock = true;
@@ -111,16 +104,13 @@
         const dir = (direction === "horizontal") ? [0, 1] : [1, 0];
         const pastlock = (direction === "horizontal") ? -transform.xOff * (position) : -transform.yOff * (position);
         items.forEach(item => {
-            const index = parseInt(item.getAttribute('data-offset'));
+            const dtoffset = item.getAttribute('data-offset');
+            const index = (dtoffset) ? parseInt(dtoffset) : 0; //if it exists, to shut typescript up
             const r = index - position;
             const abs = Math.abs(r);
             let alpha = (r === 0) ? 1 : rescale(1 - abs, -10, 0, 0, 0.1);
             item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${r * transform.angle}deg) translate3d(${transform.xOff * r * dir[1] + incr*dir[1]}px, ${transform.yOff * r * dir[0] + incr*dir[0]}px, 0)`;
-            if (abs < 3 && abs != 0) {
-                item.style.filter = "blur(2px)";
-            } else{
-                item.style.filter = "none";
-            }
+            if (abs < 3 && abs != 0) {item.style.filter = "blur(3px)";} else{item.style.filter = "none";} //blurring neighbors
             alpha = (alpha < opacityThreshold) ? 0 : alpha;
             item.style.opacity = `${alpha}`;
         });
@@ -142,14 +132,14 @@
             past = (offset < 0) ? clamp(past, max*offset, 0) : clamp(past, 0, max*offset); //limit dx/dy
             lock = clamp(lock, 0, max); //limit locking thumbnail to max
             items.forEach(item => {
-                let index = parseInt(item.getAttribute('data-offset'));
-                let r = index;
-                let abs = Math.abs(r - lock);
+                const dtoffset = item.getAttribute('data-offset');
+                const index = (dtoffset) ? parseInt(dtoffset) : 0;
+                const r = index;
+                const abs = Math.abs(r - lock);
                 let alpha = (r === lock) ? 1 : rescale(1 - abs, -10, 0, 0, 0.1);
-                let blur = (r === lock) ? 0 : rescale(abs, 0, 10, 2, 5);
-                let ang = (r - (past/offset))*transform.angle; //get new index to find relative position of current position, and use it to get angle
+                const ang = (r - (past/offset))*transform.angle; //get new index to find relative position of current position, and use it to get angle
                 item.style.transform = `rotate3d(${dir[0]}, ${dir[1]}, 0, ${ang}deg) translate3d(${transform.xOff*r*dir[1] + past*dir[1]}px, ${transform.yOff*r*dir[0] + past*dir[0]}px, 0)`;
-                item.style.filter = `blur(${blur}px)`;
+                if (abs < 3 && abs != 0) {item.style.filter = "blur(3px)";} else{item.style.filter = "none";} //blurring neighbors
                 alpha = (alpha < opacityThreshold) ? 0 : alpha;
                 item.style.opacity = `${alpha}`;
             });
@@ -218,9 +208,7 @@
     {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
         <button class="item" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
             {#if type === "video"}
-                <video alt ={alt} transition muted loop
-                    onmouseover="this.play()" 
-                    onmouseout="this.pause()" 
+                <video  muted loop
                     class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">
                     <source src={src} type="video/mp4"> your browser does not support the video tag.
                 </video>
@@ -245,7 +233,6 @@
 <div class="counter">
     <h3>
         <span class="left {($currentItem == 0)?"invisible":""}">&lt;</span> 
-        <!-- <span id="currentItem">{$currentItem}</span>/<span id="max">{max}</span> -->
         <span id="currentItem">{$currentItem} / {max}</span>
         <span class="right {($currentItem == max)?"invisible":""}">&gt;</span>  
     </h3>
@@ -261,7 +248,6 @@
     {/if}
     <div class="documentation" bind:this={documentation}>
         <div class = "techs">
-
         </div>
         <div class = "page">
             {#if docmode}
@@ -280,7 +266,7 @@
                     <img class="media_container" src={m.src} alt={alt} >
                 {:else if m.type === "video"}
                 <!-- there was a transition property in this video tag maybe i should put it back -->
-                    <video  class="media_container" autoplay muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
+                    <video  class="media_container" autoplay muted loop style="float:right; right:0rem; width:100%; height:100%">
                         <source src={m.src} type="video/mp4">
                             Your browser does not support the video tag.
                     </video>
@@ -310,7 +296,7 @@
         transform: rotate(0deg) translate(0%, calc(70px - 50%));
     }
     .navbutton{
-        position: absolute;
+        position: fixed;
         width: 140px;
         height: 140px;
         color: var(--black);
@@ -350,7 +336,7 @@
         left: -10%;
         width: 120%;
         height: 120%;
-        z-index: -1; /* Make sure the pseudo-element is behind the actual element */
+        z-index: -1;
     }
     /* documentation formatting */
     .documentation {
@@ -444,14 +430,14 @@
     .counter h3 {
         display: flex;
         justify-content: space-between;
-        align-items: center; /* Centers the items vertically */
-        width: 100%; /* Ensures the h3 element takes full width of its container */
+        align-items: center;
+        width: 100%;
     }
 
     /* THUMBNAILS */
-    #currentItem, #max {
-        flex: 1; /* Allows the text in the middle to take up any remaining space */
-        text-align: center; /* Centers the text */
+    #currentItem {
+        flex: 1;
+        text-align: center; 
     }
     .ribbon{
         transform: rotate3d(1, 0, 0, 51deg) rotate3d(0, 0, 1, 43deg) !important;
