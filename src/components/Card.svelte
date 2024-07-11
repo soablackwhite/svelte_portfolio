@@ -5,12 +5,11 @@
     export let offset: number;
     export let label: string;
     let current = 0;
-    let test = texts[0];
     import { coordinates, constellated, constellation_index, profile_index} from "../stores";
     //animations
     import { slide, fade, scale } from "svelte/transition";
     import { cubicInOut } from 'svelte/easing';
-    import { onMount } from "svelte";
+    import { onMount, onDestroy} from "svelte";
     const svgs = [
         "/media/icons/mor.svg",
         "/media/icons/italyflag.svg",
@@ -27,19 +26,16 @@
         "Recently moved to London, and looking forward to the next chapter in my journey."
     ]
     
-    const quadrant = quadrants[offset];
-    let x: number, y : number, x2: number, y2: number; //wobble variables
+    let x: number, y : number; //wobble variables
     $: x =  Math.round($coordinates[offset].x);
     $: y = Math.round($coordinates[offset].y);
-    $: x2 = Math.random()*10 + Math.sign(x);
-    $: y2 = -Math.random()*10 + Math.sign(y);
 
     function scrollToSection(sectionId: string) {
         const section = document.getElementById(sectionId);
         if (section) {
             section.scrollIntoView({
                 behavior: 'smooth',
-                block: 'center'  // Scroll to the center of the viewport
+                block: 'start'
             });
         }
     }
@@ -51,15 +47,7 @@
         constellation_index.set(index);
         current = index;
     }
-    let textContent: HTMLElement;
-    function handleScroll(event) {
-        if (textContent) {
-            textContent.scrollTop += event.deltaY;
-        }
-        AOS.refresh();
-    }
     let observer: IntersectionObserver | null = null;
-
 
     onMount(() => {
         const handleIntersection = (entries: IntersectionObserverEntry[]) => {
@@ -71,18 +59,20 @@
             });
         }
         observer = new IntersectionObserver(handleIntersection, {
-            threshold: 1
+            threshold: 0.9
         })
         const sections = document.querySelectorAll('.section');
         sections.forEach(section => observer.observe(section));
-        window.addEventListener('wheel', handleScroll);
+        document.body.style.overflow = 'auto'; // or 'scroll', 'visible', etc.
         return () => {
-            window.removeEventListener('wheel', handleScroll);
             if (observer) {
                 observer.disconnect();
                 observer = null;
             }
         };
+    });
+    onDestroy(() => {
+        document.body.style.overflow = 'hidden'; // Reset to default when the component is destroyed
     });
 
 </script>
@@ -102,10 +92,10 @@
             <button class="step {(i === current) ? "stepselected" : ""}" on:click={() => toggleConstellate(i)}></button>
         {/each}
     </div>
-    <div class="text-container"   transition:slide|global>
-        <div class="text-content" bind:this={textContent} transition:slide|global={{delay: offset * 100, duration: 200, easing: cubicInOut}}>
+    <div class="text-container" >
+        <div class="text-content" >
                 {#each personal_txts as txt, i}
-                    <div id={"section-" + i} class = "section" data-aos="fade-up">
+                    <div id={"section-" + i} class="section" data-aos="fade-right">
                         <span><img class="icon" alt="personal-icon" src="{svgs[i]}"> </span>
                         {txt} 
                     </div>
@@ -127,29 +117,30 @@
         background-color: var(--white) !important;
     }
     .steps {
-        position: absolute;
+        position: fixed;
         z-index: 10;
         display: flex;
         align-items: center;
         justify-content: center;
         left: 0%;
         top: 50%;
-        transform: rotate(90deg);
+        transform:  translate(calc(-50% + 20px), -0%) rotate(90deg) ;
     }
     .step {
         all:unset;
         cursor: pointer;
         position: relative;
-        width: 25px;
-        height: 25px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         border: solid 1px var(--white);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: var(--white);
+        background-color: var(--black);
         font-weight: bold;
-        margin: 0 10px;
+        margin: 0 17px;
         transition: all 0.13s;
     }
     .step:hover{
@@ -160,7 +151,7 @@
         position: absolute;
         top: 50%;
         left: 100%;
-        width: 20px;
+        width: 35px;
         height: 2px;
         border: solid 1px var(--white);
         transform: translateY(-50%);
@@ -168,68 +159,67 @@
     .step:last-child::before {
         display: none;
     }
+    /* SCROLLING TEXT */
     .text-content {
-        position: absolute;
-        font-family: "Proxima Nova", sans-serif;
-        color: var(--white);
-        height: 35vh;
+        font-family: "Montserrat", sans-serif;
+        font-size: x-large;
+        color: lightgray;
         transition: top .6s, left .6s;
-        font-size: large;
-        padding: 40px;
-        -webkit-mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent);
-        mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent);
-        overflow-y: scroll;
+        /* height: 100vh; */
+        /* padding: 40px; */
+        /* /* -webkit-mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent); */
+        /* mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent); */
     }
     .text-container{
-        /* positioning */
         position: absolute;
-        left: 10%;
-        top: calc(50% + 0px);
-        height: calc(35vh + 0px);
-        width: 30vw;
-        transform: translate(0, -50%);
-        /* formatting */
+        left: 0%;
+        top: 0%;
+        width: 50%;
+        display: flex;
+        flex-flow: column nowrap;
+        background-color: rgba(255, 255, 255, 0.46);
+        mask-image: linear-gradient(to top,  black 10%, transparent, transparent, black 90%);
+        align-items: center;
         border-right: var(--white) solid 1px;
-        border-left: var(--white) solid 1px;
-        background-color: var(--black) !important;
     }
     .section {
-        padding: 20px 0;
+        height: 80vh;
+        width: 30vw;
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        border-radius: 1px;
     }
     /* width */
     .text-content::-webkit-scrollbar {
-    width: 5px;
+        width: 8px;
     }
-
-    /* Track */
+    /* track */
     .text-content::-webkit-scrollbar-track {
-    background: var(--black);
+        background: var(--black);
     }
-
-    /* Handle */
+    /* handle */
     .text-content::-webkit-scrollbar-thumb {
-    background: var(--white);
+        background: var(--white);
     }
-
-    /* Handle on hover */
+    /* handle on hover */
     .text-content::-webkit-scrollbar-thumb:hover {
-    background: gray;
+        background: gray;
     }
-
+    /* MAP STUFF */
     .content{
         width: 350px;
-        overflow: hidden;
     }
     .mapinfo{
         position: fixed;
         top: 4%;
         right: 15%;
-        /* width: 20vw; */
         display: flex;
         align-items: center;
     }
     .title{
-        /* margin-top: 25%; */
         font-family: "Montserrat", sans-serif;
         font-weight: 400 !important;
         font-size: 64px;
@@ -255,15 +245,9 @@
         background-color: var(--white);
     }
     .icon{
-        width: 32px;
+        width: 75px;
+        margin: 20px;
         height: auto;
         filter: none;
-        transform: translate(0%, -10%);
-        margin-right: 5px;
-    }
-    
-    button{
-        all:unset;
-        cursor: pointer; /* Add this line */
     }
 </style>

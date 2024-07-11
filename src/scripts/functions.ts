@@ -180,7 +180,7 @@ export const contents = [
       "type": "image"
     },
     "alt": "Reccie video",
-    "category": "Recommendation system",
+    "category": "Web Project",
     "tech": "p5.js",
     "description": "Reccie is a sketch  I made for friends, prototyping a recommender system by taking the approach of collaborative filtering to recommend TV shows based on our movie tastes. It builds a taste profile based on the user's answers and recommends TV shows based on people with similar tastes. The algorithm is pretty straightforward: you calculate similarities between users, assign a weight to each user based on similarity, then every series gets a weighted sum of the user's ratings, and the user gets recommended the series with the highest weighted sum.",
     "media": [

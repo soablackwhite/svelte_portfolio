@@ -6,8 +6,8 @@
   --accent1: #886988; 
   --accent2: #40F99B; 
   --accent3: #60AFFF;
-  --gray: #30332E;
-  --dark: 0; */
+  --gray: #30332E; */
+  /* --dark: 1; */
 
   /* old paper */
   /* --accent2: #FFFBFC;
@@ -42,8 +42,14 @@
   --black: #4E4B42;
   --accent1: #CD664D;
   --dark: 0; */
+
+  /* best pair */
   /* --black: #CDC8B0; */
   /* --white: #4E4B42; */
+  /* --black: #4E4B42;
+  --white: #CDC8B0; */
+  /* accent */
+  /* --accent1: #CD664D; */
 
 
 
@@ -171,7 +177,7 @@
 }
 html{
   overflow-x: hidden;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 body{
   font-family: "Proxima Nova", sans-serif;
@@ -179,27 +185,27 @@ body{
   padding: 0;
   background-color: var(--black);
   scroll-behavior: smooth;
-  overflow: hidden;
   z-index: 3;
   color: var(--white);
-}
-html::-webkit-scrollbar {
-  display: none;
+  /* overflow: hidden; */
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-html {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+/* html::-webkit-scrollbar {
+  display: none;
 }
+html {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+} */
+
 h1 {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 5rem;
-  font-weight: 300;
+  font-family: 'Montserrat', serif;
+  font-size: 7rem;
+  font-weight: 100;
 }
 h2{
-  font-weight: 700;
-  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-family: 'Montserrat', serif;
   font-size: 3rem;
 }
 p{

@@ -5,7 +5,7 @@
     import { get_css_var } from '../scripts/functions';
     import { moroccoData, lionData, runnerData, bioData, englandData, italyData, uaeData, usaData} from "../scripts/coordinateData";
     import { onDestroy, onMount } from 'svelte';
-    import { rescale } from '../scripts/functions';
+    import type { Color } from 'p5';
     export let index: number;
     let innerWidth: number;
     let innerHeight: number;
@@ -16,16 +16,16 @@
     const pointData = [moroccoData, italyData, uaeData, usaData, englandData];
     let map;
     //styling
-    const spread = 0.5;
-    const point = 0; //values 0, 1
+    const spread = 0.3;
+    const point = 2; //values 0, 1
     const weight = 1;
     //onclick u can make black hole force radius high, repulsion strength negative
     //forces
-    const offset = 0.00015; //speed of particles moving
-    const forceradius = 140; //values 70, 140, 210, 3000 for fabric
-    let proximity = 17;
-    let repulsionStrength = 11  ; //values 7, 17, 50, -20 for black hole
-    const prox = [17, 11]; //1st is for regular stars 2nd is for constellation stars
+    const offset = 0.00075; //speed of particles moving
+    const forceradius = 140; //values 70, 140, 210, 1040 for fabric
+    let proximity = 7;
+    let repulsionStrength = 11  ;//values 7, 17, 51 with long range fabric, -20 for black hole
+    const prox = [7, 11]; //1st is for regular stars 2nd is for constellation stars
     const snapStrength = 100; //under 200 values cause jitter, 1200 for rubber effect (experimental)
     //loading bar
     let cx:number, cy:number, s:number;
@@ -72,20 +72,24 @@
       });
     }, 100);
     // colors
-    let accent1, accent2, accent3;
+    let accent1_s: string, accent2_s: string, accent3_s: string, white_s: string, black_s: string;
+    let accent1: Color;
+    let accent2: Color;
+    let accent3: Color;
+    let white: Color;
+    let black: Color;
     onMount( () =>{
-      accent1 = get_css_var("--black").trim();
-      accent2 = get_css_var("--accent2").trim();
-      accent3 = get_css_var("--accent1").trim();
+      black_s = get_css_var("--black").trim();
+      white_s = get_css_var("--white").trim();
+      accent1_s = get_css_var("--accent1").trim();
+      accent2_s = get_css_var("--accent2").trim();
+      accent3_s = get_css_var("--accent3").trim();
       let ang = parseFloat(get_css_var("--ang"));
       max =  -ang*13 + 1;
-      // console.log(ang, max);
     })
     function handleScroll(deltaY: number) {
       spinSpeed =  Math.sign(deltaY) * maxSpinSpeed * Math.min(Math.abs(deltaY) / 100, 1);
     }
-    //stretching line
-    $: linesize = $delta * 3;
 
     class Wobbler { //this is the endpoint that controls the floating boxes
       ox; oy; //originf
@@ -111,8 +115,8 @@
         this.ynoise = p5.map(p5.noise(this.yoff), 0, 1, -range, range);
       }
       display(p5:p5) {
-        accent2.setAlpha(255);
-        p5.fill(accent2);
+        white.setAlpha(255);
+        p5.fill(white);
         this.x = this.ox + this.xnoise;
         this.y = this.oy + this.ynoise;
         p5.ellipse(this.x - 50, this.y - 100, 15);
@@ -222,9 +226,11 @@
         map = new Float32Array(moroccoData.flatMap(coord => [coord.x, coord.y])); 
         p5.pixelDensity(p5.displayDensity());
         quadtree = new QuadTree(new Rectangle(p5.width / 2, p5.height / 2, p5.width, p5.height), capacity);
-        accent1 = p5.color(accent1);
-        accent2 = p5.color(accent2);
-        accent3 = p5.color(accent3);
+        white = p5.color(white_s);
+        black = p5.color(black_s);
+        accent1 = p5.color(accent1_s);
+        accent2 = p5.color(accent2_s);
+        accent3 = p5.color(accent3_s);
         //instantiating walkers and wobblers
         for (let i = 0; i < numWalkers; i++) {
           walkers.push(new Walker(p5));
@@ -238,7 +244,7 @@
         //reset
         p5.clear();
         quadtree.clear();
-        p5.background(accent1);
+        p5.background(0, 10);
         //loading bar
         if(index === 2){
           // previously 235 for --ang = 18deg
@@ -247,18 +253,18 @@
           // let progress = p5.map(progress2, 0, 1, 3 * p5.PI / 2, p5.PI / 2);
           s = 280;
           p5.noFill();
-          p5.stroke(255);
+          p5.stroke(white);
           p5.strokeWeight(1);
           p5.arc(cx, cy, s, s, 0, 2*p5.PI);
           //white arc outline
           s = 260;
           // smol white arc
-          p5.stroke(255);
+          p5.stroke(white);
           p5.strokeWeight(6);
-          p5.fill(255);
+          p5.fill(white);
           p5.arc(cx, cy, s, s, progress, p5.PI / 2, p5.PIE);
           // mask
-          p5.fill(accent1);
+          p5.fill(black);
           p5.noStroke();
           p5.rect(p5.width / 2 - 10, 0, s, p5.height);
         }
@@ -287,7 +293,7 @@
           }
           
           quadtree.insert(new Point(walker.x, walker.y, walker));
-          p5.stroke(255);
+          p5.stroke(white);
           p5.strokeWeight(point);
           p5.point(walker.x, walker.y);
         });
@@ -302,22 +308,22 @@
             let d = p5.dist(walkers[i + 1].x, walker.x, walkers[i+1].y, walker.y); //dist between point and neighbor
             let alpha = 255 - p5.map(d, 0, proximity, 0, 255);
             let isFar = d > proximity;
-            (isFar) ? accent2.setAlpha(0.1) : accent2.setAlpha(alpha);
-            (isFar) ? p5.stroke(255) : p5.stroke(accent2);
+            (isFar) ? white.setAlpha(0.1) : white.setAlpha(alpha);
+            (isFar) ? p5.stroke(white) : p5.stroke(white);
             p5.strokeWeight((d === 0) ? weight : weight - p5.map(d, 0, proximity, weight, 0));
             (isFar) ? p5.strokeWeight(.2) : true;
             if (d < 3 * proximity){
-            p5.line(walker.x, walker.y, walkers[i + 1].x, walkers[i + 1].y);
+              p5.line(walker.x, walker.y, walkers[i + 1].x, walkers[i + 1].y);
             }
-
           }
           // connect nearby points
           pointsInRange.forEach(other => {
             if (other.userData !== walker) { // no self-connection
               let d = other.sqDistanceFrom(walker);
                 let alpha = p5.map(d, 0, proximity * proximity, 255, 0);
-                accent2.setAlpha(alpha);
-                p5.stroke(255,255,255,alpha);
+                white.setAlpha(alpha);
+                // p5.stroke(255, 255, 255, alpha);
+                p5.stroke(white);
                 p5.strokeWeight((d === 0) ? weight :p5.map(d, 0, proximity * proximity, weight, 0));
                 p5.line(walker.x, walker.y, other.x, other.y);
             }
@@ -332,7 +338,9 @@
         thrupdate2(p5);
         // visualizations for debugging, end of draw
         p5.strokeWeight(.4);
-        p5.stroke(255, 255, 255, 10); // Ensure this function call is valid
+        white.setAlpha(10);
+        p5.stroke(white);
+        // p5.stroke(255, 255, 255, 10);
         p5.noFill();
         p5.rectMode(p5.CENTER);
         drawQuadtree(p5, quadtree);
@@ -342,6 +350,7 @@
           // spinSpeed = Math.max(spinSpeed - 10*spinDecay, 0);
           spinSpeed*=spinDecay;
         }
+        white.setAlpha(255);
       };
 
       p5.windowResized = () => {
@@ -367,7 +376,7 @@
     }
     function drawMap(p5, map){
       p5.noFill();
-      p5.stroke(255)
+      p5.stroke(white)
       p5.strokeWeight(0.2);
       p5.beginShape();
       map.forEach(coord => {
@@ -416,6 +425,7 @@
       left: 0;
       top: 0;
       z-index: 0;
-      /* filter: invert(); */
+      /* filter: invert(var(--dark)); */
+      /* filter: invert(1); */
     }
   </style>

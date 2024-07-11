@@ -77,7 +77,7 @@
         left: 30% !important;
         font-size: xx-large !important;
         border-bottom: solid 4px var(--accent2) !important;
-        background-color: var(--black);
+        /* background-color: var(--black); */
         border-left: solid 0px var(--accent2) !important;
         transition: border 0.3s, min-height 0.2s !important;
     }
@@ -97,11 +97,9 @@
     }
     .typewriter{
         font-family: "Proxima Nova", sans-serif;
-        /* overflow: hidden; */
         z-index: 10;
         height: auto;
         transition: max-height 0.5s ease-out;   
-        /* background-color: var(--white); */
         color: var(--white);
         hyphens: auto;
         -webkit-hyphens: auto;
@@ -120,16 +118,6 @@
     }
     .about .border {
         border-width: 1px !important;
-    }
-    .typewriter::-webkit-scrollbar {
-        width: 0.5em;
-        height: 0.5em;
-    }
-    .typewriter::-webkit-scrollbar-thumb {
-        /* background-color: rgba(255, 255, 255, 0); */
-    }
-    .typewriter::-webkit-scrollbar-track {
-        /* background-color: color(--black); */
     }
     @media (max-width: 950px) {
         .container {
