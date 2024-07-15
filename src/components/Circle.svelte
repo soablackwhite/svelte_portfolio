@@ -3,11 +3,14 @@
     import { rescale } from "../scripts/functions";
     import { currentItem } from "../stores";
     import { fade, slide } from "svelte/transition";
+    import { onMount, afterUpdate } from "svelte";
+    import { parse } from "svelte/compiler";
     export let idx: number;
     export let sz: number; //size of content
     export let custom: string;
     export let locking: boolean;
-    let isLabel: string;
+    export let proficiency: number;
+    let halfBorder: HTMLElement;
     let alpha:number;
     let disappear:boolean = false;
     $: test = generateAlpha($currentItem, idx, sz); //this is so that it updates with any change to cur, idx, and sz variables
@@ -36,25 +39,45 @@
         }
         return(alpha);
     }
+    onMount(() => {
+        proficiency /= 10;
+        if (halfBorder) {
+            let redElement = halfBorder.querySelector('.red') as HTMLElement;
+            let blueElement = halfBorder.querySelector('.blue') as HTMLElement;
+            redElement.style.width = `${(proficiency) * 100}%`;
+            blueElement.style.width = `${(1 - proficiency) * 100}%`;
+            blueElement.style.left = `${(proficiency) * 100}%`;
+        }
+    });
 </script>
 
 {#if custom === "label"}
     <div transition:slide|global class="tags {custom}" class:locking-label={locking} class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
-        <slot> </slot>
+        <slot></slot>
     </div>
 {:else}
-    <div transition:slide|global={{axis:"x"}} class="tags {custom} {(idx === $currentItem)?"selected":""}" class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
-        <span><slot name="letter"/></span><slot name="tag"></slot>
+    <div transition:slide class="tags half-border {custom} {(idx === $currentItem)?"selected":""}" bind:this={halfBorder} class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
+        <p><span><slot name="letter"></slot></span><slot name="tag"></slot></p>
+        <div class="red"></div>
+        <div class="blue"></div>
     </div>
 {/if}
-<!-- <div class="tags {custom} {isLabel}" class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
-    <slot> </slot>
-</div> -->
 
 <style>
+    .half-border .red, .half-border .blue {
+        content: "";
+        position: absolute;
+        top: -5px;
+        height: 4px;
+    }
+    .half-border .red {
+        background-color: var(--white);
+    }
+    .half-border .blue {
+        background-color: gray;
+    }
     .selected{
         font-size: x-large !important;
-        border-color: var(--white) !important;
     }
     .selected span{
         color: var(--black);
@@ -74,16 +97,21 @@
         transition: padding-left 0.33s, opacity 3s, border-top 0.5s, top 0.33s;
     }
     .circle {
+        position: relative;
         left: calc(50% - 4rem);
         top: calc(50% - 1rem);
         height: 2rem;
         width: 8rem;
         text-align: right;
-        font-size: 1.2rem;
+        font-size: large;
         color: var(--white);
-        border-top: solid 3px var(--white);
+        /* border-top: solid 3px var(--white); */
         padding-bottom: 1.5rem;
         transition: font-size 0.2s;
+    }
+    p{
+        font: "Roboto Mono", sans-serif;
+        font-weight: 300;
     }
     .tags{
         position: absolute;

@@ -1,6 +1,5 @@
 <script lang="ts">
     export let index:number;
-    $: left = (index === 3) ? true : false;
     function update(){
         index = 0;
     }
@@ -76,19 +75,16 @@
         animation: enter 0.2s forwards;
         cursor: pointer;
     }
-    .left {
-        animation: exit 0.2s forwards !important;
-    }
     .inner {
         /* stroke: var(--black) !important; */
-        stroke: rgba(255, 255, 255, 0) !important;
+        /* stroke: rgba(255, 255, 255, 0) !important; */
+        stroke: var(--white) !important;
         /* stroke-width: 3px !important; */
     }
     .outer {
-        /* stroke: rgba(calc( 255 - var(--dark))) !important; */
+        stroke: rgba(calc( 255 - var(--dark))) !important;
         /* stroke: rgb(calc( 1 - var(--dark))) !important; */
-        stroke: rgb(calc(50 + 200 * var(--dark)), calc( 50 + 200 * var(--dark)), calc( 50 + 200 * var(--dark))) !important;
-
+        /* stroke: rgb(calc(50 + 200 * var(--dark)), calc( 50 + 200 * var(--dark)), calc( 50 + 200 * var(--dark))) !important; */
         /* filter: invert(calc(1 - var(--dark))); */
         stroke-width: 2px !important;
     }
@@ -105,24 +101,7 @@
         }
         100% {
             transform: translate(var(--translate-x), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
-            filter: blur(0px);
+            filter: none;
         }
     }
-    @keyframes exit {
-        0% {
-            transform: translate(var(--translate-x), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
-            filter: blur(0px);
-        }
-        25% {
-            filter: blur(1px);
-        }
-        75% {
-            filter: blur(3px);
-        }
-        100% {
-            transform: translate(-12rem, var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
-            filter: blur(0px);
-        }
-    }
-    
 </style>

@@ -2,7 +2,7 @@
     export let index:number;
     import { currentItem, transitioned, profile_index} from "../stores";
     import {rescale, set_css_var } from "../scripts/functions"
-    import { onMount } from "svelte";
+    import { slide, fade} from "svelte/transition";
     const icons = [
         '/media/icons/react.svg',
         '/media/icons/svelte.svg',
@@ -17,7 +17,6 @@
         '/media/icons/r.svg',
         '/media/icons/stata.svg',
     ];
-    const hilink = '/media/icons/hi.webp'
     const profiles = [
         '/media/icons/manbaa.svg',
         '/media/icons/bocconi.svg',
@@ -30,7 +29,6 @@
     let t1 = false;
     let t2 = false;
     let classes = ["manbaa", "bocconi", "nyuad", "nyu", "next"]
-    $: thumbnail_class = (typer === 1) ? "runner": ( typer === 2) ? "cook" : "graduate";
     $: square = (index === 3) ? true : false;
     $: square2 = (index === 3) ? true : false;
     $: if (index != 3){
@@ -39,12 +37,10 @@
     }
     $: transitioned.set(t1 && t2);
     $: disappear = $transitioned;
-    // $: disappear = (index===1);
     function handleMouseOver(event) {
         event.target.play();
     }
-
-    // Function to pause video on mouse out
+    // function to pause video on mouse out
     function handleMouseOut(event) {
         event.target.pause();
     }
@@ -62,39 +58,36 @@
 </script>
 
 <!-- this condition doesnt do anything for some reason lol, works with $transitioned tho -->
-    <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
+    <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}} >
         <div id="zoomer" class:square2 class:disappear role="img" on:transitionend={()=>{if(index===3){t1 = true;}}}>
             {#if ( (index == 0) && $transitioned==false)}
                 <!-- <img alt="profile" id="profile" src="/media/animated/bio.svg"/> -->
                 <video preload="auto" id="profile" playsinline muted loop
                     on:mouseover|preventDefault={handleMouseOver}
-                    on:mouseout|preventDefault={handleMouseOut}>
+                    on:mouseout|preventDefault={handleMouseOut}
+                    transition:fade|global={{duration:100, delay: 100}}
+                    >
                     <source src="/media/animated/loop.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-            {:else if ( (index == 1) && $transitioned==false) && ($profile_index === -1)}
-                <div> <h1> Hi! </h1></div>
             {:else if ( (index == 1) && $transitioned==false)}
-                <img alt="profile" class="school {classes[$profile_index]}" src={profiles[$profile_index]}/>
+                <img alt="profile"
+                    class="school {classes[$profile_index]}" 
+                    src={profiles[$profile_index]}
+                    transition:fade|global={{duration:100, delay: 100}}
+
+                />
             {:else if (index == 2) && $transitioned === false}
-                <img alt="profile" id="icon" src={icons[cur]}/>
-            {:else}
+                <img alt="profile" id="icon" src={icons[cur]}
+                transition:fade|global={{duration:100, delay: 100}}
+                />
             {/if}
         </div>
     </div>
 
-
 <style>
     :root{
         --dur: 0.1s;
-    }
-    h1{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        align-content: center;
-        width: 100%;
-        height: 100%;
     }
     .disappear{
         opacity: 0 !important;
@@ -186,21 +179,18 @@
         object-fit: cover;
         transition: all 0.33s;
     }
-    .image-container video:hover {
-        /* transform: translate(var(--vidx), var(--vidy)); */
-    }
     .ui {
         position: fixed !important;
     }
 
     @media (max-width: 576px) {
         .image-container video{
-            width:150px;
-            height:150px;
+            width: 150px;
+            height: 150px;
         }
         #zoomer{
-            width:150px;
-            height:150px;
+            width: 150px;
+            height: 150px;
         }
         #profile{
             width: 65px;
@@ -213,8 +203,8 @@
     }
     @media (max-width: 400px) {
         .image-container video{
-            width:175px;
-            height:175px;
+            width: 175px;
+            height: 175px;
         }
         .image-container{
             top: calc(50% + var(--indent_ui));

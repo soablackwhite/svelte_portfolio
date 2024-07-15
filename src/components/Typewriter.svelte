@@ -17,7 +17,6 @@
         borderHeight = `${contentDiv.offsetHeight}px`;
     }
     afterUpdate(updateBorderHeight);
-
     // compare strings & return common starting substring
     function getCommonStart(str1:string, str2:string) {
         let i = 0;
@@ -53,7 +52,6 @@
             }
             await new Promise(r => setTimeout(r, delay)); // delay before next text
             index = (index + 1) % texts.length; // loop back to beginning
-            // currentItem.set(index);
             justOpened = false;
             typeNext(); // recursive call to type the next text
         }
@@ -64,39 +62,35 @@
 
 <div class="container {custom}" transition:fade|global={{duration:120}}>
     <div bind:this={contentDiv}>
-        <div class="typewriter" >{currentText}</div>
+        <div class="typewriter">{currentText}</div>
     </div>
-    <div class="border" style="height: {borderHeight};"></div>
 </div>
 
 <style>
     .about{
-        position: absolute;
-        transform: translate(-50%, -50%) !important;
-        top: 52% !important;
-        left: 30% !important;
-        font-size: xx-large !important;
-        border-bottom: solid 4px var(--accent2) !important;
-        /* background-color: var(--black); */
-        border-left: solid 0px var(--accent2) !important;
+        border-bottom: solid 4px var(--white);
+        border-left: solid 3px var(--white);
+        background-color: var(--black);
         transition: border 0.3s, min-height 0.2s !important;
     }
     .about:hover{
-        border-bottom: solid 11px var(--accent2) !important;
+        border-bottom: solid 11px var(--white) !important;
         transition: border 0.2s, min-height 0.3s !important;
-        min-height: 59px !important;
     }
     .container{
+        font-family: "Montserrat", sans-serif !important;
+        font-weight: 400;
+        font-size: xx-large;
         position: absolute;
-        width: var(--txt_pad);
-        min-height: 52px;
-        left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
-        top: calc(47%);
-        font-size: x-large;
+        top: 50%;
+        left: calc(50% - var(--media_size)/2 + 10px);
+        transform: translate(-100%, -50%);
+        width: 30vw;
+        line-height: 1.5em;
+        min-height: 1.5em;
         transition: left 0.23s ease-in-out;
     }
     .typewriter{
-        font-family: "Proxima Nova", sans-serif;
         z-index: 10;
         height: auto;
         transition: max-height 0.5s ease-out;   
@@ -109,50 +103,60 @@
     }
     .border {
         position: absolute;
-        border-color: var(--gray--) !important;
+        border-color: var(--gray) !important;
         border-width: 2px !important;
         left: 0;
         top: 0;
         bottom: 0;
         transition: height 0.3s ease-in-out;
     }
-    .about .border {
-        border-width: 1px !important;
-    }
     @media (max-width: 950px) {
         .container {
-            left: calc(50% - var(--txt_pad)/2 - 250px - 3rem);
-            top: calc(47%);
+            top: 80%;
+            left: calc(50%);
+            width: 80vw;
+            transform: translate(-50%, -50%);
+            background-color: transparent;
+        }
+        .about {
+            border: none;
+            text-align: center;
         }
     }
     @media (max-width: 820px) {
-        .container {
-            left: calc(50% - var(--txt_pad)/2 - 250px + 2rem);
-            top: calc(47%);
-        }
     }
     /*____________________________________________MEDIUM MOBILE SCREEN__________________________________________*/
     @media (max-width: 576px) {
         .container {
-            left: calc(50% - var(--txt_pad)/2 + 1rem);
-            top: calc(65%);
-            font-size: large;
+            /* left: calc(50% - var(--txt_pad)/2 + 1rem); */
+            /* top: calc(65%); */
+            font-size: x-large;
+            font-weight: 500;
         }
     }
     /*______________________________________________SMALL PHONE__________________________________________*/
     @media (max-width: 400px) {
         .container {
-            left: calc(25% - var(--txt_pad)/2);
-            top: calc(45%);
+            top: 50%;
+            left: calc(50% - var(--media_size)/2 + 5px);
+            width: 40vw;
+            background-color: black;
+            text-align: left;
             font-size: large;
+            font-weight: 500;
         }
+        .about {
+            border-left: solid var(--white) 3px;
+            border-bottom: solid var(--white) 3px;
+            text-align: left;
+        }
+        
     }   
     /*__________________________________________VERY SMALL PHONE__________________________________________*/
     @media (max-width: 341px) {
         .container {
-            left: calc(2%);
-            top: calc(50%);
-            font-size: small;
+            font-size: large;
+            font-weight: 100;
         }
     }
 </style>

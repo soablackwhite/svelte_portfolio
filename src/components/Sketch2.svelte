@@ -2,9 +2,9 @@
     import P5, { type p5 } from 'p5-svelte';
     import { coordinates, constellated, constellation_index, delta, spinDelta, currentItem} from '../stores';
     import { throttle} from 'lodash-es';
-    import { get_css_var } from '../scripts/functions';
+    import { get_css_var, rescale} from '../scripts/functions';
     import { moroccoData, lionData, runnerData, bioData, englandData, italyData, uaeData, usaData} from "../scripts/coordinateData";
-    import { onDestroy, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import type { Color } from 'p5';
     export let index: number;
     let innerWidth: number;
@@ -16,20 +16,20 @@
     const pointData = [moroccoData, italyData, uaeData, usaData, englandData];
     let map;
     //styling
-    const spread = 0.3;
-    const point = 2; //values 0, 1
-    const weight = 1;
+    const spread = 0;
+    let point = 0; //values 0, 1
+    let weight = .9;
     //onclick u can make black hole force radius high, repulsion strength negative
     //forces
-    const offset = 0.00075; //speed of particles moving
-    const forceradius = 140; //values 70, 140, 210, 1040 for fabric
-    let proximity = 7;
+    let parameters = 0;
+    const offset = 0.00015; //speed of particles moving
+    let forceradius = 140; //values 70, 140, 210, 1040 for fabric
+    let proximity = 12;
     let repulsionStrength = 11  ;//values 7, 17, 51 with long range fabric, -20 for black hole
-    const prox = [7, 11]; //1st is for regular stars 2nd is for constellation stars
-    const snapStrength = 100; //under 200 values cause jitter, 1200 for rubber effect (experimental)
+    let prox = [12, 11]; //1st is for regular stars 2nd is for constellation stars
+    let snapStrength = 100; //under 200 values cause jitter, 1200 for rubber effect (experimental)
     //loading bar
     let cx:number, cy:number, s:number;
-    let progress2 = 0;
     let max: number;
     //spinning canvas
     let angle = 0;
@@ -72,7 +72,7 @@
       });
     }, 100);
     // colors
-    let accent1_s: string, accent2_s: string, accent3_s: string, white_s: string, black_s: string;
+    let accent1_s:string, accent2_s:string, accent3_s:string, white_s:string, black_s: string;
     let accent1: Color;
     let accent2: Color;
     let accent3: Color;
@@ -181,8 +181,14 @@
         let stopThreshold = 1;
         if (d > stopThreshold) {
             //scale based on distance
-            let forceMagnitude = p5.map(d, 0, p5.width / 2, 0, snapStrength); // Adjust the range and max force as needed
+            let forceMagnitude = p5.map(d, 0, p5.width/2, 0, snapStrength);
             forceDirection.setMag(forceMagnitude);
+            // evaluating whether it's gonna overshoot
+            if(p5.dist(this.x + forceDirection.x, this.y + forceDirection.y, xtarget, ytarget) > d)
+            {
+              forceDirection.x = 0;
+              forceDirection.y = 0;
+            }
             // apply force
             this.x += forceDirection.x;
             this.y += forceDirection.y;
@@ -198,6 +204,41 @@
     }
   
     const sketch = (p5:p5) => {
+      p5.mouseClicked = () =>{
+        console.log(parameters);
+        parameters += 1;
+        parameters %= 4;
+        switch (parameters){
+          // case 0: //regular
+          //   forceradius = 140; //values 70, 140, 210, 1040 for fabric
+          //   proximity = 12;
+          //   prox = [12, 11]; //1st is for regular stars 2nd is for constellation stars
+          //   repulsionStrength = 11  ;//values 7, 17, 51 with long range fabric, -20 for black hole
+          //   snapStrength = 100;
+          //   break
+          // case 1: //fabric
+          //   forceradius = 500; //values 70, 140, 210, 1040 for fabric
+          //   proximity = 12;
+          //   prox = [12, 11]; //1st is for regular stars 2nd is for constellation stars
+          //   repulsionStrength = 42  ;//values 7, 17, 51 with long range fabric, -20 for black hole
+          //   snapStrength = 100;
+          //   break
+          // case 2: //black hole
+          //   forceradius = 300; //values 70, 140, 210, 1040 for fabric
+          //   proximity = 2;
+          //   prox = [0, 0]; //1st is for regular stars 2nd is for constellation stars
+          //   repulsionStrength = -20;//values 7, 17, 51 with long range fabric, -20 for black hole
+          //   snapStrength = 100;
+          //   break
+          // case 3:
+          //   forceradius = 3000; //values 70, 140, 210, 1040 for fabric
+          //   proximity = 20;
+          //   prox = [0, 0]; //1st is for regular stars 2nd is for constellation stars
+          //   repulsionStrength = 7; //values 7, 17, 51 with long range fabric, -20 for black hole
+          //   snapStrength = -10;
+            // break
+        }
+      }
       p5.setup = () => {
         p5.createCanvas(innerWidth, innerHeight);
         cy = innerHeight/2;
@@ -242,16 +283,18 @@
   
       p5.draw = () => {
         //reset
+        //reset
         p5.clear();
         quadtree.clear();
-        p5.background(0, 10);
+        // black.setAlpha(60);
+        p5.background(black);
+        // black.setAlpha(255);
+        
         //loading bar
         if(index === 2){
           // previously 235 for --ang = 18deg
           let progress = p5.map($delta, 0, max, 3 * p5.PI / 2, p5.PI / 2);
-          // progress2 = p5.lerp(progress2, $currentItem/12, 0.15);
-          // let progress = p5.map(progress2, 0, 1, 3 * p5.PI / 2, p5.PI / 2);
-          s = 280;
+          s = 280; //hardcoded
           p5.noFill();
           p5.stroke(white);
           p5.strokeWeight(1);
@@ -304,7 +347,7 @@
           let pointsInRange = quadtree.query(searchArea);
 
           //connect neighbors
-          if(walker.mapmode && !walker.traveling && i < walkers.length - 1){ //if map mode and point not traveling
+          if(walker.mapmode && index===1 && !walker.traveling && i < walkers.length - 1){ //if map mode and point not traveling
             let d = p5.dist(walkers[i + 1].x, walker.x, walkers[i+1].y, walker.y); //dist between point and neighbor
             let alpha = 255 - p5.map(d, 0, proximity, 0, 255);
             let isFar = d > proximity;
@@ -387,13 +430,32 @@
       p5.endShape(p5.CLOSE);
     }
     function changeMode(){
-      map = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y])); 
+      map = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y]));
       walkers.forEach( (walker, i) => {
         if(!$constellated){
-          walker.mapmode = false;
-          proximity = prox[0];
-          walker.ox = walker.xnoise;
-          walker.oy = walker.ynoise;
+          if(index === 3){ //ruban banner for project
+            walker.mapmode = true;
+            proximity = 3;
+            let upperborder = innerHeight/2 - 100;
+            let lowerborder = innerHeight/2 + 100;
+            walker.oy = (Math.random() < 0.5) ? upperborder : lowerborder;
+            walker.ox = Math.random()*innerWidth;
+          } 
+          else if (index === 2){ //circle for skills
+            let rad = 370;
+            let rad2 = 700;
+            let radius = (Math.random()<0.2) ? rad - Math.random() * 10 :  rad2 - Math.random() * 10;
+            let angle = Math.random() * 2*Math.PI;
+            walker.mapmode = true;
+            walker.oy = cy + Math.sin(angle)*radius;
+            walker.ox =  cx + Math.cos(angle)*radius;
+          } 
+          else {
+            walker.mapmode = false;
+            proximity = prox[0];
+            walker.ox = walker.xnoise;
+            walker.oy = walker.ynoise;
+          }
         }
         else if(i < pointData[$constellation_index].length){ //if map make pos map
           walker.mapmode = true;

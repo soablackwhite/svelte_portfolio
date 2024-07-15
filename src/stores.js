@@ -36,4 +36,4 @@ export const coordinates = writable([
 //for which element hovered
 export const constellated = writable(false);
 export const constellation_index = writable(0);
-export const profile_index = writable(-1);
+export const profile_index = writable(0);

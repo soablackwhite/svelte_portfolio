@@ -26,7 +26,6 @@
 </script>
 
 <!-- UI DESIGNER -->
-
 <span class="clickable" on:click={(opened)?closeUI:openUI}> {symbol}</span>
 <!-- <button class="clickable" style="font-size:30px;cursor:pointer" on:click={openUI}>&#9776; settings</button> -->
 

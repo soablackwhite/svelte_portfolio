@@ -1,27 +1,187 @@
 :root {
-  --black: #121212;
-  --white: #faf5f5;
-  --yellow: rgb(249, 223, 77);
+  /*colors*/
+  /* white bg dark pink */
+  /* --black: #363636;
+  --white: #FFFBFC;
+  --accent1: #886988; 
+  --accent2: #40F99B; 
+  --accent3: #60AFFF;
+  --gray: #30332E; */
+  /* --dark: 1; */
+
+  /* old paper */
+  /* --accent2: #FFFBFC;
+  --white: rgb(234, 222, 203);
+  --accent1: rgb(23, 22, 19);
+  --accent3: #60AFFF;
+  --gray: #30332E;
+  --dark: 0; */
+
+  /* Apple */
+  /* --black: rgb(245, 245, 247);
+  --white: rgb(29, 29, 31);
+  --accent1: rgb(110, 110, 115);
+  --accent2: rgb(245, 245, 247);
+  --accent3: rgb(76, 149, 247);
+  --gray: rgb(245, 245, 247);
+  --dark: 1; */
+
+  @font-face {
+    font-family: 'FAMILY_NAME';
+    src: url(FONT_FILE_NAME.woff2) format('woff2');
+   }
+
+  /* BLACKBOARD */
+  --black: rgb(16, 16, 16);
+  --white: rgb(245, 245, 247);
+  --accent1: rgb(110, 110, 115);
+  --accent2: rgb(245, 245, 247);
+  --accent3: rgb(76, 149, 247);
+  --gray: rgb(203, 203, 207);
+  --dark: 1;
+
+  /* nier automata, ordered from lightest to darkest */
+  /* --accent3: #DCD4BB;
+  --white: #CDC8B0;
+  --accent2: #B4AF9A;
+  --black: #4E4B42;
+  --accent1: #CD664D;
+  --dark: 0; */
+
+  /* best pair */
+  /* --black: #CDC8B0; */
+  /* --white: #4E4B42; */
+  /* --black: #4E4B42;
+  --white: #CDC8B0; */
+  /* accent */
+  /* --accent1: #CD664D; */
+
+
+
+
+  /* --black: #363636;
+  --accent2: #FFFBFC;
+  --white: rgb(234, 222, 203);
+  --accent1: rgb(23, 22, 19);
+  --accent3: #60AFFF;
+  --gray: #30332E;
+  --dark: 0; */
+  
+  /* dark pink bg */
+  /* --black: #FFFBFC;
+  --accent2: #60AFFF;
+  --accent1: #40F99B;
+  --accent3: #886988;
+  --gray: #30332E;
+  --white: #886988;
+  --dark: 1; */
+
+  /*tags*/
   --dist: -16rem;
-  --ang: -18deg;
+  --ang: -22deg;
   --ang_start: 0deg;
   --ang_img: -33deg;
   --dist_img: -13rem;
-  --indent_ui: 0rem;
-  --isindent: 0deg;
+  --isindent: 1;
+  /*typewriter*/
+  --txt_pad: 25vw;
+  /*media size*/
+  --media_width: 560px;
+  --media_height: 400px;
+  /*center img*/
   --vidy : 1rem;
   --vidx : 0rem;
-  --txt_pad: 20rem;
+  /* carousel */
+  --ycarousel: 50px;
+  --size: 200px;
+  --indent_ui: 0px; /* used to be in tags */
+}
+/*___________________________________________MEDIUM MOBILE SCREEN__________________________________________*/
+@media (max-width: 576px) {
+  :root{
+    /*tags*/
+    --dist: -9.5rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -8rem;
+    /*typewriter*/
+    --txt_pad: 15rem;
+    /*media size*/
+    --media_height: 200px !important;
+    --media_width: 280px !important;
+    /*logo*/
+    --translate-x: -3.8rem;
+    --translate-y: 3rem;
+    --scale: 1.2;
+    --rotate: 90deg;
+  }
+}
+/*______________________________________________SMALL PHONE__________________________________________*/
+@media (max-width: 400px) {
+  :root{
+    /*tags*/
+    --dist: -12rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -10rem;
+    /*typewriter*/
+    --txt_pad: 9rem;
+    /*media size*/
+    --media_height: 200px !important;
+    --media_width: 280px !important;
+    /*logo*/
+    --translate-x: -4rem;
+    --translate-y: 2.5rem;
+    --scale: 1.1;
+    --rotate: 90deg;
+  }
+}
+/*__________________________________________SMALL COMPACT PHONE__________________________________________*/
+@media (max-width: 400px) and (max-height: 700px) {
+  :root {
+    /*tags*/
+    --dist: -12rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -10rem;
+    /*typewriter*/
+    --txt_pad: 10rem;
+    /*media size*/
+    --media_height: 200px !important;
+    --media_width: 280px !important;
+    /*logo*/
+    --translate-x: -4.0rem;
+    --translate-y: 2rem;
+    --scale: 1;
+    --rotate: 90deg;
+  }
+}
+/*__________________________________________VERY SMALL PHONE__________________________________________*/
+@media (max-width: 341px) {
+  :root{
+    /*tags*/
+    --dist: -10rem;
+    --ang: -26deg;
+    --ang_start: 52deg;
+    --ang_img: -32deg;
+    --dist_img: -8rem;
+    /*typewriter*/
+    --txt_pad: 8rem; 
+    /*media size*/
+    --media_height: 200px !important;
+    --media_width: 280px !important;
+    /*logo*/
+    --translate-x: -2.0rem;
+    --translate-y: -1.5rem;
+    --scale: 0.8;
+    --rotate: 0deg;
+  }
 }
 html{
   overflow: hidden;
-}
-mark{
-  background-color: var(--white);
-}
-mark::selection{
-  background-color: var(--black);
-  color: var(--white);
 }
 body{
   font-family: "Proxima Nova", sans-serif;
@@ -29,36 +189,46 @@ body{
   padding: 0;
   background-color: var(--black);
   scroll-behavior: smooth;
-  overflow: hidden;
   z-index: 3;
-  color: white;
-}
-h1 {
-  font-family: 'Proxima Nova', sans-serif;
-  font-size: 3rem;
-  text-align: justify;
-  font-weight: 900;
-  margin: 0;
-  margin-bottom: 2rem;
-  padding: 0;
-}
-h2{
-  font-weight: 700;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 3rem;
-}
-section {
-  padding: 50px;
-  font-family: 'Proxima Nova', sans-serif;
   color: var(--white);
+  overflow: hidden;
+}
+
+/* html::-webkit-scrollbar {
+  display: none;
+}
+html {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+} */
+ /* width */
+ /* Custom scrollbar styles */
+
+
+h1 {
+  font-family: 'Montserrat', serif;
+  font-size: 7rem;
+  font-weight: 100;
+}
+h2 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 64px;  
+}
+h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 200;
 }
 p{
-  /* background-color: #ffffff07; */
-  color: #ffffffb8;
-  line-height: 2rem;
+  font-family: 'Proxima Nova', sans-serif;
+  color: var(--white) !important;
+}
+mark{
+  background-color: var(--white);
 }
 ::selection {
-  color: rgb(18, 18, 18);
+  color: var(--black);
   background: var(--white);
 }
 /*___________________________________________FADE ANIMATION__________________________________________*/
@@ -68,7 +238,7 @@ p{
   left: 0%;
   width: 100%;
   height:100%;
-  background-color: #121212;
+  background-color: var(--black);
   z-index: 5;
 }
 @keyframes fadeMeOut{
@@ -76,42 +246,8 @@ p{
   100%{opacity:0; visibility:hidden;}
 }
 
-/*__________________________________________MEDIA QUERY & FONTS__________________________________________*/
+/*________________________________________________FONTS_____________________________________________*/
 @font-face {
   font-family: 'Proxima Nova';
   src: url('../fonts/proximanova.otf') format('truetype');
-}
-/*____________________________________________MEDIUM MOBILE SCREEN__________________________________________*/
-@media (max-width: 576px) {
-  :root{
-    --dist: -9.5rem;
-    --ang: -26deg;
-    --ang_start: 52deg;
-    --ang_img: -32deg;
-    --dist_img: -8rem;
-    --txt_pad: 15rem;
-  }
-}
-
-/*______________________________________________SMALL PHONE__________________________________________*/
-@media (max-width: 400px) {
-  :root{
-    --dist: -12rem;
-    --ang: -26deg;
-    --ang_start: 52deg;
-    --ang_img: -32deg;
-    --dist_img: -10rem;
-    --txt_pad: 9rem;
-  }
-}
-/*__________________________________________VERY SMALL PHONE__________________________________________*/
-@media (max-width: 341px) {
-  :root{
-    --dist: -10rem;
-    --ang: -26deg;
-    --ang_start: 52deg;
-    --ang_img: -32deg;
-    --dist_img: -8rem;
-    --txt_pad: 19rem;
-  }
 }

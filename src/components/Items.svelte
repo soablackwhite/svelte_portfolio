@@ -16,11 +16,16 @@
     let resetThreshold: number;
     let rt = document.querySelector(':root') as HTMLElement;
     let labels = ['FRONTEND', 'BACKEND', 'DATA'];
-    type ContentItem = string | { src: string; alt: string; link: string; };
+    type ContentItem = 
+        | string 
+        | { name: string; score: number }
+        | { src: string; alt: string; link: string };
+
     interface Tag {
         id: number;
         content: ContentItem[];
     }
+
     let cur: number;
     let d: number;
     currentItem.subscribe((value) => {
@@ -40,14 +45,6 @@
             "title": ["2014-2017", "2017-2018", "2019-2023"],
             "contents": ["al manbaa", "bocconi university", "new york university"]
         },
-        
-    ]
-
-    let home_txt = [
-        "welcome :)",
-        "to navigate, use arrows ↑↓",
-        "to navigate, scroll!",
-        "...feel free to adjust scrolling sensitivity to your liking in the bottom right corner!"
     ]
     let about_txt = [
         "Hi I'm Omar!",
@@ -60,7 +57,20 @@
     let tags: Tag[] = [
 		{ id: 0, content: [``]},
 		{ id: 1, content: [``]},
-		{ id: 2, content: [`react`, `svelte`, `bootstrap`, `javascript`, `c`, `c++`, `node.js`, `flask`, `python`, `sql`, `r`, `stata`]},
+		{ id: 2, content: [
+            { name: 'react', score: 8 },
+            { name: 'svelte', score: 10 },
+            { name: 'bootstrap', score: 7 },
+            { name: 'javascript', score: 10 },
+            { name: 'c', score: 8 },
+            { name: 'c++', score: 8 },
+            { name: 'node.js', score: 8 },
+            { name: 'flask', score: 5 },
+            { name: 'python', score: 10 },
+            { name: 'sql', score: 8 },
+            { name: 'r', score: 10 },
+            { name: 'stata', score: 8 }
+        ]},
 		{ id: 3, content: [
             {src: `/media/icons/github.svg`, alt: `github icon`, link: `https://github.com/soablackwhite`},
             {src: `/media/icons/linkedin.svg`, alt: `linkedin icon`, link: `https://www.linkedin.com/in/omarouldali/`}, 
@@ -165,16 +175,12 @@
     {#if index === 0}
         <Typewriter texts={about_txt} custom = "about"/>
     {:else if index === 1}
-        <!-- {#each cards_text as txt, i}
-            <Card label={txt.label} title={txt.title} texts={txt.contents} offset={i}/>
-        {/each} -->
         <Card label={cards_text[0].label} title={cards_text[0].title} texts={cards_text[0].contents} offset={0}/>
-        <!-- <Hobby/> -->
     {:else if index === 2}
         <!-- LABELS -->
         <div>
             {#each labels as label, i}
-                <Circle idx={i} sz={labels[index].length - 1} custom="label" locking={locking}>
+                <Circle idx={i} sz={labels[index].length - 1} custom="label" locking={locking} proficiency={0}>
                     {label} 
                 </Circle>
             {/each}
@@ -183,12 +189,14 @@
         <div class="content">
             {#each tags[2].content as tag, i}
                 <div>
-                    <Circle locking={locking} idx={i} sz={tags[index].content.length - 1} custom="circle centered">
-                        <span slot="letter">{tag[0]}</span>
-                        <span slot="tag">{tag.slice(1)}</span>
+                    <Circle locking={locking} idx={i} sz={tags[index].content.length - 1} custom="circle centered" proficiency={tag.score}>
+                        <span slot="letter">{tag.name[0]}</span>
+                        <span slot="tag">{tag.name.slice(1)}</span>
+                        <!-- <span slot="tag">{tag.name}</span> -->
                     </Circle>
                 </div>
             {/each}
         </div>
+        
     {/if}
 </div>

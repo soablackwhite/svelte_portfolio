@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1200"
+   height="600"
+   viewBox="0 0 12 6"
+   version="1.1"
+   id="svg41424"
+   sodipodi:docname="uaeflag.svg"
+   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs41428" />
+  <sodipodi:namedview
+     id="namedview41426"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.39333333"
+     inkscape:cx="385.16949"
+     inkscape:cy="300"
+     inkscape:window-width="1440"
+     inkscape:window-height="872"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg41424" />
+  <rect
+     width="12"
+     height="6"
+     fill="#00732f"
+     id="green"
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:0.5;stroke-dasharray:none" />
+  <rect
+     width="12"
+     height="4"
+     y="2.3"
+     fill="#ffffff"
+     id="rect41419"
+     x="0"
+     style="display:inline;stroke:#ffffff;stroke-width:0.5;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     width="11.968231"
+     height="2.2682307"
+     y="3.7158847"
+     id="rect41421"
+     x="0.01588448"
+     style="display:inline;stroke:#ffffff;stroke-width:0.531769;stroke-dasharray:none;stroke-opacity:1" />
+  <rect
+     width="3"
+     height="6"
+     fill="#f00"
+     id="red"
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:0.5;stroke-dasharray:none" />
+</svg>

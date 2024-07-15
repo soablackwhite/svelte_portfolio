@@ -8,7 +8,7 @@
     import { coordinates, constellated, constellation_index, profile_index} from "../stores";
     //animations
     import { slide, fade, scale } from "svelte/transition";
-    import { cubicInOut } from 'svelte/easing';
+    import { cubicInOut, quintInOut} from 'svelte/easing';
     import { onMount, onDestroy} from "svelte";
     const svgs = [
         "/media/icons/mor.svg",
@@ -17,29 +17,38 @@
         "/media/icons/usaflag.svg",
         "/media/icons/ukflag.svg"
     ]
-    const quadrants = ["q1", "q2", "q3"];
     const personal_txts = [
-        "Born and raised in Morocco, I went to school in Jeanne d'Arc and got my Baccalauréat in Sciences Physiques from Al Manbaa.",
-        "After graduating from high school in Rabat, I moved to Italy to study political science and economics at Università Bocconi. During my classes there, I understood that I was more quantitatively inclined; I enjoyed the math and computer science seminars more than their social science counterparts.",
-        "In August 2018, I decided to transfer to New York University Abu Dhabi, a satellite campus of NYU in the UAE. There, I took classes from various departments until I settled on majoring in Interactive Media, a project-centric field at the intersection of computer science, design, and communication.",
-        "I did two semesters—Spring 2020 and Fall 2021—in the New York campus to take advanced classes in web development, and also to have fun pursuing my hobby in game design.",
-        "Recently moved to London, and looking forward to the next chapter in my journey."
-    ]
-    
-    let x: number, y : number; //wobble variables
-    $: x =  Math.round($coordinates[offset].x);
-    $: y = Math.round($coordinates[offset].y);
+    "28th of July, 1999, Omar was born. It's been a while so I can't recall much, but I do remember I had good times in primaire and collège Jeanne d'Arc, where I made close friends that are still around to this day. I went on to get my high school Baccalauréat degree from Al Manbaa in Sciences Physiques, participated in MUNs, and won some. It was fun, but I was curious about what else was out there. In April 2017, I got a scholarship to study International Relations at Bocconi University, and decided to continue my studies in Italy.",
+    "When I arrived in Milan, I was excited to study something I thought I'd be good at: social sciences. I was in a new environment, and had newfound independence that brought along both joys and challenges. Academically I did pretty well. Bocconi taught me a lot about markets, jobs, and money. But I wanted personal growth beyond just the practical knowledge. At the same time, I found myself missing mathematics and sciences. Political science had its share of problems to solve and topics to learn about, but I discovered that I enjoyed numbers and logical puzzles more. After finishing my year at Bocconi, I switched.",
+    "Sometime around Fall 2017, I received updates from a high school friend who was studying in the United Arab Emirates; New York University had a new campus in Abu Dhabi that provided full scholarships, and my friend was loving it there. Since I had already been thinking about transferring to a Liberal Arts school, I applied, visited campus, and got in. At NYUAD, I took classes from various departments, took part in student government, and got to know people and cultures from all over the world. In my second year, I settled on majoring in Interactive Media, a project-centric field at the intersection of computer science, design, and digital communication.",
+    "I went to the New York campus in Spring 2020 and Fall 2021 to take more technical classes in web development and game programming. During this time, I realized my passion for creating projects that people can use and play around with. My classes involved a lot of group projects, so I learned a lot about group dynamics and leadership. Things learned 2020-2021: making stuff feels great, making good stuff feels fantastic, choose wisely who you work with, and it's okay to make concessions.",
+    "After spending a year teaching in Morocco, I recently moved to London and I'm looking forward to the next chapter in my journey!"
+];
 
+    interface TransitionConfig {
+        duration: number;
+        [key: string]: any; //optionals
+    }
+    // transition
+    function expandOut(node: HTMLElement, { duration, sign = 1 }: TransitionConfig) {
+        return {
+            duration,
+            css: (t:number) => `
+                transform: translate(${(1 - t) * 100 * sign}%, 0);
+            `,
+            easing: quintInOut,
+        };
+    }
+    //scroll stuff
     function scrollToSection(sectionId: string) {
         const section = document.getElementById(sectionId);
         if (section) {
             section.scrollIntoView({
                 behavior: 'smooth',
-                block: 'start'
+                block: "start"
             });
         }
     }
-    
     function toggleConstellate(index: number) {
         scrollToSection("section-" + index);
         profile_index.set(index);
@@ -54,16 +63,18 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const index = parseInt(entry.target.id.replace("section-", ""));
-                    toggleConstellate(index);
+                    profile_index.set(index);
+                    constellated.set(true);
+                    constellation_index.set(index);
+                    current = index;
                 }
             });
         }
         observer = new IntersectionObserver(handleIntersection, {
-            threshold: 0.9
+            threshold: .4
         })
         const sections = document.querySelectorAll('.section');
         sections.forEach(section => observer.observe(section));
-        document.body.style.overflow = 'auto'; // or 'scroll', 'visible', etc.
         return () => {
             if (observer) {
                 observer.disconnect();
@@ -71,31 +82,28 @@
             }
         };
     });
-    onDestroy(() => {
-        document.body.style.overflow = 'hidden'; // Reset to default when the component is destroyed
-    });
 
 </script>
+
 
 <div class="mapinfo" transition:fade>
     <div class="label" transition:slide|global={{delay: offset*100, duration:200, easing: cubicInOut}}> history </div>
     <div class="content" transition:slide|global={{delay: offset*100, duration:200, easing: cubicInOut}}>
-        <div class="title"> {texts[current]} </div>
-        <div class="subtitle"> {title[current]} </div>
+        <div class="title"> <h2>{texts[current]} </h2></div>
+        <div class="subtitle"> <h3> {title[current]} </h3> </div>
     </div>
 </div>
-
+<div class="steps" transition:scale|global={{duration: 150}}>
+    {#each texts as txt, i}
+        <button class="step {(i === current) ? "stepselected" : ""}" on:click={() => toggleConstellate(i)}></button>
+    {/each}
+</div>
 
 <div class="centerall" transition:fade|global>
-    <div class="steps"  transition:scale|global>
-        {#each texts as txt, i}
-            <button class="step {(i === current) ? "stepselected" : ""}" on:click={() => toggleConstellate(i)}></button>
-        {/each}
-    </div>
-    <div class="text-container" >
-        <div class="text-content" >
+    <div class="text-container" transition:fade|global>
+        <div class="text-content">
                 {#each personal_txts as txt, i}
-                    <div id={"section-" + i} class="section" data-aos="fade-right">
+                    <div id={"section-" + i} class="section" in:expandOut|global={{duration: 200, sign: -1}} out:expandOut|global={{duration: 200, sign: -1}}>
                         <span><img class="icon" alt="personal-icon" src="{svgs[i]}"> </span>
                         {txt} 
                     </div>
@@ -104,109 +112,79 @@
     </div>
 </div>
 
-
 <style>
     .centerall{
-        display: flex;
+        position: absolute;
+        left:0;
+        top:0;
+        width: 100%;
         height: 100%;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
+        overflow: auto;
+        display: flex;
     }
     .stepselected{
         background-color: var(--white) !important;
     }
     .steps {
         position: fixed;
+        left: 50%;
+        top: 0%;
         z-index: 10;
         display: flex;
         align-items: center;
         justify-content: center;
-        left: 0%;
-        top: 50%;
-        transform:  translate(calc(-50% + 20px), -0%) rotate(90deg) ;
+        transform: translate(-100%, 70px) rotate(90deg);
     }
     .step {
         all:unset;
         cursor: pointer;
         position: relative;
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         border-radius: 50%;
         border: solid 1px var(--white);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: var(--white);
         background-color: var(--black);
-        font-weight: bold;
-        margin: 0 17px;
-        transition: all 0.13s;
+        color: var(--white);
+        margin: 0 5px;
+        transition: all 0.23s;
     }
     .step:hover{
         background-color: var(--white);
-    }
-    .step::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 100%;
-        width: 35px;
-        height: 2px;
-        border: solid 1px var(--white);
-        transform: translateY(-50%);
     }
     .step:last-child::before {
         display: none;
     }
     /* SCROLLING TEXT */
     .text-content {
-        font-family: "Montserrat", sans-serif;
-        font-size: x-large;
+        font-size: large;
         color: lightgray;
         transition: top .6s, left .6s;
-        /* height: 100vh; */
-        /* padding: 40px; */
-        /* /* -webkit-mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent); */
-        /* mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent); */
     }
     .text-container{
         position: absolute;
         left: 0%;
         top: 0%;
-        width: 50%;
-        display: flex;
-        flex-flow: column nowrap;
-        background-color: rgba(255, 255, 255, 0.46);
-        mask-image: linear-gradient(to top,  black 10%, transparent, transparent, black 90%);
-        align-items: center;
-        border-right: var(--white) solid 1px;
-    }
-    .section {
-        height: 80vh;
-        width: 30vw;
+        width: 46%;
         display: flex;
         flex-flow: column wrap;
+        background-color: rgba(0, 0, 0, 0.35);
         align-items: center;
+
+    }
+    .section {
+        height: 100vh;
+        padding: 0 5vw 0 5vw;
+        display: flex;
+        flex-flow: column wrap;
+        /* align-items: center; */
         justify-content: center;
-        text-align: center;
-        border-radius: 1px;
-    }
-    /* width */
-    .text-content::-webkit-scrollbar {
-        width: 8px;
-    }
-    /* track */
-    .text-content::-webkit-scrollbar-track {
-        background: var(--black);
-    }
-    /* handle */
-    .text-content::-webkit-scrollbar-thumb {
-        background: var(--white);
-    }
-    /* handle on hover */
-    .text-content::-webkit-scrollbar-thumb:hover {
-        background: gray;
+        /* text-align: center; */
+        border-left: var(--white) solid 1px;
+        border-right: var(--white) solid 1px;
+        border-bottom: var(--white) solid 1px;
     }
     /* MAP STUFF */
     .content{
@@ -216,19 +194,14 @@
         position: fixed;
         top: 4%;
         right: 15%;
+        z-index: 1;
         display: flex;
         align-items: center;
     }
     .title{
-        font-family: "Montserrat", sans-serif;
-        font-weight: 400 !important;
-        font-size: 64px;
         line-height: 90%;
     }
     .subtitle{
-        font-family: "Montserrat", sans-serif;
-        font-size: 28px;
-        font-weight: 200 !important;
         margin: 5px;
     }
     .label{
@@ -246,7 +219,7 @@
     }
     .icon{
         width: 75px;
-        margin: 20px;
+        margin-bottom: 1em;
         height: auto;
         filter: none;
     }

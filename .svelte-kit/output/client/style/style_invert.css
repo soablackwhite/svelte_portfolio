@@ -8,6 +8,8 @@
   --indent_ui: 0rem;
   --vidy : 1rem;
   --vidx : 0rem;
+  --media_width: 560px;
+  --media_height: 400px;
 }
 
 html{

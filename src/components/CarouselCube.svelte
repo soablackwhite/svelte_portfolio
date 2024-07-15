@@ -4,6 +4,8 @@
     import { fade} from "svelte/transition";
     import { quintOut } from "svelte/easing";
     import { currentItem } from "../stores";
+    import Documentation from "./Documentation.svelte";
+
     // parameters
     const max = contents.length - 1; //nbr of tbnails minus 1
     let items: NodeListOf<HTMLElement>;
@@ -74,27 +76,27 @@
     function showDoc() {
         docmode = true;
         carousel.style.top = '-100%';
+        carousel.style.opacity = "0";
         documentation.style.bottom = '0';
     }
     function hideDoc() {
         docmode = false;
         carousel.style.top = '0%';
+        carousel.style.opacity = "1";
         documentation.style.bottom = '-100%';
     }
     // svelte animation customized for pop in pop out
     function expandOut(node: HTMLElement, { duration, sign = 1 }: TransitionConfig) {
-        const height = node.offsetHeight;
         return {
             duration,
             css: (t:number) => `
                 transform: translate(-50%, ${ sign * (50 - (1 - t) * 100)}%);
                 opacity: ${2*t/3};
-                height: 50%;
+                height: 60%;
             `,
             easing: quintOut,
         };
     }
-
     function clickScroll(idx:number, event: MouseEvent){
         lock = true;
         past = lockCarousel(idx);
@@ -123,9 +125,6 @@
         past = ((dir === 1 && position < max)||(dir === -1 && position > 0)) ? lockCarousel(position + dir) : past;
     }
     onMount(() => {
-        // disable overflow to hide document
-        document.body.style.overflow = 'hidden'; // or 'scroll', 'visible', etc.
-
         items = document.querySelectorAll('.item');
         //update my carousel based on current position, which is found thru current scroll
         function updateCarousel(delta: number){
@@ -157,7 +156,7 @@
             if(!docmode){
                 lock = false;
                 if (Math.abs(e.deltaX) > 0) {
-                    e.preventDefault();
+                    // e.preventDefault();
                 }
                 let scroll = (Math.abs(e.deltaY) > Math.abs(e.deltaX)) ? -e.deltaY : -e.deltaX;
                 if(Math.abs(scroll) < 4){
@@ -199,64 +198,58 @@
             past = ((dir === 1 && position < max)||(dir === -1 && position > 0)) ? lockCarousel(position + dir) : past;
         }
         window.addEventListener("keydown", arrowScroll);
-        window.addEventListener('wheel', wheelScroll, { passive: false });
+        window.addEventListener('wheel', wheelScroll);
         return () => {
-            document.body.style.overflow = 'auto'; // Reset to default when the component is destroyed
             window.removeEventListener('keydown', arrowScroll);
             window.removeEventListener('wheel', wheelScroll);
         };
     })
-    onDestroy(() => {
-        document.body.style.overflow = 'auto'; // Reset to default when the component is destroyed
-    });
 </script>
 <!-- images -->
-<main id="carousel" bind:this={carousel} class:ribbon>
-    <!-- left arrow -->
-    <button on:click={() => clickArrow(-1)}> <img class="arrow" style="left: 10%;"alt="left arrow" src="/media/icons/bluetipdesign_left.svg"> </button>
-    {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
-        <button class="item" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
-            {#if type === "video"}
-                <video  muted loop
-                    class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">
-                    <source src={src} type="video/mp4"> your browser does not support the video tag.
-                </video>
-            {:else }
-                <img class="{(i===$currentItem)?"current":""}" alt={alt} src={src}>
-            {/if}
-            {#if cardtype === "label"}<div id="category">{category}:</div>{/if}
-            <div class="overlay">
-                <h3> {title} </h3>
-                <p>
-                    {#if cardtype==="minimal"} <span>{category}:</span> {/if}
-                    {tech}
-                </p>
-            </div>
-        </button>
-    {/each}
-    <!-- right arrow -->
-    <button on:click={() => clickArrow(1)}> <img style="left:90%;" class="arrow" alt="right arrow" src="/media/icons/bluetipdesign_right.svg"> </button>
-</main>
+<div class="hidden">
+    <main id="carousel" bind:this={carousel} class:ribbon >
+        <!-- left arrow -->
+        <button on:click={() => clickArrow(-1)}> <img class="arrow" style="left: 10%;"alt="left arrow" src="/media/icons/bluetipdesign_left.svg"> </button>
+        {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
+            <button class="item {(i===$currentItem)?"currentButton":""}" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
+                {#if type === "video"}
+                    <video  muted loop
+                        class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">
+                        <source src={src} type="video/mp4"> your browser does not support the video tag.
+                    </video>
+                {:else }
+                    <img class="{(i===$currentItem)?"current":""}" alt={alt} src={src}>
+                {/if}
+                {#if cardtype === "label"}<div id="category">{category}:</div>{/if}
+                <div class="overlay">
+                    <h3> {title} </h3>
+                    <p>
+                        {#if cardtype==="minimal"} <span>{category}:</span> {/if}
+                        {tech}
+                    </p>
+                </div>
+            </button>
+        {/each}
+        <!-- right arrow -->
+        <button on:click={() => clickArrow(1)}> <img style="left:90%;" class="arrow" alt="right arrow" src="/media/icons/bluetipdesign_right.svg"> </button>
+    </main>
 
-<!-- current item count -->
-<div class="counter">
-    <h3>
-        <span class="left {($currentItem == 0)?"invisible":""}">&lt;</span> 
-        <span id="currentItem">{$currentItem} / {max}</span>
-        <span class="right {($currentItem == max)?"invisible":""}">&gt;</span>  
-    </h3>
-</div>
-<!-- show documentation, used to be inside doc container, we'll see-->
-{#if !docmode}
-    <button out:expandOut={{duration: 370, sign: 1}} 
-    in:fade={{duration:370}} 
-    class="readmore navbutton" 
-    on:click={showDoc}>
-        <div class="textrotate"> <strong> READ MORE </strong> </div>
-    </button>
-{/if}
-<!-- documentation -->
- <div class="hidden">
+    <!-- current item count -->
+    <div class="counter">
+            <span class="left {($currentItem == 0)?"invisible":""}">&lt;</span> 
+            <span id="currentItem">{$currentItem} / {max}</span>
+            <span class="right {($currentItem == max)?"invisible":""}">&gt;</span>  
+    </div>
+    <!-- show documentation, used to be inside doc container, we'll see-->
+    {#if !docmode}
+        <button out:expandOut={{duration: 370, sign: 1}} 
+        in:fade={{duration:370}} 
+        class="readmore navbutton" 
+        on:click={showDoc}>
+            <div class="textrotate"> <strong> READ MORE </strong> </div>
+        </button>
+    {/if}
+    <!-- documentation -->
     <div class="documentation" bind:this={documentation}>
         {#if docmode}
             <button out:expandOut={{duration: 300, sign: -1}} 
@@ -266,53 +259,17 @@
                 <div class="textrotate2"> <strong> BACK </strong> </div>
             </button>
         {/if}
-        <div class = "banner">
-           
-        </div>
-        <div class = "columns">
-            <!-- vertical banner -->
-            <div class = "labelBanner">
-                <h2> {category} </h2>
-                <!-- <h3> {tech} </h3> -->
-            </div>
-            <div class="rows"> 
-                <div class = "titleBanner">
-                    <div> <h1> {title} </h1> <br></div>
-                </div>
-                <div class = "page">
-                    <p>{description}</p>
-                    <!-- media display stuff based on type of media -->
-                    {#each media as m, i}
-                        {#if m.type === "image"}
-                            <img class="media_container" src={m.src} alt={alt} >
-                        {:else if m.type === "video"}
-                        <!-- there was a transition property in this video tag maybe i should put it back -->
-                            <video class="media_container" autoplay muted loop style="float:right; right:0rem; width:100%; height:100%">
-                                <source src={m.src} type="video/mp4">
-                                    Your browser does not support the video tag.
-                            </video>
-                        {:else if m.type === "youtube"}
-                            <iframe
-                                src= {m.src} class="media_container" title="YT video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                            </iframe>
-                        {:else}
-                            <div class="skel" transition:fade>
-                            </div>
-                        {/if}
-                    {/each}
-                </div>
-            </div>
-            
-        </div>
+        <Documentation data={data}/>
     </div>
- </div>
-
-
-
-
+</div>
 
 <style>
     .hidden{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left:0;
+        top: 0;
         overflow: hidden !important;
     }
     .textrotate{
@@ -328,10 +285,11 @@
         position: fixed;
         width: 140px;
         height: 140px;
-        color: var(--black);
-        background-color: var(--white);
-        transition: all 0.17s;
-        border-radius: 4px;
+        color: var(--white);
+        background-color: var(--black);
+        transition: all 0.22s;
+        border-radius: 2px;
+        border: 2px solid var(--white);
     }
     .navbutton:hover{
         color: var(--black);
@@ -367,61 +325,6 @@
         height: 120%;
         z-index: -1;
     }
-    /* documentation formatting */
-    .columns{
-        position: relative;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-flow: column wrap;
-    }
-    .rows{
-        position: relative;
-        width: calc(100% - 120px);
-        display: flex;
-        flex-flow: row wrap;
-    }
-    .banner {
-        position: sticky;
-        top: 0;
-        width: 100%;
-        height: 140px;
-        background-color: var(--black);
-        color: var(--white);
-        z-index: 3;
-    }
-    /* title */
-    .titleBanner {
-        position: sticky;
-        margin-top: 40px;
-        top: 120px;
-        width: 100%;
-        height: 200px;
-        color: var(--white);
-        -webkit-mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent);
-        mask-image: linear-gradient(to top, transparent, black 10%, black 90%, transparent);
-        background-color: var(--black);
-        z-index: 1;
-    }
-    /* categories */
-    .labelBanner {
-        position: sticky;
-        top: 140px;
-        height: 75%;
-        /* width: 120px; */
-        overflow-wrap: break-word;
-        writing-mode: vertical-rl;
-        text-align: center;
-        color: var(--white);
-        background-color: var(--black);
-        z-index: 2;
-        border-right: var(--white) 2px solid;
-    }
-
-    .titleBanner h1{
-        text-align: center;
-        margin-right: 120px;
-    }
     .documentation {
         position: absolute;
         z-index: 2;
@@ -434,19 +337,20 @@
         transition: bottom 0.37s ease;
         display: flex;
         flex-flow: row wrap;
-        /* align-items: center; */
         justify-content: center;
-        overflow-y: hidden;
-        overflow-x: hidden;
+        /* align-items: center; */
+        /* overflow-y: scroll; */
+        /* overflow-x: hidden; */
     }
     .page{
         background-color: var(--black);
+        background-color: brown;
         width: calc(100% - 200px);
+        height: 2000px; /* For demonstration purposes */
     }
     .page p{
         padding: 0 10vw 0 10vw;
         font-size: x-large;
-        font-family: 'Proxima Nova', sans-serif;
         color: lightgrey !important;
     }
     .media_container{
@@ -455,7 +359,6 @@
         height: auto;
     }
     h3 {
-        font-family: 'Montserrat', sans-serif;
         font-size: xx-large;
         /* font-weight: 400; */
     }
@@ -463,7 +366,6 @@
         all: unset;
         cursor: pointer;
     }
-
     /* UI ELEMENTS */
     .arrow{
         position: absolute;
@@ -474,7 +376,7 @@
         filter: invert();
         cursor: pointer;
         opacity: .5;
-        transition: opacity 0.16s;
+        transition: opacity 0.22s;;
     }
     .arrow:hover{
         opacity: 1;
@@ -490,28 +392,19 @@
     }
     .counter{
         position: fixed;
-        bottom: 50px;
-        right: 50px;
+        bottom: 10px;
+        right: 5px;
         color: var(--white);
-        border-top: solid 1px var(--white);
-        border-bottom: solid 1px var(--white);
         padding: 10px;
-        font-family: "Proxima Nova", sans-serif;
-        width: 160px;
+        font-family: "Roboto Mono", sans-serif;
+        font-size: 2em;
         user-select: none;
         -moz-user-select: none;
         -khtml-user-select: none;
         -webkit-user-select: none;
         -o-user-select: none;
-        z-index: 100;
+        z-index: 20;
     }
-    .counter h3 {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-
     /* THUMBNAILS */
     #currentItem {
         flex: 1;
@@ -525,20 +418,19 @@
     .item img {
         width: var(--size);
         height: var(--size);
-        border-radius: 2%; 
+        /* border-radius: 2%;  */
         transition: opacity 0.1s ease-in-out;
         user-select: none;
         -moz-user-select: none;
         -khtml-user-select: none;
         -webkit-user-select: none;
         -o-user-select: none;
-
     }
     .item video {
         width: var(--size) ;
         height: var(--size) ;
         object-fit: cover;
-        border-radius: 2%;
+        /* border-radius: 2%; */
         transition: opacity 0.1s ease-in-out;
         user-select: none;
         -moz-user-select: none;
@@ -550,7 +442,7 @@
         /* styling */
         background-color: var(--accent1);
         color: var(--white);
-        border-radius: 2%;
+        /* border-radius: 2%; */
         /* positioning */
         padding: 3px;
         position: absolute;
@@ -577,17 +469,17 @@
         left: 0%;
         align-items: center;
         justify-content: center;
-        overflow: hidden ;
         transform-style: preserve-3d;
         perspective: 600px;
-        transition: top 0.37s ease;
-        /* z-index:  */
+        transition: all 0.37s ease;
     }
     .current{
-        box-shadow: 0px 0px 3px rgb(255, 255, 255);
+        /* box-shadow: 0px 0px 3px rgb(255, 255, 255); */
         z-index: 10 !important;
-        border: solid 2px var(--white);
         opacity: 1 !important;
+    }
+    .currentButton{
+        border: solid 2px var(--white) !important;
     }
     button.item {   
         /* positioning */
@@ -603,14 +495,15 @@
         /* positioning */
         opacity: 1 !important;
         filter: none !important;
-        border-radius: 3%;
+        /* border-radius: 3%; */
         border: solid 2px var(--white);
     }
     button.item:hover img{
         opacity: 0.4;
+        /* border: solid 2px var(--white); */
     }
     button.item:hover video{
-        border: solid 2px var(--white);
+        /* border: solid 2px var(--white); */
         opacity: 0.4;
     }
     .lock{

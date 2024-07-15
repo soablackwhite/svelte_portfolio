@@ -120,26 +120,22 @@
     .links{
         z-index: 3;
         position: fixed;
-        top: 1%;
+        display: flex;
+        top: 0%;
         right: 0%;
         transition: all 0.3s;
         animation: enter 0.4s forwards;
-        width: 15rem !important;
+        /* width: 15rem; */
     }
     .links button {
         all: unset;
         position: relative;
-        display: inline-block;
         width: fit-content;
         margin: 0.3rem;
         cursor: pointer;
-        /* transition: margin-left 0.1s, left 0.3s, right 0.3s !important; */
-        /* width: 15rem; */
     }
     .links img {
         display: inline;
-        /* margin-bottom: 0.5rem; */
-        /* display: block; */
         width: 3rem;
         transition: width 0.17s ease-in, background-color 0.11s;
         filter: invert(var(--dark));
@@ -157,9 +153,6 @@
     }
     .links button:hover::after {
         background-color: var(--white); /* overlay color */
-    }
-    .links button:hover {
-        /* margin-left: -10px; */
     }
     .links button:focus::after {
         background-color: var(--white);
@@ -206,7 +199,7 @@
         color: var(--accent2);
     }
     .menu {
-        left: calc(50% + 6.2rem);
+        left: calc(50% + 6.3rem);
         top: calc(50% - 4rem);
         position: fixed !important;
         width: 8rem;
@@ -260,12 +253,12 @@
             overflow: visible;
         }
         .links img{
-            width: 3rem;
-            margin: 0.3rem;
+            /* width: 3rem; */
+            /* margin: 0.3rem; */
         }
         .links{
-            width: 15rem;
-            right: -2%;
+            /* width: 15rem; */
+            /* right: -2%; */
         }
         .indented{
             left: 105% !important;
@@ -287,11 +280,7 @@
         }
         .links img{
             width: 2.5rem;
-            margin: 0.2rem;
-        }
-        .links{
-            width: auto;
-            right: 1%;
+            margin: 0rem;
         }
     }
     @media (max-width: 341px) {

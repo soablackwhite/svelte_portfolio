@@ -1,79 +1,116 @@
 <script lang="ts">
-    import { onMount, createEventDispatcher, afterUpdate } from "svelte";
-    import { fade} from "svelte/transition";
-    import Skeleton from "./Skeleton.svelte";
-    export let data_export;
-    // export let contentLoaded: boolean;
-    const dispatch = createEventDispatcher();
-    const { alt, title, category, tech, description, media } = data_export;
-    let loadedArray: Array<boolean> = media.map( () => false );
-    $: contentLoaded = loadedArray.every(value => value === true);
-
-    //to update loaded array individually on each media element as it loads
-    function loadHandler(media_index: number){
-        loadedArray[media_index] = true;
-    }
-    function isLoaded() {
-        dispatch('loadAll', {
-            loaded : contentLoaded
-		});
-    }
-    afterUpdate(() => {
-        if (contentLoaded){
-            isLoaded();
-        }
-    })
-</script>
-
-<!-- hider -->
-<div class="scroller">
-    <!-- text stuff -->
-    <h1> {title} </h1>
-    <h3><mark>{category}:</mark> {tech} </h3>
-    <p> {description}</p>
-    <!-- media display stuff based on type of media -->
-    {#if {contentLoaded}} <!-- could also use a hidden class div instead -->
+    export let data;
+    $: ({ alt, title, category, tech, description, media } = data || {});
+    let blacked = true;
+  </script>
+  
+  <div class="page" class:blacked>
+    <div class="banner"></div>
+    <div class="row" class:blacked>
+      <div class="category" class:blacked><h2>{category}</h2></div>
+      <div class="column" class:blacked>
+        <div class="title" class:blacked><h1>{title}</h1></div>
+        <div class="description" class:blacked><p>{description}</p></div>
+        <!----------------------------------------------------- MEDIA PART --------------------------------------------------->
         {#each media as m, i}
             {#if m.type === "image"}
-                <img on:load={()=> loadHandler(i)} class="media_container" src={m.src} alt={alt} >
+                <img class="media_container" src={m.src} alt={alt} >
             {:else if m.type === "video"}
             <!-- there was a transition property in this video tag maybe i should put it back -->
-                <video on:canplaythrough={()=> loadHandler(i)} class="media_container" autoplay muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
+                <video class="media_container" autoplay muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
                     <source src={m.src} type="video/mp4">
                         Your browser does not support the video tag.
                 </video>
             {:else if m.type === "youtube"}
                 <iframe
-                    on:load={()=> loadHandler(i)} src= {m.src} class="media_container" title="YT video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+                     src= {m.src} class="yt-video" title="YT video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
                 </iframe>
-            {:else}
-                <div class="skel" transition:fade>
-                    <Skeleton type="skeleton-media" />
-                </div>
             {/if}
         {/each}
-    {:else} 
-        <div class="skel" transition:fade>
-            <Skeleton type="skeleton-media" />
-        </div>
-    {/if}
-</div>
-
-<style>
+      </div>
+    </div>
+    
+  </div>
+  
+  <style>
+    .yt-video{
+        height: 100% !important;
+        min-height: 50vw !important;
+    }
     .media_container{
-        height: var(--media_height) !important;
-        width: var(--media_width) !important;
+        width: 100%;
+        height: auto;
+        min-height: 500px;
+        padding: 3em 10vw;
     }
-    p{
-        font-size: large;
+    .blacked {
+        background-color: var(--black) !important;
     }
-    h3{
-        font-size: xx-large;
+    .page {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        background-color: antiquewhite;
+        overflow: auto;
     }
-    h1{
-        display: block;
-        position:relative;
-        margin-top: 0rem !important;
-        text-align: center ;
+    .banner {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        min-height: 140px;
+        text-align: center;
+        /* background-color: indigo; */
     }
-</style>
+    .row {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+    .category {
+        flex: 0 1 200px; /* flex-grow: 0, flex-shrink: 1, flex-basis: 200px */
+        position: sticky;
+        top: 140px;
+        height: 75vh;
+        /* FORMATTING & STYLE*/
+        overflow-wrap: break-word;
+        writing-mode: vertical-rl;
+        text-align: center;
+        color: var(--white);
+        background-color: var(--black);
+        border-right: var(--white) solid 1px;
+        z-index: 2;
+    }
+    .category h2{
+        font: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 4em;
+    }
+    .column{
+        flex: 2;
+        display: flex;
+        flex-flow: column;
+    }
+    .title {
+        /* position: sticky; */
+        /* top: 140px; */
+        margin-right: 10em;
+        min-height: 150px;
+        text-align: center;
+        background-color: lightskyblue;
+        z-index: 1;
+        /* mask-image: linear-gradient(to top, transparent 1%, black 10%, black 90%, black 99%); */
+    }
+
+    .description {
+        background-color: brown;
+    }
+
+    .description p {
+        padding: 1em 20vw 1em 10vw;
+        font-size: x-large;
+        color: lightgrey !important;
+    }
+  </style>
+  

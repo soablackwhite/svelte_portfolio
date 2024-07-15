@@ -78,14 +78,13 @@
   --ang_img: -33deg;
   --dist_img: -13rem;
   --isindent: 1;
-  /*typewriter*/
-  --txt_pad: 25vw;
   /*media size*/
   --media_width: 560px;
   --media_height: 400px;
   /*center img*/
   --vidy : 1rem;
   --vidx : 0rem;
+  --media_size: 250px;
   /* carousel */
   --ycarousel: 50px;
   --size: 200px;
@@ -105,9 +104,10 @@
     /*media size*/
     --media_height: 200px !important;
     --media_width: 280px !important;
+    --media_size: 150px;
     /*logo*/
     --translate-x: -3.8rem;
-    --translate-y: 3rem;
+    --translate-y: 5rem;
     --scale: 1.2;
     --rotate: 90deg;
   }
@@ -126,9 +126,10 @@
     /*media size*/
     --media_height: 200px !important;
     --media_width: 280px !important;
+    --media_size: 175px;
     /*logo*/
     --translate-x: -4rem;
-    --translate-y: 2.5rem;
+    --translate-y: 4.5rem;
     --scale: 1.1;
     --rotate: 90deg;
   }
@@ -147,9 +148,10 @@
     /*media size*/
     --media_height: 200px !important;
     --media_width: 280px !important;
+    --media_size: 175px;
     /*logo*/
     --translate-x: -4.0rem;
-    --translate-y: 2rem;
+    --translate-y: 4rem;
     --scale: 1;
     --rotate: 90deg;
   }
@@ -168,6 +170,7 @@
     /*media size*/
     --media_height: 200px !important;
     --media_width: 280px !important;
+    --media_size: 150px;
     /*logo*/
     --translate-x: -2.0rem;
     --translate-y: -1.5rem;
@@ -176,40 +179,40 @@
   }
 }
 html{
-  overflow-x: hidden;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 body{
-  font-family: "Proxima Nova", sans-serif;
+  /* font-family: "Proxima Nova", sans-serif; */
   margin: 0;
   padding: 0;
   background-color: var(--black);
   scroll-behavior: smooth;
   z-index: 3;
   color: var(--white);
-  /* overflow: hidden; */
-}
-
-/* html::-webkit-scrollbar {
-  display: none;
-}
-html {
-  -ms-overflow-style: none; 
-  scrollbar-width: none;
-} */
-
-h1 {
-  font-family: 'Montserrat', serif;
-  font-size: 7rem;
-  font-weight: 100;
-}
-h2{
-  font-weight: 500;
-  font-family: 'Montserrat', serif;
-  font-size: 3rem;
+  overflow: hidden; 
 }
 p{
-  font-family: 'Proxima Nova', sans-serif;
+  /* font-family: "Lato", sans-serif; */
+  font-weight: 300;
+  color: lightgrey !important;
+}
+h1 {
+  font-family: 'Montserrat', serif;
+  font-size: 7em;
+  font-weight: 200;
+}
+h2{
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  font-size: 4em;
+}
+h3{
+  font-family: "Montserrat", sans-serif;
+  font-weight: 200;
+  font-size: 2em;
+}
+p{
+  /* font-family: 'Lato', sans-serif; */
   color: var(--white) !important;
 }
 mark{

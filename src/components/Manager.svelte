@@ -7,9 +7,6 @@
     function showPage() {
         loaded = true; // Assuming showPage is an async function
     }
-    // onMount( () => { 
-    //     window.onload = function () {showPage();};
-    // })
     onMount(() => {
         // if page loaded
         if (document.readyState === 'complete') {
@@ -17,7 +14,6 @@
         } else {
             // if still loading
             window.addEventListener('load', showPage);
-
             // clean up
             return () => window.removeEventListener('load', showPage);
         }
@@ -26,12 +22,12 @@
 
 {#if loaded}
     <!------ MAIN CONTENT ------>
-    <transition in={true} out={false} transition:fade={{delay:250}}>
+    <transition in={true} out={false} transition:fade={{delay:0}}>
         <slot name="main"> </slot>
     </transition>
 {:else}
     <!------ LOADING SCREEN ------>
-    <transition in={true} out={false} transition:fade>
+    <transition in={true} out={false} transition:fade={{delay:0}}>
         <slot name="loader"> </slot>
         <slot name="bs"> </slot>
     </transition>
