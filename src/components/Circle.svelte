@@ -66,7 +66,7 @@
 <style>
     .half-border .red, .half-border .blue {
         content: "";
-        position: absolute;
+        position: fixed;
         top: -5px;
         height: 4px;
     }
@@ -114,12 +114,12 @@
         font-weight: 300;
     }
     .tags{
-        position: absolute;
+        position: fixed;
         z-index: 1;
         opacity : 1;
     }
     .label {
-        position: absolute;
+        position: fixed;
         display: block;
         left: calc(50% - 6.5rem);
         top: calc(50% - 1.5rem);
@@ -136,21 +136,22 @@
         .circle{
             left: calc(50% - 3.5rem);
             top: calc(50% - 1rem);
-            width: 7rem;
+            width: 7.5rem;
             height: 2rem;
             text-align: right;
             border-top: none;
+        }
+        .half-border .red {
+            display: none;
+        }
+        .half-border .blue {
+            display: none;
         }
         .label {
             left: calc(50% - 3.5rem);
             top: calc(50% - 1.5rem);
             height: 2rem;
-            width: 7rem;
-        }
-        .menu{
-            left: calc(50% + 3rem); 
-            top: calc(50% - 4rem);
-            width: 7rem;
+            width: 9rem;
         }
         .icon-circle {
             left: calc(50% - 1.5rem);
@@ -161,10 +162,16 @@
             top: calc(50% - 1rem);
             left: calc(70% - 4rem);
             font-size: 1.3rem;
-            width: 8rem;
+            width: 9rem;
             height: 2rem;
             text-align: right;
             border-top: none;
+        }
+        .half-border .red {
+            display: none;
+        }
+        .half-border .blue {
+            display: none;
         }
         .icon-circle {
             left: calc(70% - 2rem);
@@ -173,7 +180,7 @@
             left: calc(70% - 4rem);
             top: calc(50% - 1.5rem);
             height: 2rem;
-            width: 8rem;
+            width: 10rem;
         }
     }
     @media (max-width: 341px) {
@@ -191,8 +198,8 @@
         }
         .label{
             font-size: large;
-            position: absolute;
-            display: block;
+            position: fixed;
+            /* display: block; */
             left: calc(70% - 4rem);
             top: calc(52% - 1.5rem);
             height: 2rem;

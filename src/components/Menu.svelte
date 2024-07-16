@@ -281,7 +281,7 @@
         .links img{
             width: 2.5rem;
             margin: 0rem;
-        }
+        }   
     }
     @media (max-width: 341px) {
         .menu{

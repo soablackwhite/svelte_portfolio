@@ -75,7 +75,6 @@
                     class="school {classes[$profile_index]}" 
                     src={profiles[$profile_index]}
                     transition:fade|global={{duration:100, delay: 100}}
-
                 />
             {:else if (index == 2) && $transitioned === false}
                 <img alt="profile" id="icon" src={icons[cur]}
@@ -141,7 +140,7 @@
         -o-user-select: none;
     }
     #profile{
-        position: absolute;
+        position: fixed;
         width: 350px !important;
         bottom: 0%;
         z-index: 10;

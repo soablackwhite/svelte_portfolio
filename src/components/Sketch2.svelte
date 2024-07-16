@@ -84,6 +84,7 @@
       accent1_s = get_css_var("--accent1").trim();
       accent2_s = get_css_var("--accent2").trim();
       accent3_s = get_css_var("--accent3").trim();
+      s =  parseFloat(get_css_var("--media_size").trim()) + 50 - 20;
       let ang = parseFloat(get_css_var("--ang"));
       max =  -ang*13 + 1;
     })
@@ -242,8 +243,11 @@
       p5.setup = () => {
         p5.createCanvas(innerWidth, innerHeight);
         cy = innerHeight/2;
-        cx = innerWidth/2;
-        s = 300;
+        if(innerWidth < 400){
+          cx = 7*innerWidth/10;
+        } else{
+          cx = innerWidth/2;
+        }
         englandData.forEach((point)=>{ //recenter
             point.x += 700;
             point.y -= 300;
@@ -291,25 +295,24 @@
         // black.setAlpha(255);
         
         //loading bar
-        if(index === 2){
+        if(index === 2 && s > 220){
           // previously 235 for --ang = 18deg
           let progress = p5.map($delta, 0, max, 3 * p5.PI / 2, p5.PI / 2);
-          s = 280; //hardcoded
           p5.noFill();
           p5.stroke(white);
           p5.strokeWeight(1);
           p5.arc(cx, cy, s, s, 0, 2*p5.PI);
           //white arc outline
-          s = 260;
+          let s2 = s - 20;
           // smol white arc
           p5.stroke(white);
           p5.strokeWeight(6);
           p5.fill(white);
-          p5.arc(cx, cy, s, s, progress, p5.PI / 2, p5.PIE);
+          p5.arc(cx, cy, s2, s2, progress, p5.PI / 2, p5.PIE);
           // mask
           p5.fill(black);
           p5.noStroke();
-          p5.rect(p5.width / 2 - 10, 0, s, p5.height);
+          p5.rect(p5.width / 2 - 10, 0, s2, p5.height);
         }
         p5.push();
         p5.translate(p5.width/2, p5.height/2);
@@ -404,6 +407,13 @@
           wobbler.ox = p5.width * positions[i].x;
           wobbler.oy = p5.height * positions[i].y;
         })
+        cy = innerHeight/2;
+        if(innerWidth < 400){
+          cx = 7*innerWidth/10;
+        } else{
+          cx = innerWidth/2;
+        }
+        changeMode();
       };
     };
     function drawQuadtree(p5, quadtree) {
@@ -436,14 +446,15 @@
           if(index === 3){ //ruban banner for project
             walker.mapmode = true;
             proximity = 3;
-            let upperborder = innerHeight/2 - 100;
-            let lowerborder = innerHeight/2 + 100;
+            let upperborder = cy - 100;
+            let lowerborder = cy + 100;
             walker.oy = (Math.random() < 0.5) ? upperborder : lowerborder;
             walker.ox = Math.random()*innerWidth;
           } 
           else if (index === 2){ //circle for skills
-            let rad = 370;
-            let rad2 = 700;
+            let rad = 160;
+            let rad2 = 160;
+            proximity = 0;
             let radius = (Math.random()<0.2) ? rad - Math.random() * 10 :  rad2 - Math.random() * 10;
             let angle = Math.random() * 2*Math.PI;
             walker.mapmode = true;
