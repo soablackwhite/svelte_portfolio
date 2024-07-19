@@ -195,12 +195,8 @@
             width: 65px;
             height: auto;
         }
-        .square2{
-            width: 100vw !important;
-            height: 100vh !important;
-        }
         .bocconi{
-        height: 150px !important;
+            height: 150px !important;
         }
         .manbaa{
             height: 100px !important;
@@ -231,10 +227,6 @@
         #profile{
             width: 65px;
             height: auto;
-        }
-        .square2{
-            width: 200vw !important;
-            height: 100vh !important;
         }
     }
     @media (max-width: 341px) {

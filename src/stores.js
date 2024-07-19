@@ -24,7 +24,7 @@ export const gui_carousel = writable("minimal");
 export const gui_menu = writable("menu");
 export const gui_outline = writable("nooutline");
 export const gui_angle = writable("horizontal");
-export const gui_motion = writable("flat");
+export const gui_motion = writable("convex");
 
 //for floating boxes
 export const coordinates = writable([

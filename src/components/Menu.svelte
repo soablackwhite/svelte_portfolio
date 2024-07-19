@@ -3,7 +3,7 @@
     export let type = "menu2";
     export let outline = "nooutline";
     let type2 = `${type}-item`;
-    $: indented = (index === 3) ? true : false;
+
     import { currentItem, transitioned } from "../stores";
     import { updateTag } from "../scripts/functions";
     import { slide, fade, scale} from "svelte/transition";
@@ -194,9 +194,9 @@
     .menu2-item:hover{
         text-shadow: none;
         transform: scale(1.09);
-        border: solid 1px var(--accent2);;
-        background-color: var(--accent2);;
-        color: var(--accent2);
+        border: solid 1px var(--white);;
+        background-color: var(--white);;
+        color: var(--black);
     }
     .menu {
         left: calc(50% + 6.3rem);
@@ -251,14 +251,6 @@
             top: calc(50% - 4rem);
             width: auto;
             overflow: visible;
-        }
-        .links img{
-            /* width: 3rem; */
-            /* margin: 0.3rem; */
-        }
-        .links{
-            /* width: 15rem; */
-            /* right: -2%; */
         }
         .indented{
             left: 105% !important;

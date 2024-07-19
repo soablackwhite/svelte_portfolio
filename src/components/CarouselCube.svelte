@@ -12,6 +12,14 @@
     type MotionType = 'cubic' | 'concave' | 'convex' | 'flat' | 'flip' | 'ribbon';
     export let motion: MotionType;
     export let direction: string;
+    let innerWidth = window.innerWidth;
+    // Define reactive statement to determine if the screen is mobile-sized
+    $: isMobile = innerWidth < 765;
+    // $: console.log(`is mobile is ${isMobile}`);
+    $: direction = isMobile ? 'vertical' : 'horizontal';
+    // $: console.log(`so direction should be ${direction}`);
+    // direction = ( innerWidth < 765 ) ? 'vertical' : 'horizontal';
+
     export let cardtype: string;
     interface TransformConfig {
         angle: number;
@@ -206,10 +214,12 @@
     })
 </script>
 <!-- images -->
+<svelte:window bind:innerWidth />
+
 <div class="hidden">
     <main id="carousel" bind:this={carousel} class:ribbon >
         <!-- left arrow -->
-        <button on:click={() => clickArrow(-1)}> <img class="arrow" style="left: 10%;"alt="left arrow" src="/media/icons/bluetipdesign_left.svg"> </button>
+        <button class:isMobile on:click={() => clickArrow(-1)}> <img class="arrow" style="left: 10%;"alt="left arrow" src="/media/icons/bluetipdesign_left.svg"> </button>
         {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
             <button class="item {(i===$currentItem)?"currentButton":""}" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
                 {#if type === "video"}
@@ -231,7 +241,7 @@
             </button>
         {/each}
         <!-- right arrow -->
-        <button on:click={() => clickArrow(1)}> <img style="left:90%;" class="arrow" alt="right arrow" src="/media/icons/bluetipdesign_right.svg"> </button>
+        <button class:isMobile on:click={() => clickArrow(1)}> <img style="left:90%;" class="arrow" alt="right arrow" src="/media/icons/bluetipdesign_right.svg"> </button>
     </main>
 
     <!-- current item count -->
@@ -264,6 +274,9 @@
 </div>
 
 <style>
+    .isMobile{
+        display: none;
+    }
     .hidden{
         position: absolute;
         width: 100%;
@@ -302,7 +315,7 @@
         top: 0px;
         left: 50%;
         transform: translate(-50%, -52%) rotate(-45deg) ;
-        z-index: 7;     
+        z-index: 9;     
     }
     .readmore {
         bottom: 0%;
@@ -329,7 +342,7 @@
     }
     .documentation {
         position: absolute;
-        z-index: 2;
+        z-index: 4;
         bottom: -100%;
         left: 0;
         width: 100%;
@@ -494,5 +507,27 @@
     }
     .lock{
         transition: all 0.32s !important;
+    }
+    @media (max-width: 576px){
+        .navbutton{
+            width: 120px;
+            height: 120px;
+            font-size: 1em !important;
+        }
+        .textrotate{
+            text-align: center;
+            margin-left: 20px;
+            transform: rotate(0deg) translate(0%, calc(-70px + 100%));
+        }
+        .textrotate2{
+            text-align: center;
+            transform: rotate(0deg) translate(0%, calc(60px - 50%));
+        }
+        .counter{
+            font-size: 1.2em;
+        }
+        h3{
+            font-size: x-large;
+        }
     }
 </style>

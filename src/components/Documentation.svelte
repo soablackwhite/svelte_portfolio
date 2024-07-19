@@ -22,9 +22,9 @@
                         Your browser does not support the video tag.
                 </video>
             {:else if m.type === "youtube"}
-                <iframe
+                <!-- <iframe
                      src= {m.src} class="yt-video" title="YT video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
-                </iframe>
+                </iframe> -->
             {/if}
         {/each}
       </div>
@@ -61,7 +61,6 @@
         width: 100%;
         min-height: 140px;
         text-align: center;
-        /* background-color: indigo; */
     }
     .row {
         display: flex;
@@ -102,15 +101,47 @@
         z-index: 1;
         /* mask-image: linear-gradient(to top, transparent 1%, black 10%, black 90%, black 99%); */
     }
-
     .description {
         background-color: brown;
     }
-
     .description p {
         padding: 1em 20vw 1em 10vw;
         font-size: x-large;
         color: lightgrey !important;
+    }
+    @media(max-width: 576px){
+        .title{
+            min-height: 100px;
+            padding: 2em 0.5em;
+            margin-right: 0em;
+        }
+        .banner{
+            background-color: var(--black);
+            min-height: 210px;
+            z-index: 3;
+        }
+        .category {
+            flex: 2 1 200px; /* flex-grow: 0, flex-shrink: 1, flex-basis: 200px */
+            position: sticky;
+            top: 200px;
+            height: auto;
+            border-right: none;
+            border-bottom: var(--white) 1px solid;
+            writing-mode: horizontal-tb;
+        }
+        .category h2{
+            font: "Montserrat", sans-serif;
+            font-weight: 600;
+            font-size: 3em;
+        }
+        .description p {
+            padding: 0em 7vw 1em 7vw;
+            font-size: x-large;
+            color: lightgrey !important;
+        }
+        .title h1{
+            font-size: 4em;
+        }
     }
   </style>
   

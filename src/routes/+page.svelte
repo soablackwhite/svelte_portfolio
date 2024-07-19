@@ -35,10 +35,11 @@
     import CarouselCube from '../components/CarouselCube.svelte';
     import CarouselStack from '../components/CarouselStack.svelte';
     import GUI from '../components/GUI.svelte';
-    import Sketch2 from '../components/Sketch2.svelte';
+    import Sketch from '../components/Sketch.svelte';
     import Logo from '../components/Logo.svelte';
     import { onMount } from 'svelte';
-    import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline, transitioned} from "../stores";
+    import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline, transitioned } from "../stores";
+    import Gui from '../components/GUI.svelte';
     let t: boolean;
     let darkmode: false;
     const unsubscribe = transitioned.subscribe(($transitioned) => {
@@ -46,13 +47,10 @@
     });
     let index:number = 0;
     let scrollThreshold:number = 70;
-    onMount(() => {
-        AOS.init();
-    });
 </script>
  <!----------------------------------CANVAS----------------------------------------------------->
- <!-- <Sketch /> -->
- <Sketch2 bind:index={index}></Sketch2>
+ <Sketch bind:index={index}></Sketch>
+ <Gui>  </Gui>
 <Manager>
     <!--------------------------------------LOADER----------------------------------------------------->
     <Loader slot="loader" />
