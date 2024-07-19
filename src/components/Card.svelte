@@ -175,11 +175,12 @@
 
     }
     .section {
-        height: 100vh;
-        padding: 0 5vw 0 5vw;
+        min-height: 100vh;
+        line-height: 2em;
+        padding: 3em 5vw 3em 5vw;
         display: flex;
         flex-flow: column wrap;
-        /* align-items: center; */
+        align-items: center;
         justify-content: center;
         /* text-align: center; */
         border-left: var(--white) solid 1px;
@@ -192,10 +193,12 @@
     }
     .mapinfo{
         position: fixed;
-        top: 4%;
-        right: 15%;
+        top: 80px;
+        left: 46%;
+        width: 54vw;
         z-index: 1;
         display: flex;
+        justify-content: center;
         align-items: center;
     }
     .title{
@@ -211,8 +214,8 @@
         padding: 0px 7px 0px 7px;
         font-family: "Montserrat", sans-serif;
         font-weight: 500;
-        margin: 20px;
-        height: 127px;
+        margin-right: 20px;
+        height: 128px;
         transform: rotate(180deg);
         color: var(--black);
         background-color: var(--white);
@@ -222,5 +225,47 @@
         margin-bottom: 1em;
         height: auto;
         filter: none;
+    }
+    @media (max-width: 576px) {
+        .mapinfo{
+            position: fixed;
+            width: 100%;
+            top: -3px !important;
+            left: 0rem;
+            right: auto;
+            padding: 0;
+            margin: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+        }
+        .label{
+            margin: 0;
+        }
+        .content{
+            background-color: var(--black);
+            width: 100%;
+            padding-left: 10px;
+        }
+        .text-container{
+            top: calc(12rem + 127px);
+            width: 100vw;
+        }
+        .steps{
+            display: none;
+        }
+    }
+    @media (max-width: 576px) {
+    }
+    @media (max-width: 400px) {
+        .mapinfo{
+            top: calc(0.8*12rem);
+        }
+        .content h2{
+            font-size: 3.5em;
+        }
+    }
+    @media (max-width: 341px) {
+       
     }
 </style>

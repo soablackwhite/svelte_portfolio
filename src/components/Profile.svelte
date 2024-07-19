@@ -1,6 +1,6 @@
 <script lang="ts">
     export let index:number;
-    import { currentItem, transitioned, profile_index} from "../stores";
+    import { currentItem, transitioned, profile_index, delta, spinDelta} from "../stores";
     import {rescale, set_css_var } from "../scripts/functions"
     import { slide, fade} from "svelte/transition";
     const icons = [
@@ -58,7 +58,7 @@
 </script>
 
 <!-- this condition doesnt do anything for some reason lol, works with $transitioned tho -->
-    <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}} >
+    <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
         <div id="zoomer" class:square2 class:disappear role="img" on:transitionend={()=>{if(index===3){t1 = true;}}}>
             {#if ( (index == 0) && $transitioned==false)}
                 <!-- <img alt="profile" id="profile" src="/media/animated/bio.svg"/> -->
@@ -198,6 +198,21 @@
         .square2{
             width: 100vw !important;
             height: 100vh !important;
+        }
+        .bocconi{
+        height: 150px !important;
+        }
+        .manbaa{
+            height: 100px !important;
+        }
+        .nyu{
+            height: 110px !important;
+        }
+        .nyuad{
+            height: 110px !important;
+        }
+        .next{
+            height: 100px !important;
         }
     }
     @media (max-width: 400px) {

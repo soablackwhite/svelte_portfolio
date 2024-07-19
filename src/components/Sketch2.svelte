@@ -3,26 +3,38 @@
     import { coordinates, constellated, constellation_index, delta, spinDelta, currentItem} from '../stores';
     import { throttle} from 'lodash-es';
     import { get_css_var, rescale} from '../scripts/functions';
-    import { moroccoData, lionData, runnerData, bioData, englandData, italyData, uaeData, usaData} from "../scripts/coordinateData";
+    import { moroccoData, englandData, italyData, uaeData, usaData} from "../scripts/coordinateData";
+    import { moroccoMobile, englandMobile, italyMobile, uaeMobile, usaMobile } from '../scripts/coordinateMobile';
     import { onMount } from 'svelte';
     import type { Color } from 'p5';
     export let index: number;
     let innerWidth: number;
     let innerHeight: number;
+    // increments=[[]]
     //quadtree stuff
     let quadtree;
-    const capacity = 4;
+    const capacity = 6;
     //float 32 for performance boost
-    const pointData = [moroccoData, italyData, uaeData, usaData, englandData];
-    let map;
+    let map: Float32Array;
+    let scaledMoroccoData = moroccoData.map(coord => ({...coord}));
+    let scaledItalyData = italyData.map(coord => ({...coord}));
+    let scaledUaeData = uaeData.map(coord => ({...coord}));
+    let scaledUsaData = usaData.map(coord => ({...coord}));
+    let scaledEnglandData = englandData.map(coord => ({...coord}));
+    let pointData = [scaledMoroccoData, scaledItalyData, scaledUaeData, scaledUsaData, scaledEnglandData];
     //styling
     const spread = 0;
     let point = 0; //values 0, 1
     let weight = .9;
-    //onclick u can make black hole force radius high, repulsion strength negative
+    //scaling map
+    let originalWidth: number;
+    let originalHeight: number;
+    let aspectRatio: number;
+    let scale;
+
     //forces
     let parameters = 0;
-    const offset = 0.00015; //speed of particles moving
+    const offset = 0.00025; //speed of particles moving
     let forceradius = 140; //values 70, 140, 210, 1040 for fabric
     let proximity = 12;
     let repulsionStrength = 11  ;//values 7, 17, 51 with long range fabric, -20 for black hole
@@ -203,10 +215,46 @@
         }
       }
     }
+    function scaleConstellation(w: number, h: number){      
+      // if (w / h > aspectRatio) {
+      //   scale = h / originalHeight;
+      // } else {
+      //   scale = w / originalWidth;
+      // }
+      scale = h / originalHeight;
+      cy = h / 2;
+      if (w < 400){
+        cx = 7 * w / 10;
+      } else {
+        cx = w / 2;
+      }
+      if ( w > 700){ //side const
+        scaledMoroccoData = scaleCoordinates(moroccoData, scale, scale);
+        scaledItalyData = scaleCoordinates(italyData, scale, scale);
+        scaledUaeData = scaleCoordinates(uaeData, scale, scale);
+        scaledUsaData = scaleCoordinates(usaData, scale, scale);
+        scaledEnglandData = scaleCoordinates(englandData, scale, scale);
+      } else { //center const
+        scaledMoroccoData = scaleCoordinates(moroccoMobile, scale, scale);
+        scaledItalyData = scaleCoordinates(italyMobile, scale, scale);
+        scaledUaeData = scaleCoordinates(uaeMobile, scale, scale);
+        scaledUsaData = scaleCoordinates(usaMobile, scale, scale);
+        scaledEnglandData = scaleCoordinates(englandMobile, scale, scale);
+      }
+      pointData = [scaledMoroccoData, scaledItalyData, scaledUaeData, scaledUsaData, scaledEnglandData];
+      map = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y]));
+    }
+    //scaling function
+    function scaleCoordinates(data, scaleX: number, scaleY:number) {
+      return data.map(coord => ({
+        x: coord.x * scaleX,
+        y: coord.y * scaleY
+      }));
+    }
   
     const sketch = (p5:p5) => {
       p5.mouseClicked = () =>{
-        console.log(parameters);
+        console.log(innerHeight);
         parameters += 1;
         parameters %= 4;
         switch (parameters){
@@ -242,12 +290,9 @@
       }
       p5.setup = () => {
         p5.createCanvas(innerWidth, innerHeight);
-        cy = innerHeight/2;
-        if(innerWidth < 400){
-          cx = 7*innerWidth/10;
-        } else{
-          cx = innerWidth/2;
-        }
+        originalWidth = (innerWidth > 765) ? 1440 : 365;
+        originalHeight = (innerWidth > 765) ? 780 : 667;
+        aspectRatio = originalWidth / originalHeight;
         englandData.forEach((point)=>{ //recenter
             point.x += 700;
             point.y -= 300;
@@ -268,7 +313,27 @@
             point.x += 700;
             point.y += 50;
         })
-        map = new Float32Array(moroccoData.flatMap(coord => [coord.x, coord.y])); 
+        englandMobile.forEach((point)=>{ //recenter
+          point.x -= 120;
+          point.y -= 120;
+        })
+        moroccoMobile.forEach((point)=>{ //recenter
+          point.y += 140;
+        })
+        uaeMobile.forEach((point)=>{ //recenter
+          point.y += 180;
+          point.x -= 40;
+        })
+        usaMobile.forEach((point)=>{ //recenter
+          point.y += 240;
+          point.x -= 20;
+        })
+        italyMobile.forEach((point)=>{ //recenter
+          point.y += 120;
+          point.x -= 30;
+        })
+        scaleConstellation(innerWidth, innerHeight);
+        // map = new Float32Array(moroccoData.flatMap(coord => [coord.x, coord.y])); 
         p5.pixelDensity(p5.displayDensity());
         quadtree = new QuadTree(new Rectangle(p5.width / 2, p5.height / 2, p5.width, p5.height), capacity);
         white = p5.color(white_s);
@@ -363,17 +428,34 @@
             }
           }
           // connect nearby points
-          pointsInRange.forEach(other => {
+          for (let i = 0; i < pointsInRange.length; i++) {
+            const other = pointsInRange[i];
             if (other.userData !== walker) { // no self-connection
-              let d = other.sqDistanceFrom(walker);
+                let d = other.sqDistanceFrom(walker);
                 let alpha = p5.map(d, 0, proximity * proximity, 255, 0);
                 white.setAlpha(alpha);
-                // p5.stroke(255, 255, 255, alpha);
                 p5.stroke(white);
-                p5.strokeWeight((d === 0) ? weight :p5.map(d, 0, proximity * proximity, weight, 0));
+                p5.strokeWeight((d === 0) ? weight : p5.map(d, 0, proximity * proximity, weight, 0));
                 p5.line(walker.x, walker.y, other.x, other.y);
+                // if(index === 3){ 
+                //   break
+                // }
             }
-          });
+        }
+          // pointsInRange.forEach(other => {
+          //   if (other.userData !== walker) { // no self-connection
+          //     let d = other.sqDistanceFrom(walker);
+          //       let alpha = p5.map(d, 0, proximity * proximity, 255, 0);
+          //       white.setAlpha(alpha);
+          //       // p5.stroke(255, 255, 255, alpha);
+          //       p5.stroke(white);
+          //       p5.strokeWeight((d === 0) ? weight :p5.map(d, 0, proximity * proximity, weight, 0));
+          //       p5.line(walker.x, walker.y, other.x, other.y);
+          //       if(index === 3){ 
+          //         break
+          //       }
+          //   }
+          // });
         });
         //wobbler movement
         wobblers.forEach((wobbler, i) => {
@@ -407,12 +489,7 @@
           wobbler.ox = p5.width * positions[i].x;
           wobbler.oy = p5.height * positions[i].y;
         })
-        cy = innerHeight/2;
-        if(innerWidth < 400){
-          cx = 7*innerWidth/10;
-        } else{
-          cx = innerWidth/2;
-        }
+        scaleConstellation(innerWidth, innerHeight);
         changeMode();
       };
     };
@@ -441,17 +518,20 @@
     }
     function changeMode(){
       map = new Float32Array(pointData[$constellation_index].flatMap(coord => [coord.x, coord.y]));
+      constellated.set( (index  === 1) ? true : false );
       walkers.forEach( (walker, i) => {
         if(!$constellated){
           if(index === 3){ //ruban banner for project
             walker.mapmode = true;
-            proximity = 3;
+            proximity = 6;
+            point = 1;
             let upperborder = cy - 100;
             let lowerborder = cy + 100;
             walker.oy = (Math.random() < 0.5) ? upperborder : lowerborder;
             walker.ox = Math.random()*innerWidth;
           } 
           else if (index === 2){ //circle for skills
+            point = 0;
             let rad = 160;
             let rad2 = 160;
             proximity = 0;
@@ -462,6 +542,7 @@
             walker.ox =  cx + Math.cos(angle)*radius;
           } 
           else {
+            point = 0;
             walker.mapmode = false;
             proximity = prox[0];
             walker.ox = walker.xnoise;

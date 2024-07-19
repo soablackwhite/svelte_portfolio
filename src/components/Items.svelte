@@ -135,7 +135,7 @@
     //___________________________________SCROLL KEYBOARD______________________________________________
     function wheelScroll(e: WheelEvent){
         locking = false;
-        if(index == 2){spinDelta.set(e.deltaY);}
+        if(index === 2){spinDelta.set(e.deltaY);}
         changeContent(e.deltaY/5, false);
         clearTimeout(resetThreshold);
         resetThreshold = setTimeout(function () {

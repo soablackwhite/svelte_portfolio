@@ -282,6 +282,8 @@
         transform: rotate(0deg) translate(0%, calc(70px - 50%));
     }
     .navbutton{
+        font-family: "Lato", sans-serif;
+        font-weight: 300;
         position: fixed;
         width: 140px;
         height: 140px;
@@ -342,22 +344,6 @@
         /* overflow-y: scroll; */
         /* overflow-x: hidden; */
     }
-    .page{
-        background-color: var(--black);
-        background-color: brown;
-        width: calc(100% - 200px);
-        height: 2000px; /* For demonstration purposes */
-    }
-    .page p{
-        padding: 0 10vw 0 10vw;
-        font-size: x-large;
-        color: lightgrey !important;
-    }
-    .media_container{
-        padding: 3vw 10vw 3vw 10vw;
-        width: calc(100% - 0px);
-        height: auto;
-    }
     h3 {
         font-size: xx-large;
         /* font-weight: 400; */
@@ -397,7 +383,7 @@
         color: var(--white);
         padding: 10px;
         font-family: "Roboto Mono", sans-serif;
-        font-size: 2em;
+        font-size: 1.8em;
         user-select: none;
         -moz-user-select: none;
         -khtml-user-select: none;

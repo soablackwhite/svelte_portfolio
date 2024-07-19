@@ -3,11 +3,13 @@
     function update(){
         index = 0;
     }
+    $: hidden = (index === 1 && window.innerWidth < 768);
 </script>
 <svg
    viewBox="0 0 128 64"
    version="1.1"
    id="logo"
+   class:hidden
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
@@ -49,10 +51,6 @@
        transform="matrix(1.0081364,0,0,1.0912112,-5.8680882,16.874684)" />
   </g>
 </svg>
-
-
-
-
 
 <style>
     :root {
@@ -102,6 +100,11 @@
         100% {
             transform: translate(var(--translate-x), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
             filter: none;
+        }
+    }
+    @media (max-width: 768px) {
+        #logo{
+            display: none !important;
         }
     }
 </style>
