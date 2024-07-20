@@ -13,6 +13,7 @@
     let maxcur = 11;
     let past = 0;
     let accumulatedDelta:number = 0;
+    let touchY: number;
     let resetThreshold: number;
     let rt = document.querySelector(':root') as HTMLElement;
     let labels = ['FRONTEND', 'BACKEND', 'DATA'];
@@ -78,7 +79,16 @@
             {src: `/media/icons/email.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}
         ]},
 	];
-    
+    //for mobile
+    function handleTouchStart(e: TouchEvent) {
+        touchY = e.touches[0].clientY;
+    }
+    function handleTouchMove(e: TouchEvent) {
+        let deltaY = e.touches[0].clientY - touchY;
+        if(index === 2){spinDelta.set(-deltaY);}
+        changeContent(-deltaY / 2, false);
+        touchY = e.touches[0].clientY;
+    }
     function changeContent(increment: number, keyboard: boolean) {
         const isBodyScrollable = document.body.scrollHeight > window.innerHeight;
         const isAtPageTop = window.scrollY === 0;
@@ -163,9 +173,13 @@
         updateTag(index, cur, -1, rt, past);
         window.addEventListener("wheel", wheelScroll);
         window.addEventListener("keydown", arrowScroll);
+        window.addEventListener("touchstart", handleTouchStart);
+        window.addEventListener("touchmove", handleTouchMove);
         return () => {
             window.removeEventListener('keydown', arrowScroll);
             window.removeEventListener('wheel', wheelScroll);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
         };
     })
 </script>

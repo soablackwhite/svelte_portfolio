@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { rescale, clamp, contents } from "../scripts/functions";
-    import { fade} from "svelte/transition";
+    import { fade } from "svelte/transition";
     import { quintOut } from "svelte/easing";
     import { currentItem } from "../stores";
     import Documentation from "./Documentation.svelte";
@@ -15,10 +15,7 @@
     let innerWidth = window.innerWidth;
     // Define reactive statement to determine if the screen is mobile-sized
     $: isMobile = innerWidth < 765;
-    // $: console.log(`is mobile is ${isMobile}`);
     $: direction = isMobile ? 'vertical' : 'horizontal';
-    // $: console.log(`so direction should be ${direction}`);
-    // direction = ( innerWidth < 765 ) ? 'vertical' : 'horizontal';
 
     export let cardtype: string;
     interface TransformConfig {
@@ -69,6 +66,7 @@
     $: ribbon = (motion === "ribbon") ? true : false;
     let resetThreshold: number;
     let opacityThreshold = 0.09;
+    let touchY: number;
     let lock = false;
     let past = 0;
     let position = 5; // start w the first item
@@ -159,7 +157,31 @@
             return(lock);
         };
         lockCarousel(0);
-        //___________________________________SCROLL KEYBOARD______________________________________________
+        //___________________________________SCROLL MOBILE______________________________________________
+        function handleTouchStart(e: TouchEvent) {
+            touchY = e.touches[0].clientY;
+        }
+        function handleTouchMove(e: TouchEvent) {
+            let deltaY = e.touches[0].clientY - touchY;
+            touchY = e.touches[0].clientY;
+            if(!docmode){
+                let scroll = -deltaY;
+                if(Math.abs(scroll) < 4){
+                    lock = true;
+                    past = lockCarousel(position);
+                } else {
+                    position = updateCarousel(scroll);
+                }
+                clearTimeout(resetThreshold);
+                resetThreshold = setTimeout(function () {
+                    if(Math.abs(scroll) > 0){
+                        lock = true;
+                        past = lockCarousel(position);
+                    }
+                }, 75);
+            }
+        }
+        //___________________________________SCROLL WHEEEL______________________________________________
         function wheelScroll(e: WheelEvent){
             if(!docmode){
                 lock = false;
@@ -182,7 +204,6 @@
                 }, 75);
             }
         }
-        
         //___________________________________SCROLL KEYBOARD______________________________________________
         function arrowScroll(e: KeyboardEvent){
             lock = true;
@@ -207,9 +228,13 @@
         }
         window.addEventListener("keydown", arrowScroll);
         window.addEventListener('wheel', wheelScroll);
+        window.addEventListener("touchstart", handleTouchStart);
+        window.addEventListener("touchmove", handleTouchMove);
         return () => {
             window.removeEventListener('keydown', arrowScroll);
             window.removeEventListener('wheel', wheelScroll);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchmove', handleTouchMove);
         };
     })
 </script>
