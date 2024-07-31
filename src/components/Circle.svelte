@@ -52,11 +52,11 @@
 </script>
 
 {#if custom === "label"}
-    <div transition:slide|global class="tags {custom}" class:locking-label={locking} class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
+    <div class="tags {custom}" class:locking-label={locking} class:disappear style="transform: {generateTransform()}; opacity: {test};"> 
         <slot></slot>
     </div>
 {:else}
-    <div transition:slide class="tags half-border {custom} {(idx === $currentItem)?"selected":""}" bind:this={halfBorder} class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
+    <div class="tags half-border {custom} {(idx === $currentItem)?"selected":""}" bind:this={halfBorder} class:disappear class:locking style="transform: {generateTransform()}; opacity: {test};"> 
         <p><span><slot name="letter"></slot></span><slot name="tag"></slot></p>
         <div class="red"></div>
         <div class="blue"></div>

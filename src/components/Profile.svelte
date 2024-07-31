@@ -36,23 +36,13 @@
         t2 = false;
     }
     $: transitioned.set(t1 && t2);
-    $: disappear = $transitioned;
+    $: disappear = ($transitioned);
     function handleMouseOver(event) {
         event.target.play();
     }
     // function to pause video on mouse out
     function handleMouseOut(event) {
         event.target.pause();
-    }
-    function magnifyingGlass(this:HTMLElement, e:MouseEvent){
-        let mouseX = e.clientX;
-        let mouseY = e.clientY;
-        //convert to rem scale
-        let incx = rescale(mouseX, window.innerWidth/2 - this.offsetWidth/2, window.innerWidth/2 + this.offsetWidth/2, -4, 4);
-        let incy = rescale(mouseY, window.innerHeight/2 - this.offsetHeight/2, window.innerHeight/2 + this.offsetHeight/2, -4, 4);
-        let rt = document.querySelector(':root') as HTMLElement;
-        set_css_var("--vidy", `${(incy + 1)}rem`, rt);
-        set_css_var("--vidx", `${incx}rem`, rt);
     }
 
 </script>
@@ -61,7 +51,6 @@
     <div class="image-container ui" class:square class:disappear on:transitionend={()=>{if(index===3){t2 = true;}}}>
         <div id="zoomer" class:square2 class:disappear role="img" on:transitionend={()=>{if(index===3){t1 = true;}}}>
             {#if ( (index == 0) && $transitioned==false)}
-                <!-- <img alt="profile" id="profile" src="/media/animated/bio.svg"/> -->
                 <video preload="auto" id="profile" playsinline muted loop
                     on:mouseover|preventDefault={handleMouseOver}
                     on:mouseout|preventDefault={handleMouseOut}
@@ -96,11 +85,13 @@
         border-radius: 2% !important;
         border: solid var(--white) 2px !important;
         transition: all var(--dur);
+        z-index: -1 !important;
     }
     .square2{
         width: var(--size) !important;
         height: var(--size) !important;
         transition: all var(--dur);
+        z-index: -1 !important;
     }
     #zoomer{
         z-index: 3;

@@ -17,13 +17,20 @@
         "/media/icons/usaflag.svg",
         "/media/icons/ukflag.svg"
     ]
+    // const personal_txts = [
+    //     "28th of July, 1999, Omar was born. It's been a while so I can't recall much. But I do remember I had good times in primaire and collège Jeanne d'Arc, where I made close, lifelong friends. I got my high school Baccalauréat degree from Al Manbaa in Sciences Physiques. Life in Rabat was fun, but I was curious about what else was out there. In April 2017, I got a scholarship to study International Relations at Bocconi University, and decided to continue my studies in Italy.",
+    //     "When I arrived in Milan, I was excited to study something I thought I'd be good at: social sciences. Academically I did pretty well, and Bocconi taught me a lot about markets, jobs, and money. But I wanted personal growth beyond practical knowledge, and also found myself missing mathematics and sciences. Political science has its share of problems to solve and topics to learn about, but I learned that I preferred numbers and logical puzzles.",
+    //     "Sometime around Fall 2017, I received updates from a high school friend who was studying in the United Arab Emirates; New York University had a new campus in Abu Dhabi, and my friend was loving it there. Since I had already been thinking about transferring to a Liberal Arts school, I applied, visited campus, and got in. At NYUAD, I took classes from various departments, took part in student government and varsity teams, and got to know people and cultures from all over the world. In my second year I settled on majoring in Interactive Media, a project-centric field at the intersection of computer science, design, and digital communication.",
+    //     "In Spring 2020 and Fall 2021, I went to the New York campus to take more technical classes in web development and game programming. During this time, I realized that I loved creating projects and tools that people can use and play around with. My classes involved many group projects, so I learned a lot about group dynamics and leadership. Things learned 2020-2021: making stuff feels great, making good stuff feels fantastic, and it's okay to make concessions.",
+    //     "After spending a year teaching in Morocco, I recently moved to London and I'm looking forward to the next chapter in my journey!"
+    // ];
     const personal_txts = [
-    "28th of July, 1999, Omar was born. It's been a while so I can't recall much. But I do remember I had good times in primaire and collège Jeanne d'Arc, where I made close, lifelong friends. I got my high school Baccalauréat degree from Al Manbaa in Sciences Physiques. Life in Rabat was fun, but I was curious about what else was out there. In April 2017, I got a scholarship to study International Relations at Bocconi University, and decided to continue my studies in Italy.",
-    "When I arrived in Milan, I was excited to study something I thought I’d be good at: social sciences. Academically I did pretty well, and Bocconi taught me a lot about markets, jobs, and money. But I wanted personal growth beyond practical knowledge, and also found myself missing mathematics and sciences. Political science has its share of problems to solve and topics to learn about, but I learned that I preferred numbers and logical puzzles.",
-    "Sometime around Fall 2017, I received updates from a high school friend who was studying in the United Arab Emirates; New York University had a new campus in Abu Dhabi, and my friend was loving it there. Since I had already been thinking about transferring to a Liberal Arts school, I applied, visited campus, and got in. At NYUAD, I took classes from various departments, took part in student government and varsity teams, and got to know people and cultures from all over the world. In my second year I settled on majoring in Interactive Media, a project-centric field at the intersection of computer science, design, and digital communication.",
-    "In Spring 2020 and Fall 2021, I went to the New York campus to take more technical classes in web development and game programming. During this time, I realized that I loved creating projects and tools that people can use and play around with. My classes involved many group projects, so I learned a lot about group dynamics and leadership. Things learned 2020-2021: making stuff feels great, making good stuff feels fantastic, and it’s okay to make concessions.",
-    "After spending a year teaching in Morocco, I recently moved to London and I’m looking forward to the next chapter in my journey!"
-];
+        "Graduated from Al Manbaa in Sciences Physiques, and got a full ride for Bocconi's International Relations program!",
+        "Studied in Bocconi for a year. Didn't love politics though, so I transferred.",
+        "I got a full ride from NYU to study Interactive Media at their satellite campus in Abu Dhabi! Interactive Media is a project-heavy program that integrates computer science, design, and communication.",
+        "Spent a year taking classes in game design and web dev in New York!",
+        "Moved to London, super excited for the next chapter.",
+    ]
 
 
     interface TransitionConfig {
@@ -73,15 +80,18 @@
         }
         observer = new IntersectionObserver(handleIntersection, {
             threshold: .4
-        })
+        });
         const sections = document.querySelectorAll('.section');
-        sections.forEach(section => observer.observe(section));
-        return () => {
-            if (observer) {
-                observer.disconnect();
-                observer = null;
-            }
-        };
+        if(observer != null)
+        {
+            sections.forEach(section => observer.observe(section));
+            return () => {
+                if (observer) {
+                    observer.disconnect();
+                    observer = null;
+                }
+            };
+        }
     });
 
 </script>
@@ -160,8 +170,8 @@
     }
     /* SCROLLING TEXT */
     .text-content {
-        font-size: large;
-        color: lightgray;
+        font-size: xx-large;
+        color: rgb(237, 237, 237);
         transition: top .6s, left .6s;
     }
     .text-container{
@@ -257,6 +267,14 @@
         }
     }
     @media (max-width: 576px) {
+        .mapinfo{
+            top: -0.5em !important;
+            border-bottom: solid rgba(255, 255, 255, 0.182) 1px;
+        }
+        .text-container{
+            background-color: rgba(0, 0, 0, 0.623);
+        }
+
     }
     @media (max-width: 400px) {
         .mapinfo{
@@ -266,7 +284,12 @@
             font-size: 3.5em;
         }
     }
-    @media (max-width: 341px) {
-       
+    @media (max-width: 350px) {
+        .content h2{
+            font-size: 3.1em;
+        }
+        .mapinfo{
+            top: -0.5em !important;
+        }
     }
 </style>

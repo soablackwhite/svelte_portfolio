@@ -45,9 +45,13 @@
     const unsubscribe = transitioned.subscribe(($transitioned) => {
         t = $transitioned;
     });
-    let index:number = 0;
-    let scrollThreshold:number = 70;
+    let index = 0;
+    let scrollThreshold = 70;
+    let innerWidth: number;
+    $: isMobile = ( innerWidth < 765 );
 </script>
+
+<svelte:window bind:innerWidth />
  <!----------------------------------CANVAS----------------------------------------------------->
  <Sketch bind:index={index}></Sketch>
  <!-- <Gui>  </Gui> -->
@@ -61,7 +65,9 @@
         <Logo bind:index={index}/>
         <Menu bind:index={index} bind:type={$gui_menu} bind:outline={$gui_outline}/>
         <!------------------------------------UI------------------------------------------------------->
-        <Profile bind:index={index}/>
+        {#if !(index === 1 && isMobile)}
+            <Profile bind:index={index}/>
+        {/if}
         <!--------------------------------SLIDER------------------------------------------------------->
         <!-- <Slider bind:scrollThreshold={scrollThreshold}/> -->
         <!-----------------------------------MENU------------------------------------------------------>

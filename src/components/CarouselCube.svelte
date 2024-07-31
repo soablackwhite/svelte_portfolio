@@ -246,7 +246,15 @@
         <!-- left arrow -->
         <button class:isMobile on:click={() => clickArrow(-1)}> <img class="arrow" style="left: 10%;"alt="left arrow" src="/media/icons/bluetipdesign_left.svg"> </button>
         {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
-            <button class="item {(i===$currentItem)?"currentButton":""}" class:lock data-offset="{i}" on:click={(e)=>clickScroll(i, e)}>
+            <button class="item {(i === $currentItem)?"currentButton":""}" class:lock data-offset="{i}" on:click={
+                (e) => {
+                    if(i === $currentItem){
+                        showDoc();
+                    } else{
+                        clickScroll(i, e)
+                    }
+                }
+            }>
                 {#if type === "video"}
                     <video  muted loop
                         class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">

@@ -73,7 +73,7 @@
     const range = 100;
     const walkers: Walker[] = [];
     const wobblers: Wobbler[] = [];
-    const numWalkers = 1000;
+    let numWalkers = 1000;
     const positions = [
       { x: 1/7, y: 1/3},
       { x: 1/5, y: 6/7},
@@ -222,7 +222,7 @@
       // } else {
       //   scale = w / originalWidth;
       // }
-      scale = h / originalHeight;
+      scale = w / originalWidth;
       cy = h / 2;
       if (w < 400){
         cx = 7 * w / 10;
@@ -258,28 +258,28 @@
         console.log(innerHeight);
         parameters += 1;
         parameters %= 4;
-        switch (parameters){
-          case 0: //regular
-            forceradius = 140; //values 70, 140, 210, 1040 for fabric
-            repulsionStrength = 11  ;//values 7, 17, 51 with long range fabric, -20 for black hole
-            snapStrength = 100;
-            break
-          case 1: //fabric
-            forceradius = 500; //values 70, 140, 210, 1040 for fabric
-            repulsionStrength = 42  ;//values 7, 17, 51 with long range fabric, -20 for black hole
-            snapStrength = 100;
-            break
-          case 2: //black hole
-            forceradius = 300; //values 70, 140, 210, 1040 for fabric
-            repulsionStrength = -20;//values 7, 17, 51 with long range fabric, -20 for black hole
-            snapStrength = 100;
-            break
-          case 3:
-            forceradius = 3000; //values 70, 140, 210, 1040 for fabric
-            repulsionStrength = 7; //values 7, 17, 51 with long range fabric, -20 for black hole
-            snapStrength = -10;
-            break
-        }
+        // switch (parameters){
+        //   case 0: //regular
+        //     forceradius = 140; //values 70, 140, 210, 1040 for fabric
+        //     repulsionStrength = 11  ;//values 7, 17, 51 with long range fabric, -20 for black hole
+        //     snapStrength = 100;
+        //     break
+        //   case 1: //fabric
+        //     forceradius = 500; //values 70, 140, 210, 1040 for fabric
+        //     repulsionStrength = 42  ;//values 7, 17, 51 with long range fabric, -20 for black hole
+        //     snapStrength = 100;
+        //     break
+        //   case 2: //black hole
+        //     forceradius = 300; //values 70, 140, 210, 1040 for fabric
+        //     repulsionStrength = -20;//values 7, 17, 51 with long range fabric, -20 for black hole
+        //     snapStrength = 100;
+        //     break
+        //   case 3:
+        //     forceradius = 3000; //values 70, 140, 210, 1040 for fabric
+        //     repulsionStrength = 7; //values 7, 17, 51 with long range fabric, -20 for black hole
+        //     snapStrength = -10;
+        //     break
+        // }
       }
       p5.setup = () => {
         p5.createCanvas(innerWidth, innerHeight);
@@ -335,6 +335,7 @@
         accent2 = p5.color(accent2_s);
         accent3 = p5.color(accent3_s);
         //instantiating walkers and wobblers
+        let numWalkers = (isMobile) ? 1000 : 500;
         for (let i = 0; i < numWalkers; i++) {
           walkers.push(new Walker(p5));
         }

@@ -112,7 +112,7 @@
                 if (increment > 0 && (index != 2 || cur === maxcur)) {
                     //go next, reset start on 0
                     if (index < max) {
-                        // index ++;
+                        if(index === 0) index ++;
                         currentItem.set(0);
                     }
                     //if last, stick to last
@@ -123,7 +123,6 @@
                 else if (increment < 0 && (index != 2 || cur === 0)) {
                     //go prv, reset start on last
                     if (index > 0) {
-                        // index --;
                         currentItem.set(tags[index].content.length - 1);
                     }
                     //if first, stick to first

@@ -1,14 +1,14 @@
 <script lang="ts">
-    export let index:number;
-    function update(){
-        index = 0;
-    }
-
+    export let index = 0;
+    let innerWidth = window.innerWidth;
+    $: isMobile = innerWidth < 765;
+    $: hidden = ( isMobile && index === 1) ? true : false;
 </script>
 <svg
    viewBox="0 0 128 64"
    version="1.1"
    id="logo"
+   class:hidden
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
@@ -59,6 +59,9 @@
         /* was 1 */
         --scale: 1.25;
         --rotate: 0deg;
+    }
+    .hidden{
+        display: none;
     }
     #logo{
         z-index: 4;
