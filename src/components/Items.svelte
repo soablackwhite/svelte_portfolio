@@ -1,8 +1,7 @@
 <script lang='ts'>
     import { onMount } from 'svelte';
     import { updateTag, lockTag, get_css_var, clamp} from "../scripts/functions";
-    import { currentItem } from "../stores";
-    import { delta, spinDelta } from "../stores";
+    import { delta, spinDelta, currentItem, constellation_index} from "../stores";
     import Typewriter from './Typewriter.svelte';
     import Circle from './Circle.svelte';
     import Card from './Card.svelte';

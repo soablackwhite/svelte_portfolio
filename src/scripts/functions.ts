@@ -64,7 +64,7 @@ export const contents = [
     ]
   },
   {
-    "title": "ML Rock Paper Scissors",
+    "title": "4ELE",
     "thumbnail": {
       "src": "/media/thumbnails/rps.webp",
       "type": "image"
@@ -159,10 +159,10 @@ export const contents = [
   {
     "title": "postcARds",
     "thumbnail": {
-      "src": "/media/animated/postcARds.mp4",
-      "type": "video"
+      "src": "/media/thumbnails/bw/postcards.webp",
+      "type": "image"
     },
-    "alt": "postcARds video",
+    "alt": "postcARds image",
     "category": "AR App",
     "tech": "Unity, C#",
     "description": "An augmented reality app to interact with the commercial postcards at Museum für Kommunikation in Berlin that I built and deployed with my team at NYU as part of a commission by the museum. The app utilized Unity's ARCore and ARKit environments for raycasting to edit the postcards using the phone's camera, and save the customized versions of the postcards into the visitor's portable devices.",
@@ -176,7 +176,7 @@ export const contents = [
   {
     "title": "Reccie",
     "thumbnail": {
-      "src": "/media/thumbnails/reccie.webp",
+      "src": "/media/thumbnails/bw/4e.webp",
       "type": "image"
     },
     "alt": "Reccie video",
@@ -193,7 +193,7 @@ export const contents = [
   {
     "title": "Mistborn",
     "thumbnail": {
-      "src": "/media/animated/mistborn.gif",
+      "src": "/media/thumbnails/bw/4e.webp",
       "type": "image"
     },
     "alt": "Mistborn image",
@@ -210,7 +210,7 @@ export const contents = [
   {
     "title": "Gemstone",
     "thumbnail": {
-      "src": "/media/thumbnails/gemstone.webp",
+      "src": "/media/thumbnails/bw/gemstone.webp",
       "type": "image"
     },
     "alt": "Gemstone video",
@@ -227,7 +227,7 @@ export const contents = [
   {
     "title": "Mad Socks",
     "thumbnail": {
-      "src": "/media/thumbnails/madsocks.webp",
+      "src": "/media/thumbnails/bw/madsocks.webp",
       "type": "image"
     },
     "alt": "Mad Socks image",

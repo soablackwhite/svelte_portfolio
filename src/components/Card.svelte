@@ -65,7 +65,6 @@
         current = index;
     }
     let observer: IntersectionObserver | null = null;
-
     onMount(() => {
         const handleIntersection = (entries: IntersectionObserverEntry[]) => {
             entries.forEach(entry => {

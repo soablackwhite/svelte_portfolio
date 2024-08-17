@@ -74,7 +74,7 @@
     //documentation stuff
     let data = contents[$currentItem] || {};
     $: data = contents[$currentItem] || {};
-    $:console.log($currentItem);
+    $: console.log($currentItem);
     $: ({ alt, title, category, tech, description, media } = data || {});
     let docmode = false;
     let carousel: HTMLElement;

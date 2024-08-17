@@ -13,7 +13,7 @@
     let isMobile: boolean;
     //quadtree stuff
     let quadtree;
-    const capacity = 6;
+    const capacity = 8; // 6 and 12 alternative settings
     //float 32 for performance boost
     let map: Float32Array;
     let scaledMoroccoData = moroccoData.map(coord => ({...coord}));

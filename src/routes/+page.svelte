@@ -36,10 +36,10 @@
     import CarouselStack from '../components/CarouselStack.svelte';
     import GUI from '../components/GUI.svelte';
     import Sketch from '../components/Sketch.svelte';
+    import CarouselFinal from '../components/CarouselFinal.svelte';
     import Logo from '../components/Logo.svelte';
     import { onMount } from 'svelte';
     import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline, transitioned } from "../stores";
-    import Gui from '../components/GUI.svelte';
     let t: boolean;
     let darkmode: false;
     const unsubscribe = transitioned.subscribe(($transitioned) => {
@@ -53,7 +53,7 @@
 
 <svelte:window bind:innerWidth />
  <!----------------------------------CANVAS----------------------------------------------------->
- <Sketch bind:index={index}></Sketch>
+ <!-- <Sketch bind:index={index}></Sketch> -->
  <!-- <Gui>  </Gui> -->
 <Manager>
     <!--------------------------------------LOADER----------------------------------------------------->
@@ -76,12 +76,12 @@
             <Items bind:index={index} bind:scrollThreshold={scrollThreshold}/>
         <!------------------------------GALLERY GRID--------------------------------------------------->
         {:else if t && $gui_carousel === "stack"}
-            <CarouselStack bind:motion={$gui_motion}/>
+            <!-- <CarouselStack bind:motion={$gui_motion}/> -->
+             <CarouselFinal></CarouselFinal>
         {:else if t}
-            <CarouselCube bind:direction={$gui_angle} bind:motion={$gui_motion} bind:cardtype={$gui_carousel}/>
+            <!-- <CarouselCube bind:direction={$gui_angle} bind:motion={$gui_motion} bind:cardtype={$gui_carousel}/> -->
+            <CarouselFinal></CarouselFinal>
         {/if}
-
-
     </div> 
 </Manager>
 

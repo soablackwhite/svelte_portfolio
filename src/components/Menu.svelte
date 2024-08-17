@@ -12,7 +12,7 @@
         {src: `/media/icons/github.svg`, alt: `github icon`, link: `https://github.com/soablackwhite`},
         {src: `/media/icons/linkedin.svg`, alt: `linkedin icon`, link: `https://www.linkedin.com/in/omarouldali/`}, 
         {src: `/media/icons/twitter.svg`, alt: `twitter icon`, link: `https://twitter.com/noiseOmie`},
-        {src: `/media/icons/mail.svg`, alt: `mail icon`, link: `mailto:omar.ould.ali@nyu.edu`}
+        {src: `/media/icons/mail.svg`, alt: `mail icon`, link: `mailto:ooa278@nyu.edu`}
     ];
     let rt = document.querySelector(":root") as HTMLElement;
     let t:boolean;
@@ -57,9 +57,9 @@
     <!-- LINKS & SOCIALS -->
     <div class="links {(index===3) ? "" : "" }">
         {#each links as link, i}
-                <button>
+                <!-- <button> -->
                     <a href={link.link} tabindex={i} target="_blank" rel="noreferrer nofollow"><img alt={link.alt} src={link.src}></a>
-                </button>
+                <!-- </button> -->
         {/each}
     </div>
 </div>
@@ -122,12 +122,12 @@
         position: fixed;
         display: flex;
         top: 0%;
-        right: 0%;
+        right: 1%;
         transition: all 0.3s;
         animation: enter 0.4s forwards;
         /* width: 15rem; */
     }
-    .links button {
+    .links a {
         all: unset;
         position: relative;
         width: fit-content;
@@ -140,7 +140,7 @@
         transition: width 0.17s ease-in, background-color 0.11s;
         filter: invert(var(--dark));
     }
-    .links button::after { /* overlay */
+    .links a::after { /* overlay */
         content: "";
         position: absolute;
         top: 0;
@@ -151,10 +151,10 @@
         border-radius: 100%;
         transition: width 0.17s ease-in, background-color 0.11s;
     }
-    .links button:hover::after {
+    .links a:hover::after {
         background-color: var(--white); /* overlay color */
     }
-    .links button:focus::after {
+    .links a:focus::after {
         background-color: var(--white);
     }
     /*___________________________________________MENU__________________________________________*/

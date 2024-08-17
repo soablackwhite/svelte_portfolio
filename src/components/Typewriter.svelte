@@ -9,7 +9,7 @@
     let currentText = '';
     let index = 0; // current txtarray index
     let speed = 20; // typing/erasing speed, unit: ms, good: 20
-    let delay = 1200; //delay before next text, unit: ms, good: 1000
+    let delay = 1700; //delay before next text, unit: ms, good: 1000
     let contentDiv: HTMLElement; //for adaptive height of border
     let borderHeight = '0px';
     //stretch border

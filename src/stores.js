@@ -37,3 +37,4 @@ export const coordinates = writable([
 export const constellated = writable(false);
 export const constellation_index = writable(0);
 export const profile_index = writable(0);
+export const pushLogo = writable(0);
