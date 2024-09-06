@@ -10,9 +10,9 @@
       <div class="category" class:blacked><h2>{category}</h2></div>
       <div class="column" class:blacked>
         <div class="title" class:blacked><h1>{title}</h1></div>
-        <div class="description" class:blacked><p>{description}</p></div>
+        <div class="description" class:blacked><p>{@html description}</p></div>
         <!----------------------------------------------------- MEDIA PART --------------------------------------------------->
-        {#each media as m, i}
+        {#each media as m}
             {#if m.type === "image"}
                 <img class="media_container" src={m.src} alt={alt} >
             {:else if m.type === "video"}

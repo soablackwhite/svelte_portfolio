@@ -1,8 +1,9 @@
 <script lang="ts">
     export let index = 0;
+    import { fade } from "svelte/transition";
     let innerWidth = window.innerWidth;
     $: isMobile = innerWidth < 765;
-    $: hidden = ( isMobile && index === 1) ? true : false;
+    $: hidden = ( (isMobile && index === 1) || index === 3 ) ? true : false;
 </script>
 <svg
    viewBox="0 0 128 64"
@@ -61,7 +62,8 @@
         --rotate: 0deg;
     }
     .hidden{
-        display: none;
+        /* display: none; */
+        opacity: 0 !important;
     }
     #logo{
         z-index: 4;

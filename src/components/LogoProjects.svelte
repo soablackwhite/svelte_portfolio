@@ -1,5 +1,6 @@
 <script lang="ts">
     export let index = 0;
+    export let translate = 0;
     let innerWidth = window.innerWidth;
     $: isMobile = innerWidth < 765;
     $: hidden = ( isMobile && index === 1) ? true : false;
@@ -7,6 +8,7 @@
 <svg
    viewBox="0 0 128 64"
    version="1.1"
+   class="logos"
    id="logo"
    class:hidden
    xmlns="http://www.w3.org/2000/svg"
@@ -67,38 +69,19 @@
         z-index: 4;
         width : 12rem !important;
         height : auto !important;
-        position: fixed;
+        position: relative !important;
         top: -2rem;
         left: .5rem;
-        transition: all 0.3s ease;
-        opacity:1;
-        animation: enter 0.2s forwards;
+        transform: translate(calc(var(--translate-x)), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
+        /* transition: all 0.3s ease; */
+        opacity: 1;
         cursor: pointer;
     }
     .inner {
-        /* stroke: var(--black) !important; */
-        /* stroke: rgba(255, 255, 255, 0) !important; */
         stroke: var(--white) !important;
-        /* stroke-width: 3px !important; */
     }
     .outer {
         stroke: rgba(calc( 255 - var(--dark))) !important;
         stroke-width: 2px !important;
-    }
-    @keyframes enter {
-        0% {
-            transform: translate(-12rem, var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
-            filter: blur(5px);
-        }
-        25% {
-            filter: blur(3px);
-        }
-        75% {
-            filter: blur(2px);
-        }
-        100% {
-            transform: translate(var(--translate-x), var(--translate-y)) rotate(var(--rotate)) scale(var(--scale));
-            filter: none;
-        }
     }
 </style>

@@ -1,19 +1,30 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { contents } from "../scripts/functions";
+    import { contents, get_css_var } from "../scripts/functions";
     import { currentItem } from "../stores";
     import { fade } from "svelte/transition";
     import { quintOut } from "svelte/easing";   
-    import Documentation from "./Documentation.svelte";
+    import LogoProjects from "./LogoProjects.svelte";
+    import Documentation from "./Documentation.svelte"; 
+    //mobile detection
+    let innerWidth = window.innerWidth;
+    let innerHeight = window.innerHeight;
+    $: isMobile = innerWidth < 765;
+    let logo: HTMLElement;
+    let scale: number; //logo scale
+    let indent: number; //the margins of logo
+    let baseHeight: number; //base height of logo
+    let logoHeight:number; //computed logo height
+    let threshold:number; //threshold required by scroll to push out logo
+    const boxSize = 300;
     //data and contents
     const max = contents.length - 1; //nbr of tbnails minus 1
     let data = contents[$currentItem] || {};
     $: data = contents[$currentItem] || {};
-    $: console.log($currentItem);
     $: ({ alt, title, category, tech, description, media } = data || {});
 
     //random array for length
-    const length = Array.from({length: 11}, (_, i) => i); //temporary
+    const length = Array.from({length: max}, (_, i) => i); //temporary
     //scroll stuff
     let scrollPos = 0;
     let lastScrollDelta = 0;
@@ -25,14 +36,16 @@
     //scroll stuff
     let isScrolling = false;
     function updateCurrentItem(scrollPos: number) {
-        const boxSize = 300;
         let closestIndex = max - Math.round(scrollPos/boxSize);
         //update to closest
         currentItem.set(closestIndex);
         console.log(closestIndex);
     }
     function handleScroll(event) {
-        const maxScrollPos = 3300; // max scroll position (update based on max)
+        if(docmode){
+            return
+        }
+        const maxScrollPos = max * boxSize; // max scroll position
         const newScrollPos = scrollPos + event.deltaY;
         //clamp scrollPos
         if (newScrollPos < 0) {
@@ -49,12 +62,28 @@
                 document.querySelector('.squares').style.transform = `translateY( calc(50vh - 150px - ${scrollPos}px) )`;
                 document.querySelector('.texts').style.transform = `translateY( calc(-100% + 50vh + 150px + ${scrollPos}px) )`;
                 isScrolling = false;
-                updateCurrentItem(newScrollPos);
+                updateCurrentItem(scrollPos);
+                // when the scroll distance is more than the amount of empty space
+                let diff = threshold - scrollPos;
+                if(diff > 0 && scrollPos < threshold){
+                    diff = 0;
+                    logo.style.transform = `translateY(${diff}px)`;
+                }
+                else if(scrollPos > threshold){
+                    logo.style.transform = `translateY(${diff}px)`;
+                }
             });
         }
         lastScrollDelta = event.deltaY;
     }
     onMount( () => {
+        //for pushing out
+        scale = parseFloat(get_css_var("--scale"));
+        indent = (isMobile) ? parseFloat(get_css_var("--translate-y"))*16 : parseFloat(get_css_var("--translate-x"))*16; //16 to convert from rem to px
+        baseHeight = (isMobile) ? 128 : 64;
+        logoHeight = scale * baseHeight + indent;
+        threshold = innerHeight/2 - 150 - logoHeight;
+        //scroll
         window.addEventListener('wheel', handleScroll);
         return () => {
             window.removeEventListener('wheel', handleScroll);
@@ -82,11 +111,12 @@
     }
 </script>
 
+<div id="logo" bind:this={logo}> <LogoProjects> </LogoProjects> </div>
 <div class="container" bind:this={carousel}>
     <!-- THUMBNAILS -->
-    <div class="squares">
+    <div on:click={showDoc} class="squares"> 
         {#each contents as {title, thumbnail:{src, type}, alt, category, tech}, i}
-            <div class="square"> 
+            <button class="square"> 
                 {#if type === "video"}
                     <video muted loop
                         class="thumbnail {(i===$currentItem)?"current":""}" style="float:right; right:0rem">
@@ -95,7 +125,7 @@
                 {:else }
                     <img class="{(i===$currentItem)?"current":""}" alt={alt} src={src}>
                 {/if}
-            </div>
+            </button>
         {/each}
     </div>
     <!-- TITLES -->
@@ -112,6 +142,13 @@
 <button id="docButton" on:click={showDoc}> click me </button>
 
 <style>
+    #logo{
+        /* display: none; */
+        position: absolute;
+        z-index: 3;
+        left: 0;
+        top: 0;
+    }
     #docButton{
         all:unset;
         cursor: pointer;
@@ -164,13 +201,17 @@
     .texts{ 
         transform: translate(0%, calc(-100% + 50vh + 150px));
     }
-
+    button{
+        all: unset;
+        cursor: pointer;
+    }
     .square {
         width: 300px;
         height: 300px;
         overflow: hidden;
-        border: 1px solid white;
+        outline: 1px solid white;
     }
+    
     .square video, img{
         width: 300px;
         height: 300px;

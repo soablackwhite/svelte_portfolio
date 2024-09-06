@@ -73,7 +73,6 @@
     const range = 100;
     const walkers: Walker[] = [];
     const wobblers: Wobbler[] = [];
-    let numWalkers = 1000;
     const positions = [
       { x: 1/7, y: 1/3},
       { x: 1/5, y: 6/7},
@@ -500,7 +499,7 @@
           if(index === 3){ //ruban banner for project
             walker.mapmode = true;
             proximity = 6;
-            // point = 1;
+            point = 1;
             let upperborder = (!isMobile) ? innerWidth/2 - 100 : cy - 100 ;
             let lowerborder = (!isMobile) ? innerWidth/2 + 100 : cy + 100 ;
             if (isMobile){
