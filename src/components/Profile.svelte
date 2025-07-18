@@ -67,7 +67,7 @@
                 />
             {:else if (index == 2) && $transitioned === false}
                 <img alt="profile" id="icon" src={icons[cur]}
-                transition:fade|global={{duration:100, delay: 100}}
+                    transition:fade|global={{duration:100, delay: 100}}
                 />
             {/if}
         </div>
