@@ -86,10 +86,10 @@
         background-color: var(--white);
     }
     .locking-label{
-        transition: transform 0.3s, padding-left 0.23s, opacity 0.13s, border-top 0.5s, top 0.33s !important;
+        transition: transform 1s, padding-left 0.23s, opacity 0.13s, border-top 0.5s, top 0.33s !important;
     }
     .locking{
-        transition: transform 0.3s !important;
+        transition: transform 1s !important;
     }
     .disappear{
         padding-left: 15rem !important;

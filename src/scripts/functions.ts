@@ -32,7 +32,7 @@ export function updateTag(index:number, incr:number, dir:number, rt:HTMLElement,
 //__________________________________LOCK TAG FUNCTION___________________________________________
 export function lockTag(past:number, dir:number, rt:HTMLElement){
   let ang = parseInt(get_css_var('--ang'));
-  let lock = Math.round(past / ang); //im actually flooring here, but since lock is negative i gotta ceil it
+  let lock = (dir === 1 ? Math.round(past / ang) : Math.floor(past / ang)); //im actually flooring here, but since lock is negative i gotta ceil it
   lock = (lock === -4 || lock === -9) ? lock + dir : lock;
   let insert = lock * ang;
   set_css_var("--ang_start", `${insert}deg`, rt);

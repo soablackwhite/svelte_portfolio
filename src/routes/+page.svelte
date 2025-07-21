@@ -1,93 +1,156 @@
 <script lang="ts">
     import Manager from '../components/Manager.svelte';
     import Menu from '../components/Menu.svelte';
-	import Slider from '../components/Slider.svelte';
     import Profile from '../components/Profile.svelte';
     import Items from '../components/Items.svelte';
     import Loader from '../components/Loader.svelte';
-    import CarouselCube from '../components/CarouselCube.svelte';
-    import CarouselStack from '../components/CarouselStack.svelte';
-    import GUI from '../components/GUI.svelte';
-    import Sketch from '../components/Sketch.svelte';
     import CarouselFinal from '../components/CarouselFinal.svelte';
     import Logo from '../components/Logo.svelte';
+    import Sketch from '../components/Sketch.svelte';
+    import Documentation from '../components/Documentation.svelte';
+    import { contents } from '../scripts/functions';
+
     import { onMount } from 'svelte';
     import { gui_angle, gui_carousel, gui_menu, gui_motion, gui_outline, transitioned } from "../stores";
-    import FlipCard from '../components/FlipCard.svelte';
     import ProjectsPage from '../components/ProjectsPage.svelte';
-    let flipped = false;
-    // toggle page
-    function flipPage() {
-        flipped = !flipped;
-    }
+    import Test from '../components/Test.svelte';
+
     let t: boolean;
     let darkmode: false;
-    const unsubscribe = transitioned.subscribe(($transitioned) => {
-        t = $transitioned;
-    });
+    $: showDocs = (index === 3 ? true : false);
     let index = 0;
     let scrollThreshold = 70;
     let innerWidth: number;
     $: isMobile = ( innerWidth < 765 );
+
+    const unsubscribe = transitioned.subscribe(($transitioned) => {
+        t = $transitioned;
+    });
 </script>
 
 <svelte:window bind:innerWidth />
 
-<FlipCard {flipped}>
-  <svelte:fragment slot="front">
-    <!-- your original page -->
-    <Sketch bind:index={index} />
-    <Manager>
-      <Loader slot="loader" />
-      <div slot="bs" id="blackscreen"> </div>
-      <div slot="main" id="wrapper" style="z-index: 0;">
-        <Logo bind:index={index} />
-        <Menu bind:index={index} bind:type={$gui_menu} bind:outline={$gui_outline} />
-        {#if !(index === 1 && isMobile)}
-          <Profile bind:index={index} />
-        {/if}
-        {#if index != 3}
-          <Items bind:index={index} bind:scrollThreshold={scrollThreshold} />
-        {:else if t && $gui_carousel === "stack"}
-          <CarouselFinal />
-        {:else if t}
-          <CarouselFinal />
-        {/if}
-      </div>
-    </Manager>
-    <button on:click={flipPage} class="flip-button">Projects</button>
-  </svelte:fragment>
+<Sketch bind:index={index} />
 
-  <svelte:fragment slot="back">
-    <ProjectsPage />
-    <button on:click={flipPage} class="flip-button">← Back</button>
-  </svelte:fragment>
-</FlipCard>
+<Manager>
+    <Loader slot="loader" />
+    <div slot="bs" id="blackscreen"> </div>
 
+    <!-- Flip Card Container -->
+    <div slot="main" class="flip-container" class:flipped={showDocs}>
+        <div class="flip-card">
+            <!-- FRONT SIDE -->
+            <div class="flip-face flip-front">
+
+                <div id="wrapper">
+                    <Logo bind:index={index}/>
+                    <Menu bind:index={index} bind:type={$gui_menu} bind:outline={$gui_outline}/>
+                    {#if !(index === 1 && isMobile)}
+                        <Profile bind:index={index}/>
+                    {/if}
+                    {#if index != 3}
+                        <Items bind:index={index} bind:scrollThreshold={scrollThreshold}/>
+                    {:else if t && $gui_carousel === "stack"}
+                        <CarouselFinal />
+                    {:else if t}
+                        <CarouselFinal />
+                    {/if}
+                </div>
+            </div>
+
+            <!-- BACK SIDE -->
+            <div class="flip-face flip-back">
+                <button class="flip-btn" on:click={() => index = 2}>Back</button>
+                {#each contents as content }
+                    <div class="doc">
+                        <Documentation data={content} />
+                    </div>
+                {/each}
+                <!-- <ProjectsPage /> -->
+            </div>
+        </div>
+    </div>
+</Manager>
 
 <style>
-    .flip-button {
-        position: absolute;
-        bottom: 2rem;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 1rem 2rem;
-        background: var(--accent1, #fff);
-        color: #000;
-        border: none;
-        font-size: 1rem;
-        z-index: 999;
-        cursor: pointer;
-        }
 
-    #wrapper{
-        /* display: flex; */
-        position: absolute !important;
-        top: 0%;
-        left: calc(0% + var(--indent_ui));
-        width: calc(100vw - var(--indent_ui)) !important;
-        height: 100%;
-        transition: all 0.33s ease-in-out;
-        z-index: 5;
+    .flip-container {
+        perspective: 1500px;
+        width: 100%;
+        height: 100vh;
+        position: relative;
     }
+
+    .flip-card {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transition: transform 0.6s ease;
+        transform-style: preserve-3d;
+    }
+
+    .flipped .flip-card {
+        transform: rotateY(180deg);
+    }
+
+    .flip-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        top: 0;
+        left: 0;
+    }
+
+    .flip-front {
+        z-index: 2;
+        overflow: hidden;
+    }
+
+    .flip-back {
+        transform: rotateY(180deg);
+        overflow-y: auto;
+        z-index: 2;
+        /* overflow-x: hidden; */
+        /* padding: 2rem; */
+        box-sizing: border-box;
+    }
+
+    #wrapper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .flip-btn {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        /* height: 10px; */
+        padding: 0.75rem 1.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        z-index: 10;
+        border: none;
+        cursor: pointer;
+        background: var(--white);
+        color: var(--black);
+        transition: all 0.3s ease;
+    }
+
+.flip-btn:hover {
+    transform: scale(1.09);
+    background: var(--white);
+}
+
+@media (prefers-color-scheme: dark) {
+    .flip-btn {
+        background: var(--white);
+        color: var(--black);
+    }
+
+    .flip-btn:hover {
+        background: var(--black);
+        color: var(--white);
+    }
+}
 </style>

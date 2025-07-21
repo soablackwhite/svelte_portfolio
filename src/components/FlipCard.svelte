@@ -3,7 +3,7 @@
   export let flipped: boolean = false;
 </script>
 
-<div class="scene">
+<!-- <div class="scene">
   <div class="card" class:flipped={flipped}>
     <div class="front">
       <slot name="front" />
@@ -12,14 +12,15 @@
       <slot name="back" />
     </div>
   </div>
-</div>
+</div> -->
 
 <style>
 .scene {
   width: 100vw;
   height: 100vh;
-  perspective: 1200px;
+  perspective: 4200px !important;
   overflow: hidden;
+  position: relative;
 }
 
 .card {

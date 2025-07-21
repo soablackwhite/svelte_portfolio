@@ -147,9 +147,10 @@
         changeContent(e.deltaY/5, false);
         clearTimeout(resetThreshold);
         resetThreshold = setTimeout(function () {
+            let dir = (accumulatedDelta > 0) ? 1 : -1;
+            let arr = lockTag(past, dir, rt); // 0 is for current value and 1 is for current scroll value
             accumulatedDelta = 0;
             locking = true;
-            let arr = lockTag(past, -1, rt); // 0 is for current value and 1 is for current scroll value
             past = arr[0];
             currentItem.set(arr[1]);
         }, 100); // adjusting the time before the threshold resets
@@ -201,11 +202,12 @@
         <div class="content">
             {#each tags[2].content as tag, i}
                 <div>
-                    <Circle locking={locking} idx={i} sz={tags[index].content.length - 1} custom="circle centered" proficiency={tag.score}>
-                        <span slot="letter">{tag.name[0]}</span>
-                        <span slot="tag">{tag.name.slice(1)}</span>
-                        <!-- <span slot="tag">{tag.name}</span> -->
-                    </Circle>
+                    {#if typeof tag === 'object' && 'score' in tag && 'name' in tag}
+                        <Circle locking={locking} idx={i} sz={tags[index].content.length - 1} custom="circle centered" proficiency={tag.score}>
+                            <span slot="letter">{tag.name[0]}</span>
+                            <span slot="tag">{tag.name.slice(1)}</span>
+                        </Circle>
+                    {/if}
                 </div>
             {/each}
         </div>

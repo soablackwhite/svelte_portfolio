@@ -70,7 +70,7 @@
   --accent3: #886988;
   --gray: #30332E;
   --white: #886988;
-  --dark: 1; */
+  --dark: 1; */            
 
   /*tags*/
   --dist: -16rem;
@@ -181,7 +181,7 @@
   }
 }
 html{
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 body{
   /* font-family: "Proxima Nova", sans-serif; */

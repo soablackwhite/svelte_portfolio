@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { browser } from '$app/environment';
     export let index = 0;
     export let translate = 0;
-    let innerWidth = window.innerWidth;
+    let innerWidth = browser ? window.innerWidth : 1024;
     $: isMobile = innerWidth < 765;
     $: hidden = ( isMobile && index === 1) ? true : false;
 </script>

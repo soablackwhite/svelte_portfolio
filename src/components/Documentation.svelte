@@ -17,7 +17,7 @@
                 <img class="media_container" src={m.src} alt={alt} >
             {:else if m.type === "video"}
             <!-- there was a transition property in this video tag maybe i should put it back -->
-                <video class="media_container" autoplay muted loop onmouseout="this.play()"  style="float:right; right:0rem; width:100%; height:100%">
+                <video class="media_container" autoplay muted loop on:mouseout={(e) => e.currentTarget.play()}  style="float:right; right:0rem; width:100%; height:100%">
                     <source src={m.src} type="video/mp4">
                         Your browser does not support the video tag.
                 </video>
@@ -47,11 +47,8 @@
         background-color: var(--black) !important;
     }
     .page {
-        position: absolute;
-        display: flex;
+        display: block;
         flex-direction: column;
-        width: 100%;
-        height: 100%;
         background-color: antiquewhite;
         overflow: auto;
     }
